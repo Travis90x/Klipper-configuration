@@ -19,7 +19,7 @@ sfind ~/printer_data/config/config/scripts/ -type f -name "*.sh" -exec chmod +x 
 
 
 # Printer.cfg
-Copy the rows you need from printer.example
+Copy the rows you need from printer.example.cfg
 
 in your printer.cfg
 
