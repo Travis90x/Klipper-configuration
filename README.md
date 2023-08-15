@@ -38,7 +38,7 @@ path: ~/Klipper-configuration
 
 origin: https://github.com/Travis90x/Klipper-configuration.git
 
-###install_script: ~/printer_data/config/config/scripts/update/klipper-configuration/klipper-configuration.sh
+install_script: config/scripts/update/klipper-configuration/klipper-configuration.sh
 
 managed_services: klipper moonraker
 
