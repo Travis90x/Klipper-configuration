@@ -27,7 +27,9 @@ Copy the rows you need from printer.example.cfg
 in your printer.cfg
 
 # Moonraker.conf
+
 add this in moonraker.conf to update klipper-configuration 
+
 
 [update_manager klipper-configuration]
 
