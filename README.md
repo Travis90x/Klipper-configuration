@@ -7,6 +7,7 @@ Enhance your Klipper
 git clone https://github.com/Travis90x/Klipper-configuration.git
 
 or update
+
 cd ~/Klipper-configuration && git pull && cd -
 
 # Install
@@ -32,7 +33,7 @@ add this in moonraker.conf to update klipper-configuration
 
 type: git_repo
 
-###primary_branch: main
+primary_branch: main
 
 path: ~/Klipper-configuration
 
