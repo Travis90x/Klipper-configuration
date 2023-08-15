@@ -9,9 +9,9 @@ Enhance your Klipper
 
 
 # CPU LOG
-## Copy the content of folder /config/script/cpu/etc_systemd_system/ in your /etc/systemd/system
+#### Copy the content of folder /config/script/cpu/etc_systemd_system/ in your /etc/systemd/system
 
-then with putty:
+### then with putty:
 
 #### sudo systemctl daemon-reload 
 #### sudo systemctl enable log_cpu.timer
