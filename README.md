@@ -33,13 +33,13 @@ add this in moonraker.conf to update klipper-configuration
 
 type: git_repo
 
-### primary_branch: main
+###primary_branch: main
 
 path: ~/Klipper-configuration
 
 origin: https://github.com/Travis90x/Klipper-configuration.git
 
-### install_script: ~/printer_data/config/config/scripts/update/klipper-configuration/klipper-configuration.sh
+###install_script: ~/printer_data/config/config/scripts/update/klipper-configuration/klipper-configuration.sh
 
 managed_services: klipper moonraker
 
