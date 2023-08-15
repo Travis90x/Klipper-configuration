@@ -2,6 +2,10 @@
 
 Enhance your Klipper
 
+If Klipper does not update information
+
+press CTRL+F5 to clean the cache of the browser.
+
 # Download
 ```
 git clone https://github.com/Travis90x/Klipper-configuration.git
