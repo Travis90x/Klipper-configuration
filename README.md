@@ -11,6 +11,10 @@ Enhance your Klipper
 # Update 
 ##### cd ~/Klipper-configuration && git pull && cd -
 
+# Printer.cfg
+##### Copy the rows you need from printer.example
+##### in your printer.cfg
+
 # CPU LOG
 ##### sudo cp -r ~/printer_data/config/config/scripts/cpu/etc_systemd_system/* /etc/systemd/system/
 ##### sudo systemctl daemon-reload 
