@@ -1,4 +1,4 @@
-# Klipper-configuration-
+# Klipper-configuration
 Enhance your Klipper
 
 # PUTTY - Give execute permission for all scripts
