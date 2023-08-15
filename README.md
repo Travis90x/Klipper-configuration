@@ -6,8 +6,7 @@ Enhance your Klipper
 
 git clone https://github.com/Travis90x/Klipper-configuration.git
 
-Or update
-
+or update
 cd ~/Klipper-configuration && git pull && cd -
 
 # Install
