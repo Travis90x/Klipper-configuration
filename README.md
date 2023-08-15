@@ -36,6 +36,7 @@ origin: https://github.com/Travis90x/Klipper-configuration.git
 install_script: config/scripts/update/klipper-configuration/klipper-configuration.sh
 managed_services: klipper moonraker
 ```
+After updating, re-execute Install commands because install_script is deprecated
 
 # CPU LOG
 ```
