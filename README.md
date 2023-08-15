@@ -23,6 +23,5 @@ Enhance your Klipper
 
 
 #  USB
-### Automount and copy USB-KEY/gcodes in /home/pi/printer_data/gcodes
-
+##### Automount and copy USB-KEY/gcodes in /home/pi/printer_data/gcodes
 ##### sudo apt install udisks2
