@@ -1,14 +1,15 @@
 # Klipper-configuration
 Enhance your Klipper
 
-# Installation with PUTTY
+# Donwload
 
 git clone https://github.com/Travis90x/Klipper-configuration.git
 
 Or update
 
- cd ~/Klipper-configuration && git pull && cd -
+cd ~/Klipper-configuration && git pull && cd -
 
+# Install
 
 sudo chown -R pi: ~/printer_data
 
