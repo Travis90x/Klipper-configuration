@@ -4,7 +4,7 @@ Enhance your Klipper
 # Installation with PUTTY
 
 ##### git clone https://github.com/Travis90x/Klipper-configuration.git
-##### Or update 
+Or update 
 ##### cd ~/Klipper-configuration && git pull && cd -
 
 
