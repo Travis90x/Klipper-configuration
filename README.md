@@ -7,7 +7,8 @@ Enhance your Klipper
 #### sfind ~/printer_data/config/config/scripts/ -type f -name "*.sh" -exec chmod +x {} \;
 
 
-#CPU LOG
+
+# CPU LOG
 ## Copy the content of folder /config/script/cpu/etc_systemd_system/ in your /etc/systemd/system
 
 then with putty:
