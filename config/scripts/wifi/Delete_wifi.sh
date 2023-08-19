@@ -1,0 +1,1 @@
+nmcli connection delete MyWiFi
