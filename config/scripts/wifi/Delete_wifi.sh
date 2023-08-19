@@ -1,1 +1,1 @@
-nmcli connection delete MyWiFi
+nmcli connection delete ${1}
