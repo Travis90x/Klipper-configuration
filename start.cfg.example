@@ -16,10 +16,7 @@ gcode:
     SET_BED_TEMP_TO_SENSOR # set the bed temperature as the temp measured at boot
 
 
-
-
-
-[gcode_macro START_PRINT]  # Recall as first MACRO of Slicer
+[gcode_macro START_PRINT]  # Recall as FIRST START PRINT MACRO in the Slicer
 description: The macros when start a print
 gcode:
     DEBUG_OFF
@@ -30,13 +27,13 @@ gcode:
     SAVE_LAST_FILE   # Recall as last MACRO in slicer: needed to generate PLR gcode without purge column in the Start Gcode of slicer
 
 
-[gcode_macro LAST_START_PRINT]
+[gcode_macro LAST_START_PRINT] # Recall as LAST START PRINT MACRO in the Slicer
 description: The last macros when start a print
 gcode:
     SAVE_VARIABLE VARIABLE=power_resume_z VALUE=0
 
 
-[gcode_macro END_PRINT]
+[gcode_macro END_PRINT]  # Recall as END PRINT MACRO in the Slicer
 description: The macros when end a print
 gcode:
     clear_last_file
