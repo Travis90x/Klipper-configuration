@@ -1,3 +1,5 @@
+# MY START.CFG BACKUP
+
 [delayed_gcode _START_PRINTER]
 # description: The macros when start the printer
 initial_duration: 2.0
