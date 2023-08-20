@@ -14,7 +14,7 @@ or update
 ```
 cd ~/Klipper-configuration && git pull && cd -
 ```
-or use the Macro **UPDATE KLIPPER CONF** in Klipper
+or update using the Macro **UPDATE KLIPPER CONF** in Klipper
 
 # Install
 ```
