@@ -1,5 +1,5 @@
 [delayed_gcode _START_PRINTER]
-description: The macros when start the printer
+# description: The macros when start the printer
 initial_duration: 2.0
 gcode:
     RUN_SHELL_COMMAND CMD=webcam_start
