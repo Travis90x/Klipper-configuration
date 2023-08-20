@@ -1,0 +1,51 @@
+[delayed_gcode _START_PRINTER]
+description: The macros when start the printer
+initial_duration: 2.0
+gcode:
+    RUN_SHELL_COMMAND CMD=webcam_start
+    BED_MESH_PROFILE LOAD=default
+    SET_VELOCITY_LIMIT ACCEL_TO_DECEL=4000
+    SET_VELOCITY_LIMIT ACCEL=8000
+    SET_VELOCITY_LIMIT VELOCITY=250
+    BL_RESET
+    BL_DOWN
+    BL_UP
+    BL_RESET
+    SET_PIN PIN=LED_Strip VALUE=5 # Set Led Strip 5%
+    UPDATE_DELAYED_GCODE ID=POWER_OFF_PRINTER_CHECK DURATION=600  # Set Timeout 600s
+    SET_BED_TEMP_TO_SENSOR # set the bed temperature as the temp measured at boot
+
+
+
+
+
+[gcode_macro START_PRINT]  # Recall as first MACRO of Slicer
+description: The macros when start a print
+gcode:
+    DEBUG_OFF
+    RUN_SHELL_COMMAND CMD=LOG_CPU_START
+    HOMING_IF_NOT
+    G90
+    G1 Y-10
+    SAVE_LAST_FILE   # Recall as last MACRO in slicer: needed to generate PLR gcode without purge column in the Start Gcode of slicer
+
+
+[gcode_macro LAST_START_PRINT]
+description: The last macros when start a print
+gcode:
+    SAVE_VARIABLE VARIABLE=power_resume_z VALUE=0
+
+
+[gcode_macro END_PRINT]
+description: The macros when end a print
+gcode:
+    clear_last_file
+    UPDATE_DELAYED_GCODE ID=POWER_OFF_PRINTER_CHECK DURATION=5
+    RUN_SHELL_COMMAND CMD=LOG_CPU_STOP
+#   {% if printer.configfile.save_config_pending|lower == 'true' or printer["gcode_macro global"].restart_inpending|lower == 'true'  %}
+    {% if printer.configfile.save_config_pending %}    
+    M117 save in pending
+    M118 save in pending
+    SAVE_VARIABLE VARIABLE=dariavviare VALUE=1  
+    SAVE_CONFIG
+    {% endif %}
