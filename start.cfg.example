@@ -1,5 +1,3 @@
-# MY START.CFG BACKUP
-
 [delayed_gcode _START_PRINTER]
 # description: The macros when start the printer
 initial_duration: 2.0
@@ -11,6 +9,7 @@ gcode:
     SET_VELOCITY_LIMIT VELOCITY=250
     BL_RESET
     BL_DOWN
+    G4 P1500
     BL_UP
     BL_RESET
     SET_PIN PIN=LED_Strip VALUE=5 # Set Led Strip 5%
@@ -18,7 +17,7 @@ gcode:
     SET_BED_TEMP_TO_SENSOR # set the bed temperature as the temp measured at boot
 
 
-[gcode_macro START_PRINT]  # Recall as FIRST START PRINT MACRO in the Slicer
+[gcode_macro START_PRINT]  # Recall as "FIRST" START PRINT MACRO in the Slicer
 description: The macros when start a print
 gcode:
     DEBUG_OFF
@@ -27,12 +26,14 @@ gcode:
     G90
     G1 Y-10
     SAVE_LAST_FILE   # Recall as last MACRO in slicer: needed to generate PLR gcode without purge column in the Start Gcode of slicer
+    SET_FILAMENT_SENSOR SENSOR=encoder_sensor ENABLE=0   # Disable Filament Sensor for purge line
 
 
-[gcode_macro LAST_START_PRINT] # Recall as LAST START PRINT MACRO in the Slicer
+[gcode_macro LAST_START_PRINT] # Recall as the "LAST" START PRINT MACRO in the Slicer
 description: The last macros when start a print
 gcode:
     SAVE_VARIABLE VARIABLE=power_resume_z VALUE=0
+    SET_FILAMENT_SENSOR SENSOR=encoder_sensor ENABLE=1   # Enable Filament Sensor after purge line
 
 
 [gcode_macro END_PRINT]  # Recall as END PRINT MACRO in the Slicer
