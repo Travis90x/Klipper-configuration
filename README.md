@@ -13,6 +13,7 @@ git clone https://github.com/Travis90x/Klipper-configuration.git
 or update
 ```
 cd ~/Klipper-configuration && git pull && cd -
+cp -r ~/Klipper-configuration/* ~/printer_data/config
 ```
 or update using the Macro **UPDATE KLIPPER CONF** in Klipper
 
@@ -38,7 +39,9 @@ type: git_repo
 primary_branch: main
 path: ~/Klipper-configuration
 origin: https://github.com/Travis90x/Klipper-configuration.git
-install_script: config/scripts/update/klipper-configuration/klipper-configuration.sh
+install_script: config/scripts/update/klipper-configuration/klipper-configuration.sh # Deprecated by Moonraker
+# Manual Update with putty:
+# cp -r ~/Klipper-configuration/* ~/printer_data/config
 managed_services: klipper moonraker
 ```
 After updating, re-execute Install commands because install_script is deprecated
