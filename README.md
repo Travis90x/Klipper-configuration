@@ -47,7 +47,11 @@ install_script: config/scripts/update/klipper-configuration/klipper-configuratio
 # cp -r ~/Klipper-configuration/* ~/printer_data/config
 managed_services: klipper moonraker
 ```
-After updating, re-execute Install commands because install_script is deprecated
+After updating from "Update Manager", use the Macro **UPDATE KLIPPER CONF** in Klipper
+or 
+```
+sudo ~/printer_data/config/config/scripts/update/klipper-configuration/klipper-configuration.sh
+```
 
 # CPU LOG
 ```
