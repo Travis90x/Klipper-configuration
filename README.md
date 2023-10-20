@@ -6,24 +6,22 @@ If Klipper does not update information
 
 press CTRL+F5 to clean the cache of the browser.
 
-# Download
+# Download & Install
 ```
 git clone https://github.com/Travis90x/Klipper-configuration.git
-```
-or update
-```
-cd ~/Klipper-configuration && git pull && cd -
-cp -r ~/Klipper-configuration/* ~/printer_data/config
-```
-or update using the Macro **UPDATE KLIPPER CONF** in Klipper
-
-# Install
-```
 sudo chown -R pi: ~/printer_data
 cp -r ~/Klipper-configuration/* ~/printer_data/config
 sudo find ~/printer_data/config/config/scripts/ -type f -name "*.sh" -exec chmod +x {} \;
 ```
 
+# Update
+```
+cd ~/Klipper-configuration && git pull && cd -
+cp -r ~/Klipper-configuration/* ~/printer_data/config
+sudo chown -R pi: ~/printer_data
+sudo find ~/printer_data/config/config/scripts/ -type f -name "*.sh" -exec chmod +x {} \;
+```
+or update using the Macro **UPDATE KLIPPER CONF** in Klipper
 
 # Printer.cfg
 
