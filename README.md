@@ -27,7 +27,9 @@ sudo find ~/printer_data/config/config/scripts/ -type f -name "*.sh" -exec chmod
 
 # Printer.cfg
 
-Copy the rows you need from **printer.example.cfg** in your **printer.cfg**
+Copy the rows you need from **advanced_macro.cfg** in your **printer.cfg**
+Or in your **printer.cfg** add this
+[include advanced_macro.cfg]
 
 # Moonraker.conf
 
