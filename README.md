@@ -9,15 +9,15 @@ press CTRL+F5 to clean the cache of the browser.
 # Download & Install
 ```
 git clone https://github.com/Travis90x/Klipper-configuration.git
+mkdir -p ~/printer_data/config/ && cp -r ~/Klipper-configuration/* ~/printer_data/config/
 sudo chown -R $USER: ~/printer_data
-cp -r ~/Klipper-configuration/* ~/printer_data/config
 sudo find ~/printer_data/config/config/scripts/ -type f -name "*.sh" -exec chmod +x {} \;
 ```
 
 # Update
 ```
-cd ~/Klipper-configuration && git pull && cd -
-cp -r ~/Klipper-configuration/* ~/printer_data/config
+cd ~/Klipper-configuration && git pull --rebase && cd -
+mkdir -p ~/printer_data/config/ && cp -r ~/Klipper-configuration/* ~/printer_data/config/
 sudo chown -R $USER: ~/printer_data
 sudo find ~/printer_data/config/config/scripts/ -type f -name "*.sh" -exec chmod +x {} \;
 ```
