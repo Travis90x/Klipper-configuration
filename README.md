@@ -9,7 +9,7 @@ press CTRL+F5 to clean the cache of the browser.
 # Download & Install
 ```
 git clone https://github.com/Travis90x/Klipper-configuration.git
-sudo chown -R pi: ~/printer_data
+sudo chown -R $USER: ~/printer_data
 cp -r ~/Klipper-configuration/* ~/printer_data/config
 sudo find ~/printer_data/config/config/scripts/ -type f -name "*.sh" -exec chmod +x {} \;
 ```
@@ -18,7 +18,7 @@ sudo find ~/printer_data/config/config/scripts/ -type f -name "*.sh" -exec chmod
 ```
 cd ~/Klipper-configuration && git pull && cd -
 cp -r ~/Klipper-configuration/* ~/printer_data/config
-sudo chown -R pi: ~/printer_data
+sudo chown -R $USER: ~/printer_data
 sudo find ~/printer_data/config/config/scripts/ -type f -name "*.sh" -exec chmod +x {} \;
 ```
 or update using the Macro **UPDATE KLIPPER CONF** in Klipper
@@ -56,7 +56,7 @@ sudo systemctl start log_cpu.timer`
 
 #  USB
 
-Automount and copy USB-KEY/gcodes in /home/pi/printer_data/gcodes
+Automount and copy USB-KEY/gcodes in /home/YourUser/printer_data/gcodes
 ```
 sudo apt install udisks2
 ```
