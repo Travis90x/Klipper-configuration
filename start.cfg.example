@@ -1,17 +1,11 @@
-[gcode_macro TEST_MACRO]
-gcode:
-    M118 { bedMeshConfig.mesh_min.split(",")[0]|float }
-    M118 { bedMeshConfig.mesh_min.split(",")[1]|float }
-    M118 { bedMeshConfig.mesh_max.split(",")[0]|float }
-    M118 { bedMeshConfig.mesh_max.split(",")[1]|float }
-
-
 [delayed_gcode _START_PRINTER]
 # description: The macros when start the printer
 initial_duration: 2.0
 gcode:    
     WEBCAM_ON
 
+    BACKUP_MOVE
+    
     SET_FILAMENT_SENSOR SENSOR=encoder_sensor ENABLE=0   # Enable Filament Sensor after purge line
     
     {% if printer.bed_mesh.profiles.default %}
@@ -58,7 +52,7 @@ gcode:
     # Heat bed for probing
     M140 S{BED_TEMP}
     
-    # PRECISE_HOMING
+    PRECISE_HOMING
     
     # PARK FOR HEATING
     _TOOLHEAD_PARK_PAUSE_CANCEL
@@ -71,17 +65,17 @@ gcode:
 
     # MESH_PRINT
     
-    # PURGE_LINE
+    PURGE_LOAD_FILAMENT
+    PURGE_LINE
 
     LAST_START_PRINT ; Enable PLR, Encoder etc
 
 
-[gcode_macro PURGE_LINE]
+[gcode_macro PURGE_LOAD_FILAMENT]
 gcode:
     {% set macro = printer['gcode_macro _MACRO_VARIABLE']|default({}) %}
     M118 Purging...
-    M117 Purging...
-    
+    M117 Purging...    
     # LOAD FILAMENT
     G90
     G92 E0 
@@ -90,16 +84,36 @@ gcode:
     G92 E0
     G4 P4000
     G1 E{macro.start_purge_short_lenght} F{macro.start_purge_short_speed}
-    G11 # retract a bit
     G92 E0
-    
+    G11
+    G11
+    G1 E-3 F{macro.start_purge_long_speed}
+    G92 E0
+
+[gcode_macro PURGE_LINE]
+gcode:
+    {% set macro = printer['gcode_macro _MACRO_VARIABLE']|default({}) %}
+    M118 Purging...
+    M117 Purging...
+
     # PURGE LINE
+    G1 Z1 F5000
+    SET_VELOCITY_LIMIT ACCEL=500 ACCEL_TO_DECEL=250
+    G90
+    G1 Z1
     G92 E0 
-    G1 Z0.3 F3000 ; Move bed down
-    G1 X10 Y5 Z0.2 F15000.0 ; Move to start position
-    G1 X200 Y5 Z0.2 F1500.0 E5 ; Draw the first line
+    M83
+    G1 X0 Y0 F12000
+    G1 Z.32
+    G1 F2400
+    G1 X275 Y0 E15
+    G92 E0
+    G1 Z.64
+    G1 X1 Y0 E12 F12000
+    G1 Z0
     G92 E0 
-    G1 Z3 F3000 E-1
+    G11
+    G1 Z3 F3000
     G92 E0 
 
 [gcode_macro MESH_PRINT]
@@ -195,6 +209,7 @@ gcode:
     
     RUN_SHELL_COMMAND CMD=LOG_CPU_STOP
     # WEBCAM_OFF
+    
 #   {% if printer.configfile.save_config_pending|lower == 'true' or printer["gcode_macro global"].restart_inpending|lower == 'true'  %}
     {% if printer.configfile.save_config_pending %}    
     M117 save in pending
@@ -202,6 +217,8 @@ gcode:
     SAVE_VARIABLE VARIABLE=dariavviare VALUE=1  
     SAVE_CONFIG
     {% endif %}
+    
+    BACKUP_MOVE
 
     # M118 Clean Air
     # EXHAUST_FAN_ON
@@ -209,3 +226,5 @@ gcode:
     
     M118 Printing finished
     TIMER_ON
+
+
