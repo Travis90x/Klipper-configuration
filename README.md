@@ -79,3 +79,4 @@ sudo apt install udisks2
 
 
 
+![Macro Screen](https://github.com/Travis90x/Klipper-configuration/assets/23300077/c47a2ed4-18c6-4a28-a4e1-9eb8f145e7a8)
