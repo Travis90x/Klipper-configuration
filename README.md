@@ -69,13 +69,11 @@ Automount and copy USB-KEY/gcodes in /home/YourUser/printer_data/gcodes
 sudo apt install udisks2
 ```
 
+# Mainsail Macro
 
+## Restore Macro Buttons
 
-
-
-
-
-
+Go to settings, General, Mainsail Settings in Moonraker DB, Restore, select **backup-mainsail_macro_"date".json**, select Macro and Restore.
 
 
 
