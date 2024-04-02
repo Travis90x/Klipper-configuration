@@ -1,16 +1,25 @@
-#!/bin/bash 
+#!/bin/bash
+
 MaxFileSize=204800
 DaysToKeep=3
-echo -e "\n Fecha:"`date` >> /home/pi/printer_data/config/scripts/logs/CPU/CPU.txt
-echo -e "\n Uptime: "`uptime` >> /home/pi/printer_data/config/scripts/logs/CPU/CPU.txt
-ps -e -o pcpu,pmem,args --sort=pcpu | tail >> /home/pi/printer_data/config/scripts/logs/CPU/CPU.txt
-#Get size in bytes** 
-file_size=`du -b /home/pi/printer_data/config/scripts/CPU.txt | tr -s '\t' ' ' | cut -d' ' -f1`
-if [ $file_size -gt $MaxFileSize ];then   
-    timestamp=`date +%s`
-    mv /home/pi/printer_data/config/scripts/logs/CPU/CPU.txt /home/pi/printer_data/config/scripts/logs/CPU/CPU.txt.$timestamp
-    gzip /home/pi/printer_data/config/scripts/logs/CPU/CPU.txt.$timestamp
-    touch /home/pi/printer_data/config/scripts/logs/CPU/CPU.txt
-    # remove old files
-    find /home/pi/printer_data/config/scripts/logs/CPU -name "CPU.txt.*" -type f -mtime +$DaysToKeep -delete 
+log_dir="/home/pi/printer_data/config/config/scripts/logs/CPU"
+log_file="$log_dir/CPU.txt"
+
+
+mkdir -p "$log_dir"
+touch "$log_file"
+
+echo -e "\n Fecha:"$(date) >> "$log_file"
+echo -e "\n Uptime: "$(uptime) >> "$log_file"
+ps -e -o pcpu,pmem,args --sort=pcpu | tail >> "$log_file"
+
+file_size=$(du -b "$log_file" | tr -s '\t' ' ' | cut -d' ' -f1)
+
+if [ $file_size -gt $MaxFileSize ]; then
+    timestamp=$(date +%s)
+    mv "$log_file" "$log_dir/CPU.txt.$timestamp"
+    gzip "$log_dir/CPU.txt.$timestamp"
+    touch "$log_file"
+    # Rimozione dei vecchi file
+    find "$log_dir" -name "CPU.txt.*" -type f -mtime +$DaysToKeep -delete
 fi
