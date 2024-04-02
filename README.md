@@ -64,10 +64,11 @@ sudo systemctl enable log_cpu.timer
 sudo systemctl start log_cpu.timer
 ```
 Example .../config/scripts/logs/CPU/CPU.txt
+https://www.site24x7.com/blog/load-average-what-is-it-and-whats-the-best-load-average-for-your-linux-servers
 ```
 "load average: 0,46, 0,53, 0,46": 
 average cpu load in last 1, 5 and 15 minutes 
-1 = cpu 100%
+1 = load on a core at 100%
 
 7.1 2.8 /home/pi/klippy-env/bin/python
 CPU at 7,1% at and RAM at 2,8%
