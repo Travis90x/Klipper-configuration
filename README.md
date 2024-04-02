@@ -63,8 +63,8 @@ sudo systemctl daemon-reload
 sudo systemctl enable log_cpu.timer
 sudo systemctl start log_cpu.timer
 ```
-### Example .../config/scripts/logs/CPU/CPU.txt
-### https://www.site24x7.com/blog/load-average-what-is-it-and-whats-the-best-load-average-for-your-linux-servers
+#### Example .../config/scripts/logs/CPU/CPU.txt
+##### https://www.site24x7.com/blog/load-average-what-is-it-and-whats-the-best-load-average-for-your-linux-servers
 ```
 "load average: 0,46, 0,53, 0,46": 
 average cpu load in last 1, 5 and 15 minutes 
