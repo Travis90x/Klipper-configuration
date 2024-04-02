@@ -63,7 +63,15 @@ sudo systemctl daemon-reload
 sudo systemctl enable log_cpu.timer
 sudo systemctl start log_cpu.timer
 ```
+Example .../config/scripts/logs/CPU/CPU.txt
+```
+"load average: 0,46, 0,53, 0,46": 
+average cpu load in last 1, 5 and 15 minutes 
+1 = cpu 100%
 
+7.1 2.8 /home/pi/klippy-env/bin/python
+CPU at 7,1% at and RAM at 2,8%
+```
 #  USB
 
 Automount and copy USB-KEY/gcodes in /home/YourUser/printer_data/gcodes
