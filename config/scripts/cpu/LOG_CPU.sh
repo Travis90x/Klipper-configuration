@@ -23,3 +23,7 @@ if [ $file_size -gt $MaxFileSize ]; then
     # Rimozione dei vecchi file
     find "$log_dir" -name "CPU.txt.*" -type f -mtime +$DaysToKeep -delete
 fi
+
+
+chown pi:pi "$log_dir" "$log_file"
+chmod 755 "$log_file"
