@@ -3,4 +3,4 @@ Description=Log the CPU load
 
 [Service]
 Type=oneshot
-ExecStart=/bin/bash /home/pi/printer_data/config/scripts/LOG_CPU.sh
+ExecStart=/bin/bash /home/pi/printer_data/config/config/scripts/LOG_CPU.sh
