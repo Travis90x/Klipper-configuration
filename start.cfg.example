@@ -3,10 +3,12 @@
 initial_duration: 2.0
 gcode:    
     WEBCAM_ON
-
     BACKUP_MOVE
-    
-    SET_FILAMENT_SENSOR SENSOR=encoder_sensor ENABLE=0   # Enable Filament Sensor after purge line
+
+    LOG_CPU_CLEAN
+    BRUSH_CLEAN_OFF
+
+    #  SET_FILAMENT_SENSOR SENSOR=encoder_sensor ENABLE=0   # Enable Filament Sensor after purge line
     
     {% if printer.bed_mesh.profiles.default %}
     BED_MESH_PROFILE LOAD=default
@@ -24,7 +26,7 @@ gcode:
     BL_RESET
     SET_PIN PIN=LED_Strip VALUE=5 # Set Led Strip 5%
            
-    TIMER_OFF # Disable Timeout
+    TIMER_ON # Enable Timeout
         
     SET_BED_TEMP_TO_SENSOR # set the bed temperature as the temp measured at boot
 
@@ -33,14 +35,18 @@ gcode:
 description: The macros when start a print
 gcode:
     {% set macro = printer['gcode_macro _MACRO_VARIABLE']|default({}) %}
+
     # EXHAUST_FAN_OFF
     # HOMING_IF_NOT
+
+    FILAMENT_SENSORS_DISABLE  # Disable Filament Sensor and Encoder for purge line  
+
     SAVE_VARIABLE VARIABLE=power_resume_z VALUE=0
     TIMER_OFF
     CLEAR_PAUSE
     RUN_SHELL_COMMAND CMD=LOG_CPU_START
     SAVE_LAST_FILE   # Recall as last MACRO in slicer: needed to generate PLR gcode without purge column in the Start Gcode of slicer
-    SET_FILAMENT_SENSOR SENSOR=encoder_sensor ENABLE=0   # Disable Filament Sensor for purge line  
+    
 
     
     # ORCA SLICER
@@ -51,8 +57,11 @@ gcode:
     M104 S{EXTRUDER_TEMP}
     # Heat bed for probing
     M140 S{BED_TEMP}
-    
+
+    HOMING_IF_NOT
+    #######
     PRECISE_HOMING
+    G1 Z10 F5000
     
     # PARK FOR HEATING
     _TOOLHEAD_PARK_PAUSE_CANCEL
@@ -69,6 +78,13 @@ gcode:
     PURGE_LINE
 
     LAST_START_PRINT ; Enable PLR, Encoder etc
+
+[gcode_macro LAST_START_PRINT] # Recall as the "LAST" START PRINT MACRO in the Slicer
+description: The last macros when start a print
+gcode:
+    {% set macro = printer['gcode_macro _MACRO_VARIABLE']|default({}) %}
+
+    FILAMENT_SENSORS_RESTORE # RESTORE FILAMENT SWITCH ENCODER AFTER PURGE
 
 
 [gcode_macro PURGE_LOAD_FILAMENT]
@@ -129,12 +145,6 @@ gcode:
     {% else %}
     M118 Bed Mesh "print" present
     {% endif %}
-
-[gcode_macro LAST_START_PRINT] # Recall as the "LAST" START PRINT MACRO in the Slicer
-description: The last macros when start a print
-gcode:
-    {% set macro = printer['gcode_macro _MACRO_VARIABLE']|default({}) %}
-    SET_FILAMENT_SENSOR SENSOR=encoder_sensor ENABLE=0   # Enable Filament Sensor after purge line
 
 
 [gcode_macro END_PRINT]  # Recall as END PRINT MACRO in the Slicer
@@ -218,7 +228,6 @@ gcode:
     SAVE_CONFIG
     {% endif %}
     
-    BACKUP_MOVE
 
     # M118 Clean Air
     # EXHAUST_FAN_ON
