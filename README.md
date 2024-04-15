@@ -29,10 +29,10 @@ or update using the Macro **UPDATE KLIPPER CONF** in Klipper
 
 Copy the rows you need from **advanced_macro.cfg** in your **printer.cfg**
 
-Or rename **advanced_macro.cfg** in **macro.cfg** (because it will be overwritten by update process)
+Or rename **advanced_macro.cfg** in **°ADV_macro.cfg** (because it will be overwritten by update process)
 and in your **printer.cfg** add
 ```
-[include macro.cfg]
+[include °ADV_macro.cfg]
 ```
 
 # Moonraker.conf
