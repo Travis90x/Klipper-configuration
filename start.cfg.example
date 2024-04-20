@@ -4,7 +4,7 @@ initial_duration: 2.0
 gcode:    
     WEBCAM_ON
     BACKUP_MOVE
-
+    LOGS_KLIPPER_CLEAN
     LOG_CPU_CLEAN
     BRUSH_CLEAN_OFF
 
@@ -38,7 +38,7 @@ gcode:
 
     # EXHAUST_FAN_OFF
     # HOMING_IF_NOT
-
+    LOGS_KLIPPER_CLEAN
     FILAMENT_SENSORS_DISABLE  # Disable Filament Sensor and Encoder for purge line  
 
     SAVE_VARIABLE VARIABLE=power_resume_z VALUE=0
