@@ -1,0 +1,21 @@
+alias: Alexa M117
+description: "Alexa reproduce >M117 Alexa messages< "
+trigger:
+  - platform: state
+    entity_id:
+      - sensor.printername_current_display_message
+condition: []
+action:
+  - service: notify.alexa_media_your-eco-name
+    metadata: {}
+    data:
+      data:
+        type: announce
+      message: >
+        {% set filament_message = states('sensor.printername_current_display_message')
+        %} {% if filament_message | regex_match('(?i)^alexa') %}
+          {% set message_without_alexa = filament_message[5:] %}
+          <say-as interpret-as="interjection">hey</say-as>
+          <amazon:domain name="conversational"> {{ message_without_alexa }}   </amazon:domain>  
+        {% endif %}    
+mode: single
