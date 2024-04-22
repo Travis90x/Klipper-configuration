@@ -1,0 +1,9 @@
+type: gauge
+entity: sensor.printername_progress
+min: 0
+max: 100
+severity:
+  green: 90
+  yellow: 50
+  red: 0
+name: Print progress
