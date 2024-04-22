@@ -5,3 +5,14 @@ rest_command:
     payload: '{"filename": "{{ payload_data }}"}'
     headers:
       Content-Type: application/json
+  queue_job_print:
+    url: "http://192.168.1.110/server/job_queue/job"
+    method: POST
+    payload: '{"filenames": "{{ payload_data }}"}'
+    headers:
+      Content-Type: application/json
+  queue_start_print:
+    url: "http://192.168.1.110/server/job_queue/start"
+    method: POST
+    headers:
+      Content-Type: application/json
