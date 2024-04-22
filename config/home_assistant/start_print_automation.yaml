@@ -3,6 +3,8 @@ description: ""
 trigger: null
 condition: []
 action:
+  - service: rest_command.queue_job_remove   # clean the print queue
+    data: {}
   - service: rest_command.start_print  # print "file.gcode"
     data:
       payload_data: "file.gcode"
