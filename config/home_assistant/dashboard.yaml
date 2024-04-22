@@ -1,0 +1,86 @@
+type: grid
+square: false
+columns: 1
+cards:
+  - type: horizontal-stack
+    cards:
+      - type: button
+        tap_action:
+          action: toggle
+        entity: button.printername_resume_print
+        icon: mdi:play
+        name: Resume
+        show_state: false
+        show_icon: true
+        show_name: true
+        hold_action:
+          action: none
+        card_mod:
+          style: |
+            :host {
+              --paper-item-icon-color: green;
+            }
+      - type: button
+        tap_action:
+          action: toggle
+        entity: button.printername_pause_print
+        icon: mdi:motion-pause-outline
+        name: Pause
+        show_state: false
+        show_icon: true
+        show_name: true
+        hold_action:
+          action: none
+        card_mod:
+          style: |
+            :host {
+              --paper-item-icon-color: yellow;
+            }
+      - type: button
+        tap_action:
+          action: toggle
+        entity: button.printername_cancel_print
+        icon: mdi:cancel
+        name: Cancel
+        show_state: false
+        show_name: true
+        show_icon: true
+        hold_action:
+          action: none
+        card_mod:
+          style: |
+            :host {
+              --paper-item-icon-color: red;
+            }
+      - type: button
+        tap_action:
+          action: toggle
+        entity: button.printername_firmware_restart
+        icon: mdi:restart
+        name: FW Restart
+        show_state: false
+        show_icon: true
+        show_name: true
+        hold_action:
+          action: none
+        card_mod:
+          style: |
+            :host {
+              --paper-item-icon-color: lightblue;
+            }
+      - type: button
+        tap_action:
+          action: toggle
+        entity: button.printername_emergency_stop
+        icon: mdi:alert-octagon-outline
+        name: Emergency
+        show_state: false
+        show_icon: true
+        show_name: true
+        hold_action:
+          action: none
+        card_mod:
+          style: |
+            :host {
+              --paper-item-icon-color: red;
+            }
