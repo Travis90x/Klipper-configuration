@@ -1,0 +1,9 @@
+alias: Klipper
+description: ""
+trigger: null
+condition: []
+action:
+  - service: rest_command.start_print
+    data:
+      payload_data: "file.gcode"
+mode: single
