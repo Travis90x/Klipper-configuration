@@ -117,5 +117,15 @@ Install in HACS:
 <img src="https://onedrive.live.com/embed?resid=2A6BE858ABEEB97B%21716438&authkey=%21AIAnR-RZLMIS-SY&width=653&height=879" width="653" height="879" />
 
 
+#  Schedule a print or job queue with Home Assistant automation
 
+<img src="https://onedrive.live.com/embed?resid=2A6BE858ABEEB97B%21716451&authkey=%21AJHak2fAaqFmY-U&width=398&height=110" width="398" height="110" />
 
+Add in Home assistant configuration.yaml the code in the link below with your Moonraker printer IP, then restart HA.
+#### https://github.com/Travis90x/Klipper-configuration/blob/main/config/home_assistant/start_print_configuration.yaml
+
+#### Create an automation by customizing the code in the link below.
+#### https://github.com/Travis90x/Klipper-configuration/blob/main/config/home_assistant/start_print_automation.yaml
+
+Add in the Dashboard, edit macro names:
+#### https://github.com/Travis90x/Klipper-configuration/tree/main/config/home_assistant
