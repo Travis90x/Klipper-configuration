@@ -1,0 +1,26 @@
+type: custom:mini-graph-card
+name: Temperature
+align_state: center
+icon: mdi:thermometer-lines
+hour24: true
+hours_to_show: 2
+points_per_hour: 60
+show:
+  labels: true
+  fill: true
+entities:
+  - entity: sensor.printername_idm_coil_temp
+    name: IDM
+    color: yellow
+  - entity: sensor.printername_skrat_temp
+    name: Skrat
+    color: grey
+  - entity: sensor.printername_stepper_x_temp
+    name: Step X
+    color: red
+  - entity: sensor.printername_stepper_y_temp
+    name: Step Y
+    color: green
+  - entity: sensor.printername_tvbox_temp
+    name: TvBox
+    color: purple
