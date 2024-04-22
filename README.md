@@ -95,16 +95,17 @@ Go to settings, General, Mainsail Settings in Moonraker DB, Restore, select **ba
 
 <img src="https://onedrive.live.com/embed?resid=2A6BE858ABEEB97B%21716441&authkey=%21ACP4y-KNnQguGmI&width=571&height=358" width="571" height="358" />
 
-Dashboard Lovelace
-Source: https://github.com/NonaSuomy/Moonraker-Home-Assistant?tab=readme-ov-file#lovelace-cards
+Dashboard Lovelace Source:
+```  https://github.com/NonaSuomy/Moonraker-Home-Assistant?tab=readme-ov-file#lovelace-cards ```
 Install in HACS:
+```
 https://github.com/marcolivierarsenault/moonraker-home-assistant
 https://github.com/kalkih/mini-graph-card
 https://github.com/thomasloven/lovelace-card-mod
-https://github.com/alandtse/alexa_media_player
-
+https://github.com/alandtse/alexa_media_player 
+```
 Dashboard here:
-https://github.com/Travis90x/Klipper-configuration/tree/main/config/home_assistant
+``` https://github.com/Travis90x/Klipper-configuration/tree/main/config/home_assistant ```
 
 <img src="https://onedrive.live.com/embed?resid=2A6BE858ABEEB97B%21716435&authkey=%21ADfZeGVQbG5wfy4&width=474&height=768" width="474" height="768" />
 
