@@ -93,7 +93,7 @@ Go to settings, General, Mainsail Settings in Moonraker DB, Restore, select **ba
 
 #  Home Assistant + Alexa
 
-![immagine](https://github.com/Travis90x/Klipper-configuration/assets/23300077/f785d039-3a73-4ab5-9bf0-a78dd37f8116)
+<img src="https://onedrive.live.com/embed?resid=2A6BE858ABEEB97B%21716441&authkey=%21ACP4y-KNnQguGmI&width=571&height=358" width="571" height="358" />
 
 Dashboard Lovelace
 Source: https://github.com/NonaSuomy/Moonraker-Home-Assistant?tab=readme-ov-file#lovelace-cards
@@ -107,6 +107,10 @@ Dashboard here:
 https://github.com/Travis90x/Klipper-configuration/tree/main/config/home_assistant
 
 <img src="https://onedrive.live.com/embed?resid=2A6BE858ABEEB97B%21716435&authkey=%21ADfZeGVQbG5wfy4&width=474&height=768" width="474" height="768" />
+
+<img src="https://onedrive.live.com/embed?resid=2A6BE858ABEEB97B%21716431&authkey=%21AJcQ5X8GQ06RAag&width=473&height=547" width="473" height="547" />
+
+<img src="https://onedrive.live.com/embed?resid=2A6BE858ABEEB97B%21716438&authkey=%21AIAnR-RZLMIS-SY&width=653&height=879" width="653" height="879" />
 
 
 
