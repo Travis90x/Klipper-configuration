@@ -96,14 +96,14 @@ gcode:
     G90
     G92 E0 
     G1 X{macro.purge_park_x} Y{macro.purge_park_x}
-    G1 E{macro.start_purge_long_lenght} F{macro.start_purge_long_speed}
+    G1 E{macro.start_purge_long_lenght} F{macro.start_purge_long_speed*60}
     G92 E0
     G4 P4000
-    G1 E{macro.start_purge_short_lenght} F{macro.start_purge_short_speed}
+    G1 E{macro.start_purge_short_lenght} F{macro.start_purge_short_speed*60}
     G92 E0
     G11
     G11
-    G1 E-3 F{macro.start_purge_long_speed}
+    G1 E-3 F{macro.start_purge_long_speed*60}
     G92 E0
 
 [gcode_macro PURGE_LINE]
@@ -162,7 +162,7 @@ gcode:
     M118 Short retract
     G91 ; Relative positioning
     # Retract short
-    G1 E-{macro.start_purge_short_lenght} F{macro.start_purge_short_speed}
+    G1 E-{macro.start_purge_short_lenght} F{macro.start_purge_short_speed*60}
     # G10 ; Firmware Retraction
     G92 E0
     
@@ -173,7 +173,7 @@ gcode:
     {% set x_med = printer.toolhead.axis_maximum.x / 2 %}
     {% set y_med = printer.toolhead.axis_maximum.x / 2 %}
     G90
-    G1 X{macro.cooling_park_x} Y{macro.cooling_park_x} F{macro.speed_move*6}
+    G1 X{macro.cooling_park_x} Y{macro.cooling_park_x} F{macro.speed_move}
 
   
     # Cooldown 20%
@@ -184,7 +184,7 @@ gcode:
 
     M118 Long retract
     # Retract long 
-    G1 E-{macro.start_purge_long_lenght} F{macro.start_purge_long_speed}
+    G1 E-{macro.start_purge_long_lenght} F{macro.start_purge_long_speed*60}
 
     # Cooldown
     M118 Turn Off Heaters
