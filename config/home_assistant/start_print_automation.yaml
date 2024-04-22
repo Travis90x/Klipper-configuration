@@ -3,7 +3,11 @@ description: ""
 trigger: null
 condition: []
 action:
-  - service: rest_command.start_print
+  - service: rest_command.start_print  # print "file.gcode"
     data:
       payload_data: "file.gcode"
+  - service: rest_command.queue_job_print  # add to print queue: 1.gcode, 2.gcode
+    data:
+      payload_data: "1.gcode, 2.gcode"
+  - service: rest_command.queue_start_print # print the gcodes in the queue
 mode: single
