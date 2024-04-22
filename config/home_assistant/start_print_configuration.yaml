@@ -1,0 +1,7 @@
+rest_command:
+  start_print:
+    url: "http://192.168.1.110/printer/print/start"
+    method: POST
+    payload: '{"filename": "{{ payload_data }}"}'
+    headers:
+      Content-Type: application/json
