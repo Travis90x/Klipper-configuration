@@ -1,0 +1,41 @@
+show_name: true
+show_icon: true
+show_state: true
+type: glance
+entities:
+  - entity: sensor.printername_current_display_message
+    name: Message
+  - entity: sensor.printername_printer_state
+    name: State
+  - entity: sensor.printername_current_print_state
+    name: Current State
+  - entity: sensor.printername_speed_factor
+    name: Speed %
+    icon: mdi:layers-triple
+  - entity: sensor.printername_progress
+    name: Progress
+  - entity: sensor.printername_print_duration
+    name: Duration
+  - entity: sensor.printername_print_eta
+    name: Eta
+  - entity: sensor.printername_print_projected_total_duration
+    name: Total Time
+    icon: mdi:layers-triple
+  - entity: sensor.printername_print_time_left
+    name: Time left
+    icon: mdi:layers-edit
+  - entity: binary_sensor.printername_encoder_sensor
+    name: Encoder
+  - entity: binary_sensor.printername_filament_sensor
+    name: Bed Power
+  - entity: sensor.printername_current_layer
+    name: Power
+    icon: mdi:power
+    tap_action:
+      action: toggle
+  - entity: sensor.printername_total_layer
+  - entity: sensor.printername_filament_used
+  - entity: sensor.printername_slicer_print_duration_estimate
+  - entity: sensor.printername_slicer_print_time_left_estimate
+columns: 4
+state_color: true
