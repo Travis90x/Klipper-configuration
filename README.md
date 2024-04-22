@@ -88,3 +88,26 @@ Go to settings, General, Mainsail Settings in Moonraker DB, Restore, select **ba
 
 
 ![Macro Mainsail](https://github.com/Travis90x/Klipper-configuration/assets/23300077/66e5309e-1721-48f7-8b51-a8f002240f1e)
+
+
+
+#  Home Assistant + Alexa
+
+![immagine](https://github.com/Travis90x/Klipper-configuration/assets/23300077/f785d039-3a73-4ab5-9bf0-a78dd37f8116)
+
+Dashboard Lovelace
+Source: https://github.com/NonaSuomy/Moonraker-Home-Assistant?tab=readme-ov-file#lovelace-cards
+Install in HACS:
+https://github.com/marcolivierarsenault/moonraker-home-assistant
+https://github.com/kalkih/mini-graph-card
+https://github.com/thomasloven/lovelace-card-mod
+https://github.com/alandtse/alexa_media_player
+
+Dashboard here:
+https://github.com/Travis90x/Klipper-configuration/tree/main/config/home_assistant
+
+<img src="https://onedrive.live.com/embed?resid=2A6BE858ABEEB97B%21716435&authkey=%21ADfZeGVQbG5wfy4&width=474&height=768" width="474" height="768" />
+
+
+
+
