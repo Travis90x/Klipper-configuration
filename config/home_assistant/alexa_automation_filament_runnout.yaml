@@ -1,0 +1,15 @@
+alias: Alexa filament runnout
+description: ""
+trigger:
+  - platform: state
+    entity_id:
+      - binary_sensor.printername_filament_sensor
+    to: "off"
+condition: []
+action:
+  - service: notify.alexa_media_your-eco-name
+    metadata: {}
+    data:
+      message: >-
+        "Warning! The filament has run out."
+mode: single
