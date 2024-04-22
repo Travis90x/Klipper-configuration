@@ -1,0 +1,41 @@
+type: grid
+square: false
+columns: 1
+cards:
+  - type: horizontal-stack
+    cards:
+      - type: button
+        entity: sensor.printername_fan0
+        name: Fan
+        icon: mdi:fan
+        show_state: true
+        show_name: true
+        show_icon: true
+      - type: button
+        entity: sensor.printername_extruder
+        name: Extruder
+        icon: mdi:fan-chevron-down
+        show_state: true
+        show_name: true
+        show_icon: true
+      - type: button
+        entity: sensor.printername_driver_fan
+        name: TMC fan
+        icon: mdi:fan-alert
+        show_state: true
+        show_name: true
+        show_icon: true
+      - type: button
+        entity: binary_sensor.printername_encoder_sensor
+        name: Encoder
+        icon: mdi:printer-3d-nozzle-alert
+        show_icon: true
+        show_name: true
+        show_state: true
+      - type: button
+        entity: binary_sensor.printername_filament_sensor
+        icon: mdi:printer-3d-nozzle-alert-outline
+        name: Sensor Sw
+        show_icon: true
+        show_name: true
+        show_state: true
