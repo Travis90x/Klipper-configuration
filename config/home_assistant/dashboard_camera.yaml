@@ -1,0 +1,26 @@
+type: grid
+square: false
+columns: 1
+cards:
+  - type: picture-entity
+    entity: camera.printername
+    name: 3DPrinterCam
+    show_state: false
+    show_name: false
+    camera_view: live
+    card_mod:
+      style: |
+        ha-card {
+          transition: transform 0s;
+          transform: rotate(180deg);
+        }
+        ha-dialog {
+          transform: rotate(180deg);
+        }
+  - show_state: true
+    show_name: true
+    camera_view: live
+    type: picture-entity
+    entity: camera.printername_thumbnail
+    name: Current Print
+    camera_image: camera.printername_thumbnail
