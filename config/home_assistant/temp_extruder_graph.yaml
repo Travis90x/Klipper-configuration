@@ -1,0 +1,15 @@
+type: custom:mini-graph-card
+name: Extruder
+align_state: center
+icon: mdi:thermometer-lines
+hour24: true
+hours_to_show: 1
+points_per_hour: 60
+show:
+  labels: true
+  fill: true
+entities:
+  - entity: sensor.printername_extruder_temperature
+    name: Extruder
+    color: red
+
