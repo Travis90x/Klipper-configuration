@@ -1,0 +1,60 @@
+type: grid
+square: false
+columns: 1
+cards:
+  - type: horizontal-stack
+    cards:
+      - show_name: true
+        show_icon: true
+        type: button
+        tap_action:
+          action: call-service
+          service: automation.trigger
+          service_data:
+            entity_id: automation.klipper_print_file_gocde
+        icon: mdi:play
+        name: Print file.gcode
+        show_state: false
+        hold_action:
+          action: none
+        card_mod:
+          style: |
+            :host {
+              --paper-item-icon-color: green;
+            }
+      - show_name: true
+        show_icon: true
+        type: button
+        tap_action:
+          action: call-service
+          service: automation.trigger
+          service_data:
+            entity_id: automation.klipper_print_queue
+        icon: mdi:tray-full
+        name: Print 1.gcode, 2.gcode
+        show_state: false
+        hold_action:
+          action: none
+        card_mod:
+          style: |
+            :host {
+              --paper-item-icon-color: lightblue;
+            }
+      - show_name: true
+        show_icon: true
+        type: button
+        tap_action:
+          action: call-service
+          service: automation.trigger
+          service_data:
+            entity_id: automation.klipper_clean_queue
+        icon: mdi:delete-forever-outline
+        name: Clean queue
+        show_state: false
+        hold_action:
+          action: none
+        card_mod:
+          style: |
+            :host {
+              --paper-item-icon-color: darkred;
+            }
