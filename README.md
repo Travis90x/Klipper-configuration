@@ -110,6 +110,10 @@ Dashboard Lovelace Source:
 ## My custom dashboards and automations here:
 ##### https://github.com/Travis90x/Klipper-configuration/tree/main/config/home_assistant
 
+### Automation: 
+#### Alexa notify all Klipper messages with "M117 Alexa <message_to_notify>"
+#### Alexa notify "The filament has run out
+#### Clean queue, start print file.gcode, add to queue 1.gcode, 2.gcode, print the queue (customize these functions and schedule them).
 
 <img src="https://onedrive.live.com/embed?resid=2A6BE858ABEEB97B%21716435&authkey=%21ADfZeGVQbG5wfy4&width=474&height=768" width="474" height="768" />
 
