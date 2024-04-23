@@ -1,5 +1,5 @@
 alias: Alexa filament runnout
-description: ""
+description: "Notification Filament run out"
 trigger:
   - platform: state
     entity_id:
