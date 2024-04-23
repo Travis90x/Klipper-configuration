@@ -113,7 +113,7 @@ Dashboard Lovelace Source:
 ### Automation: 
 #### Alexa notify all Klipper messages with "M117 Alexa <message_to_notify>"
 #### Alexa notify "The filament has run out
-#### Clean queue, start print file.gcode, add to queue 1.gcode, 2.gcode, print the queue (customize these functions and schedule them).
+
 
 <img src="https://onedrive.live.com/embed?resid=2A6BE858ABEEB97B%21716435&authkey=%21ADfZeGVQbG5wfy4&width=474&height=768" width="474" height="768" />
 
@@ -124,13 +124,18 @@ Dashboard Lovelace Source:
 
 #  Schedule a print or job queue with Home Assistant automation
 
+#### Add this dashboard
+https://github.com/Travis90x/Klipper-configuration/blob/main/config/home_assistant/dashboard_start_print.yaml
+
+
 <img src="https://onedrive.live.com/embed?resid=2A6BE858ABEEB97B%21716451&authkey=%21AJHak2fAaqFmY-U&width=398&height=110" width="398" height="110" />
 
 Add in Home assistant configuration.yaml the code in the link below with your Moonraker printer IP, then restart HA.
-#### https://github.com/Travis90x/Klipper-configuration/blob/main/config/home_assistant/start_print_configuration.yaml
+#### https://github.com/Travis90x/Klipper-configuration/blob/main/config/home_assistant/configuration_start_print.yaml
 
 #### Create an automation by customizing the code in the link below.
-#### https://github.com/Travis90x/Klipper-configuration/blob/main/config/home_assistant/start_print_automation.yaml
+### Clean queue, start print file.gcode, add to queue 1.gcode, 2.gcode, print the queue
+#### Customize these functions and schedule them as you need.
+#### https://github.com/Travis90x/Klipper-configuration/blob/main/config/home_assistant/automation_start_print.yaml
 
-Add in the Dashboard, edit macro names:
-#### https://github.com/Travis90x/Klipper-configuration/tree/main/config/home_assistant
+
