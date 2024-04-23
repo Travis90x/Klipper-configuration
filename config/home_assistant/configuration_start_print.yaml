@@ -1,3 +1,4 @@
+# Add this in your configuration.yaml and restart Home Assistant
 rest_command:
   start_print:
     url: "http://192.168.1.110/printer/print/start"  # EDIT the ip with yours
