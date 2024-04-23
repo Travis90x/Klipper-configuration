@@ -1,5 +1,5 @@
 alias: Klipper print file gcode
-description: ""
+description: "Clean queue, start print file.gocde, add to queue 1.gcode, 2.gcode, print the queue"
 trigger: null
 condition: []
 action:
