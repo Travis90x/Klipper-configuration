@@ -107,7 +107,7 @@ Dashboard Lovelace Source:
 
 ##### https://github.com/NonaSuomy/Moonraker-Home-Assistant?tab=readme-ov-file#lovelace-cards
 
-My custom dashboards and automations here:
+## My custom dashboards and automations here:
 ##### https://github.com/Travis90x/Klipper-configuration/tree/main/config/home_assistant
 
 
