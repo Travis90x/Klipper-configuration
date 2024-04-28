@@ -202,7 +202,8 @@ gcode:
     M84 ; Klipper disables All Motors
 
     
- 
+    TIMELAPSE_CLEAN
+    G4 P5000
     TIMELAPSE_RENDER  ; Webcam
     G4 P10000  ; pause cooldown 
     M107 ; Turn-off fan
