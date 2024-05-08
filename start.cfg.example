@@ -1,14 +1,18 @@
 [delayed_gcode _START_PRINTER]
 # description: The macros when start the printer
 initial_duration: 2.0
-gcode:    
+gcode: 
+    {% if printer.save_variables.variables.z_timeout %}
+    M118 Timeout in pending...
+    TIMER_ON
+    {% endif %}
+
     WEBCAM_ON
     BACKUP_MOVE
     LOGS_KLIPPER_CLEAN
     LOG_CPU_CLEAN
     BRUSH_CLEAN_OFF
 
-    #  SET_FILAMENT_SENSOR SENSOR=encoder_sensor ENABLE=0   # Enable Filament Sensor after purge line
     
     {% if printer.bed_mesh.profiles.default %}
     BED_MESH_PROFILE LOAD=default
@@ -19,11 +23,10 @@ gcode:
     SET_VELOCITY_LIMIT ACCEL_TO_DECEL=6000
     SET_VELOCITY_LIMIT ACCEL=12000
     SET_VELOCITY_LIMIT VELOCITY=300
-    BL_RESET
-    BL_DOWN
-    G4 P1500
-    BL_UP
-    BL_RESET
+
+    # BL_TEST  # BL TOUCH PIN TEST
+
+    # STRIPS
     SET_PIN PIN=LED_Strip VALUE=5 # Set Led Strip 5%
            
     TIMER_ON # Enable Timeout
@@ -35,19 +38,24 @@ gcode:
 description: The macros when start a print
 gcode:
     {% set macro = printer['gcode_macro _MACRO_VARIABLE']|default({}) %}
-
+    CLEAR_PAUSE
     # EXHAUST_FAN_OFF
-    # HOMING_IF_NOT
-    LOGS_KLIPPER_CLEAN
+    SAVE_VARIABLE VARIABLE=z_timeout VALUE=False
+    TIMER_OFF
+    SAVE_VARIABLE VARIABLE=power_resume_z VALUE=0
+
     FILAMENT_SENSORS_DISABLE  # Disable Filament Sensor and Encoder for purge line  
 
-    SAVE_VARIABLE VARIABLE=power_resume_z VALUE=0
-    TIMER_OFF
-    CLEAR_PAUSE
+    LOG_CPU_CLEAN
+    LOGS_KLIPPER_CLEAN
     RUN_SHELL_COMMAND CMD=LOG_CPU_START
     SAVE_LAST_FILE   # Recall as last MACRO in slicer: needed to generate PLR gcode without purge column in the Start Gcode of slicer
     
-
+    DISABLE_EXTRUDER
+    HOMING_IF_NOT
+    #######
+    # PRECISE_HOMING
+    # G1 Z20 F5000
     
     # ORCA SLICER
     {% set BED_TEMP = params.BED_TEMP|default(70)|int %}
@@ -58,24 +66,34 @@ gcode:
     # Heat bed for probing
     M140 S{BED_TEMP}
 
-    HOMING_IF_NOT
-    #######
-    PRECISE_HOMING
-    G1 Z10 F5000
+    # IDM need Bed heater off if it is AC >500w
+    M140 S0
+    M190 S0
+    Z_TILT_ADJUST    
+    MESH_PRINT  # KAMP MESH  
     
     # PARK FOR HEATING
     _TOOLHEAD_PARK_PAUSE_CANCEL
     # G1 X0 Y0 Z5 F{macro.speed_move*60}
-    
+    Z_SAFE Z=50  # Height "brush in your hand"
+
+    # Restore Temps after IDM Mesh
+    # Heat nozzle for probing
+    M104 S{EXTRUDER_TEMP}
+    # Heat bed for probing
+    M140 S{BED_TEMP}
+
     # Heat nozzle for probing
     M109 S{EXTRUDER_TEMP}
     # Heat bed for probing
     M190 S{BED_TEMP}
 
-    # MESH_PRINT
-    
-    PURGE_LOAD_FILAMENT
-    PURGE_LINE
+    {% if printer.save_variables.variables.z_filament_out %}
+    LINE_PURGE # KAMP PURGE
+    {% endif %}
+    SAVE_VARIABLE VARIABLE=z_filament_out VALUE=False # filament inside Hotend
+    # PURGE_LOAD_FILAMENT
+    # PURGE_LINE
 
     LAST_START_PRINT ; Enable PLR, Encoder etc
 
@@ -151,6 +169,13 @@ gcode:
 description: The macros when end a print
 gcode:
     {% set macro = printer['gcode_macro _MACRO_VARIABLE']|default({}) %}
+    {% set x_min = printer.toolhead.axis_minimum.x %}
+    {% set y_min = printer.toolhead.axis_minimum.y %}
+    {% set x_med = printer.toolhead.axis_maximum.x / 2 %}
+    {% set y_med = printer.toolhead.axis_maximum.y / 2 %}
+    {% set x_max = printer.toolhead.axis_maximum.x %}
+    {% set y_max = printer.toolhead.axis_maximum.y %}
+    G0 X{x_max} Y{y_max} F18000 # Avoid last blob
 
 
     
@@ -163,22 +188,26 @@ gcode:
     G91 ; Relative positioning
     # Retract short
     G1 E-{macro.start_purge_short_lenght} F{macro.start_purge_short_speed*60}
+    DISABLE_EXTRUDER
     # G10 ; Firmware Retraction
     G92 E0
     
     
 
-    ; Go to center
+    ## Go to center
     M118 Go to center
-    {% set x_med = printer.toolhead.axis_maximum.x / 2 %}
-    {% set y_med = printer.toolhead.axis_maximum.x / 2 %}
     G90
-    G1 X{macro.cooling_park_x} Y{macro.cooling_park_x} F{macro.speed_move}
+    G1 X{x_med} Y{y_med} F{macro.speed_move*6}
+    # G1 X{macro.cooling_park_x} Y{macro.cooling_park_x} F{macro.speed_move}
 
+    ##  Steppers OFF
+    M118 Steppers OFF
+    M18 ; Klipper disables All Motors 
+    M84 ; Klipper disables All Motors
   
     # Cooldown 20%
-    M118 Cooling at center
-    M106 S26 ; Fan 10%
+    # M118 Cooling at center
+    # M106 S26 ; Fan 10%
     
     G4 P1000  ; pause between retractions 
 
@@ -186,22 +215,22 @@ gcode:
     # Retract long 
     G1 E-{macro.start_purge_long_lenght} F{macro.start_purge_long_speed*60}
 
+    # FILAMENT OUT
+    SAVE_VARIABLE VARIABLE=z_filament_out VALUE=True  # Filament out of hotend
+    DISABLE_EXTRUDER
+
     # Cooldown
     M118 Turn Off Heaters
     TURN_OFF_HEATERS
     M106 S51 ; Fan 20%
     
-    Z_SAFE Z=100    
+    # Z_SAFE Z=100    # Avoid for warping
     
     
     M106 S102 ; Fan 40%
 
-    M118 Motor OFF
-    SET_STEPPER_ENABLE STEPPER=extruder ENABLE=0
-    M18 ; Klipper disables All Motors 
-    M84 ; Klipper disables All Motors
 
-    
+    ## TIMELAPSE
     TIMELAPSE_CLEAN
     G4 P5000
     TIMELAPSE_RENDER  ; Webcam
@@ -217,18 +246,11 @@ gcode:
     
     clear_last_file   # PLR
     
-    
+    # STOP SERVICES
     RUN_SHELL_COMMAND CMD=LOG_CPU_STOP
     # WEBCAM_OFF
     
-#   {% if printer.configfile.save_config_pending|lower == 'true' or printer["gcode_macro global"].restart_inpending|lower == 'true'  %}
-    {% if printer.configfile.save_config_pending %}    
-    M117 save in pending
-    M118 save in pending
-    SAVE_VARIABLE VARIABLE=dariavviare VALUE=1  
-    SAVE_CONFIG
-    {% endif %}
-    
+ 
 
     # M118 Clean Air
     # EXHAUST_FAN_ON
@@ -236,5 +258,6 @@ gcode:
     
     M118 Printing finished
     TIMER_ON
+    SAVE_VARIABLE VARIABLE=z_timeout VALUE=True  # Timeout persists after SAVE PENDING (FIRMWARE RESTART)
 
-
+    SAVE_PENDING
