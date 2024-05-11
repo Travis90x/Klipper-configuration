@@ -38,6 +38,7 @@ sudo sed -i "s|/home/pi|$(eval echo ~$USER)|g" /etc/systemd/system/log_cpu.servi
 sed -i 's|/home/pi|'"$HOME"'|g' ~/printer_data/config/config/scripts/cpu/LOG_CPU.sh
 sudo systemctl daemon-reload
 sudo systemctl enable log_cpu.timer
+sudo systemctl enable log_cpu.service
 sudo systemctl start log_cpu.timer
 
 echo Creating Input Shaping scripts
