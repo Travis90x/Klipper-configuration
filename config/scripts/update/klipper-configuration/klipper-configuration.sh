@@ -29,7 +29,12 @@ sudo rm /usr/local/bin/LOG_CPU_STOP
 sudo ln -s ~/printer_data/config/config/scripts/cpu/LOG_CPU_STOP.sh /usr/local/bin/LOG_CPU_STOP
 sudo rm /usr/local/bin/LOG_CPU_CLEAN
 sudo ln -s ~/printer_data/config/config/scripts/cpu/LOG_CPU_CLEAN.sh /usr/local/bin/LOG_CPU_CLEAN
+
+
+sudo rm /etc/systemd/system/log_cpu.service
+sudo rm /etc/systemd/system/log_cpu.timer
 sudo cp -r ~/printer_data/config/config/scripts/cpu/etc_systemd_system/* /etc/systemd/system/
+sudo sed -i "s|/home/pi|$(eval echo ~$USER)|g" /etc/systemd/system/log_cpu.service
 sudo systemctl daemon-reload
 sudo systemctl enable log_cpu.timer
 sudo systemctl start log_cpu.timer
