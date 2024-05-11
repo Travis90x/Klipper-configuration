@@ -88,3 +88,6 @@ sudo rm /usr/local/bin/Delete_WIFI
 sudo ln -s ~/printer_data/config/config/scripts/wifi/Delete_WIFI.sh /usr/local/bin/Delete_WIFI
 sudo rm /usr/local/bin/Show_WIFI
 sudo ln -s ~/printer_data/config/config/scripts/wifi/Show_WIFI.sh /usr/local/bin/Show_WIFI
+
+
+sudo find ~/printer_data/config/config/scripts/ -type f -name "*.sh" -exec chmod +x {} \;
