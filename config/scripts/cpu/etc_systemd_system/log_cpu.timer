@@ -3,7 +3,6 @@ Description=reload log_cpu service
 
 [Timer]
 OnUnitActiveSec=10s
-OnBootSec=10s
 
 [Install]
 WantedBy=timers.target
