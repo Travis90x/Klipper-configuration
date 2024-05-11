@@ -62,6 +62,7 @@ sudo ~/printer_data/config/config/scripts/update/klipper-configuration/klipper-c
 ```
 sudo cp -r ~/printer_data/config/config/scripts/cpu/etc_systemd_system/* /etc/systemd/system/
 sudo sed -i "s|/home/pi|$(eval echo ~$USER)|g" /etc/systemd/system/log_cpu.service
+sed -i 's|/home/pi|'"$HOME"'|g' ~/printer_data/config/config/scripts/cpu/LOG_CPU.sh
 sudo systemctl daemon-reload
 sudo systemctl enable log_cpu.timer
 sudo systemctl start log_cpu.timer
