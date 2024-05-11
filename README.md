@@ -13,17 +13,19 @@ git clone https://github.com/Travis90x/Klipper-configuration.git
 mkdir -p ~/printer_data/config/ && cp -r ~/Klipper-configuration/* ~/printer_data/config/
 sudo chown -R $USER: ~/printer_data
 sudo find ~/printer_data/config/config/scripts/ -type f -name "*.sh" -exec chmod +x {} \;
+bash ~/printer_data/config/config/scripts/update/klipper-configuration/klipper-configuration.sh
 ```
 
-# Update
+# Manual Update
 ```
 cd
 cd ~/Klipper-configuration && git pull --rebase && cd -
 mkdir -p ~/printer_data/config/ && cp -r ~/Klipper-configuration/* ~/printer_data/config/
 sudo chown -R $USER: ~/printer_data
 sudo find ~/printer_data/config/config/scripts/ -type f -name "*.sh" -exec chmod +x {} \;
+bash ~/printer_data/config/config/scripts/update/klipper-configuration/klipper-configuration.sh
 ```
-or update using the Macro **UPDATE KLIPPER CONF** in Klipper
+or update using the Macro **UPDATE KLIPPER CONF** in Klipper or **UPDATE MANAGER** in Moonraker
 
 # Printer.cfg
 
