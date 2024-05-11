@@ -29,6 +29,10 @@ sudo rm /usr/local/bin/LOG_CPU_STOP
 sudo ln -s ~/printer_data/config/config/scripts/cpu/LOG_CPU_STOP.sh /usr/local/bin/LOG_CPU_STOP
 sudo rm /usr/local/bin/LOG_CPU_CLEAN
 sudo ln -s ~/printer_data/config/config/scripts/cpu/LOG_CPU_CLEAN.sh /usr/local/bin/LOG_CPU_CLEAN
+sudo cp -r ~/printer_data/config/config/scripts/cpu/etc_systemd_system/* /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable log_cpu.timer
+sudo systemctl start log_cpu.timer
 
 echo Creating Input Shaping scripts
 sudo rm /usr/local/bin/generate-shaper-graph
