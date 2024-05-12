@@ -13,6 +13,10 @@ gcode:
     LOG_CPU_CLEAN
     BRUSH_CLEAN_OFF
 
+    KLIPPERSCREEN_STOP
+    OCTOEVERYWHERE_STOP
+    OBICO_STOP
+
     
     {% if printer.bed_mesh.profiles.default %}
     BED_MESH_PROFILE LOAD=default
