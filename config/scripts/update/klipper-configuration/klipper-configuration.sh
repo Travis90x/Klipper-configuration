@@ -61,7 +61,19 @@ sudo ln -s ~/printer_data/config/config/scripts/klipperscreen/Klipperscreen_STOP
 
 echo Creating LOGS scripts
 sudo rm /usr/local/bin/LOGS_KLIPPER_CLEAN
-sudo ln -s ~/printer_data/config/config/scripts/logs/klipper/LOGS_KLIPPER_CLEAN.sh /usr/local/bin/LOGS_KLIPPER_CLEAN
+sudo ln -s~/printer_data/config/config/scripts/logs/klipper/LOGS_KLIPPER_CLEAN.sh /usr/local/bin/LOGS_KLIPPER_CLEAN
+
+echo Creating Obico scripts
+sudo rm /usr/local/bin/Obico_START
+sudo ln -s ~/printer_data/config/config/scripts/moonraker/obico/Obico_START.sh /usr/local/bin/Obico_START
+sudo rm /usr/local/bin/Obico_STOP
+sudo ln -s ~/printer_data/config/config/scripts/moonraker/obico/Obico_STOP.sh /usr/local/bin/Obico_STOP
+
+echo Creating Octoeverywhere scripts
+sudo rm /usr/local/bin/Octoeverywhere_START
+sudo ln -s ~/printer_data/config/config/scripts/octoeverywhere/Octoeverywhere_START.sh /usr/local/bin/Octoeverywhere_START
+sudo rm /usr/local/bin/Octoeverywhere_STOP
+sudo ln -s ~/printer_data/config/config/scripts/octoeverywhere/Octoeverywhere_STOP.sh /usr/local/bin/Octoeverywhere_STOP
 
 echo Creating Power Loss Recovery scripts
 sudo rm /usr/local/bin/plr
