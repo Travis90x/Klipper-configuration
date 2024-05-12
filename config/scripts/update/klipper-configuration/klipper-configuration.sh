@@ -56,6 +56,8 @@ sudo rm /usr/local/bin/Klipperscreen_USB
 sudo ln -s ~/printer_data/config/config/scripts/klipperscreen/Klipperscreen_USB.sh /usr/local/bin/Klipperscreen_USB
 sudo rm /usr/local/bin/Klipperscreen_WIFI
 sudo ln -s ~/printer_data/config/config/scripts/klipperscreen/Klipperscreen_WIFI.sh /usr/local/bin/Klipperscreen_WIFI
+sudo rm /usr/local/bin/Klipperscreen_STOP
+sudo ln -s ~/printer_data/config/config/scripts/klipperscreen/Klipperscreen_STOP.sh /usr/local/bin/Klipperscreen_STOP
 
 echo Creating LOGS scripts
 sudo rm /usr/local/bin/LOGS_KLIPPER_CLEAN
