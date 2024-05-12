@@ -1,0 +1,1 @@
+service moonraker-obico stop
