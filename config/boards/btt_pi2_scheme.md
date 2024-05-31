@@ -1,7 +1,7 @@
 | Method 2 | Method 1 | PI2/CB2 | PI2/CB2 | Method 1 | Method 2 |
 | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
 | $\color{yellow}{\textsf{3,3v}}$ | $\color{yellow}{\textsf{3,3v}}$ | $\color{yellow}{\textsf{3,3v}}$ | $\color{red}{\textsf{5V}}$ | $\color{red}{\textsf{5V}}$ | $\color{red}{\textsf{5V}}$ |
-| $\color{lightgreen}{\textsf{gpio131}}$ | $\color{lightgreen}{\textsf{gpiochip4/gpio10}}$ | $\color{lightgreen}{\textsf{GPIO4_B2}}$ | $\color{red}{\textsf{5V}}$ | $\color{red}{\textsf{5V}}$ | $\color{red}{\textsf{5V}}$ |
+| $\color{lightgreen}{\textsf{gpio131}}$ | $\color{lightgreen}{\textsf{gpiochip4/gpio10}}$ | $$\textcolor{lightgreen}{\textsf{GPIO4\_B2}}$$ | $\color{red}{\textsf{5V}}$ | $\color{red}{\textsf{5V}}$ | $\color{red}{\textsf{5V}}$ |
 | $\color{lightgreen}{\textsf{gpio132}}$ | $\color{lightgreen}{\textsf{gpiochip4/gpio11}}$ | $\color{lightgreen}{\textsf{GPIO4_B3}}$ | $\color{white}{\textsf{GND}}$ | $\color{white}{\textsf{GND}}$ | $\color{white}{\textsf{GND}}$ |
 | $\color{lightgreen}{\textsf{gpio97}}$ | $\color{lightgreen}{\textsf{gpiochip3/gpio1}}$ | $\color{lightgreen}{\textsf{GPIO3_A1}}$ | $\color{lightgreen}{\textsf{GPIO0_D1}}$ | $\color{lightgreen}{\textsf{gpio4}}$ | $\color{lightgreen}{\textsf{gpiochip0/gpio25}}$ |
 | $\color{white}{\textsf{GND}}$ | $\color{white}{\textsf{GND}}$ | $\color{white}{\textsf{GND}}$ | $\color{lightgreen}{\textsf{GPIO0_D0}}$ | $\color{lightgreen}{\textsf{gpio3}}$ | $\color{lightgreen}{\textsf{gpiochip0/gpio24}}$ |
