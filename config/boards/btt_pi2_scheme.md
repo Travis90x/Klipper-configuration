@@ -1,8 +1,3 @@
 | Method 2 | Method 1 | PI2/CB2 | PI2/CB2 | Method 1 | Method 2 |
 | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
-| <span style="color:yellow;">3,3v</span> | <span style="color:yellow;">3,3v</span> | <span style="color:yellow;">3,3v</span> | <span style="color:red;">5V</span> | <span style="color:red;">5V</span> | <span style="color:red;">5V</span> |
-| <span style="color:lightgreen;">gpio131</span> | <span style="color:lightgreen;">gpiochip4/gpio10</span> | <span style="color:lightgreen;">GPIO4_B2</span> | <span style="color:red;">5V</span> | <span style="color:red;">5V</span> | <span style="color:red;">5V</span> |
-| <span style="color:lightgreen;">gpio132</span> | <span style="color:lightgreen;">gpiochip4/gpio11</span> | <span style="color:lightgreen;">GPIO4_B3</span> | <span style="color:white;">GND</span> | <span style="color:white;">GND</span> | <span style="color:white;">GND</span> |
-| <span style="color:lightgreen;">gpio97</span> | <span style="color:lightgreen;">gpiochip3/gpio1</span> | <span style="color:lightgreen;">GPIO3_A1</span> | <span style="color:lightgreen;">GPIO0_D1</span> | <span style="color:lightgreen;">gpio4</span> | <span style="color:lightgreen;">gpiochip0/gpio25</span> |
-| <span style="color:white;">GND</span> | <span style="color:white;">GND</span> | <span style="color:white;">GND</span> | <span style="color:lightgreen;">GPIO0_D0</span> | <span style="color:lightgreen;">gpio3</span> | <span style="color:lightgreen;">gpiochip0/gpio24</span> |
-| <span style="color:lightgreen;">gpio9</span> | <span style="color:lightgreen;">gpiochip0/gpio23</span> | <span style="color:l
+$\color{lightgreen}{\textsf{GPIO4\_B3}}$
