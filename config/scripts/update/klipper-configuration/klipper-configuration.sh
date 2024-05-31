@@ -19,7 +19,7 @@ sudo ln -s ~/printer_data/config/config/scripts/webcam/webcam_stop.sh  /usr/loca
 echo Creating backup scripts
 sudo rm /usr/local/bin/printer.cfg-backup
 sudo ln -s ~/printer_data/config/config/scripts/backup/printer.cfg-backup.sh /usr/local/bin/printer.cfg-backup
-sudo rm /usr/local/bin/printer.cfg-backup
+sudo rm /usr/local/bin/printer.cfg-backup_clean
 sudo ln -s ~/printer_data/config/config/scripts/backup/printer.cfg-backup_clean.sh /usr/local/bin/printer.cfg-backup_clean
 
 echo Creating Log CPU scripts
