@@ -61,7 +61,7 @@ sudo ln -s ~/printer_data/config/config/scripts/klipperscreen/Klipperscreen_STOP
 
 echo Creating LOGS scripts
 sudo rm /usr/local/bin/LOGS_KLIPPER_CLEAN
-sudo ln -s~/printer_data/config/config/scripts/logs/klipper/LOGS_KLIPPER_CLEAN.sh /usr/local/bin/LOGS_KLIPPER_CLEAN
+sudo ln -s ~/printer_data/config/config/scripts/logs/klipper/LOGS_KLIPPER_CLEAN.sh /usr/local/bin/LOGS_KLIPPER_CLEAN
 
 echo Creating Obico scripts
 sudo rm /usr/local/bin/Obico_START
