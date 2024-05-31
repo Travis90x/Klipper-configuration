@@ -107,3 +107,4 @@ sudo ln -s ~/printer_data/config/config/scripts/wifi/Show_WIFI.sh /usr/local/bin
 
 
 sudo find ~/printer_data/config/config/scripts/ -type f -name "*.sh" -exec chmod +x {} \;
+echo "$1" | sudo -S chown -R $USER: /usr/local/bin/*
