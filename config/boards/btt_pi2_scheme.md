@@ -1,1 +1,1 @@
-| $\color{lightgreen}{\textsf{gpio132}}$ | $\color{lightgreen}{\textsf{gpiochip4/gpio11}}$ | $\color{lightgreen}{\textsf{GPIO4<sub>B3</sub>}}$ | $\color{white}{\textsf{GND}}$ | $\color{white}{\textsf{GND}}$ | $\color{white}{\textsf{GND}}$ |
+| $\color{lightgreen}{\textsf{gpio132}}$ | $\color{lightgreen}{\textsf{gpiochip4/gpio11}}$ | $\color{lightgreen}{\textsf{GPIO4\&#95;B3}}$ | $\color{lightgreen}{\textsf{GPIO4\&#8209;B3}}$ | $\color{lightgreen}{\textsf{GPIO4\&#8208;B3}}$ | $\color{lightgreen}{\textsf{GPIO4\&#8315;B3}}$ | $\color{lightgreen}{\textsf{GPIO4\&#8210;B3}}$ |
