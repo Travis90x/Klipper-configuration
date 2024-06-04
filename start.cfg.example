@@ -78,6 +78,7 @@ gcode:
     
     # PARK FOR HEATING
     _TOOLHEAD_PARK_PAUSE_CANCEL
+    SET_FAN_SPEED FAN=fan0 SPEED=1 # to detach the petg from the nozzle
     # G1 X0 Y0 Z5 F{macro.speed_move*60}
     Z_SAFE Z=50  # Height "brush in your hand"
 
@@ -93,11 +94,16 @@ gcode:
     M190 S{BED_TEMP}
 
     {% if printer.save_variables.variables.z_filament_out %}
-    LINE_PURGE # KAMP PURGE
+      LINE_PURGE # KAMP PURGE
+    {% else %}
+      # LINE_PURGE PURGE_AMOUNT=10 # PURGE_HEIGHT=0.8 TIP_DISTANCE=10 PURGE_MARGIN=5 
     {% endif %}
+      # PURGE_LOAD_FILAMENT
+      # PURGE_LINE
+
     SAVE_VARIABLE VARIABLE=z_filament_out VALUE=False # filament inside Hotend
-    # PURGE_LOAD_FILAMENT
-    # PURGE_LINE
+
+    SET_FAN_SPEED FAN=fan0 SPEED=0
 
     LAST_START_PRINT ; Enable PLR, Encoder etc
 
