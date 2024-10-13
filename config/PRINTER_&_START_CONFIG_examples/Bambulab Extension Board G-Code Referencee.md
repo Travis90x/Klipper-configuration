@@ -190,3 +190,113 @@ ADC Reserved pin parameters (T = 2)
     I: ADC Pin Index (0-2)
     F: Function selection, all functions are the same as the sliding potentiometer. Please refer to the sliding potentiometer function configuration (S=6)
     D : Control the device index. For example, the function is to control the fan, this parameter specifies the fan number.
+
+######################################
+
+
+G-Code Placeholder Reference for Extension Board
+Placeholder Lists
+Name 	Type 	Definition 	Instance
+total_layer_count 	int 	Total layer counting 	
+
+; layer num/total_layer_count: {layer_num+1}/[total_layer_count] 
+
+Showing the number of total layers
+previous_extruder 	int 0-16 	Previous type of filament extruded 	
+
+;{ filament_type[previous_extruder]} 
+
+Getting information about the previous type of filament extruded when changing
+next_extruder 	int 0-16 	Next type of filament extruded 	
+
+;{ filament_type[next_extruder]} 
+
+Getting information about the next type of filament extruded when changing
+layer_num 	int 	Current layer number 	
+
+;{layer_num} 
+
+Showing the number of current layer
+layer_z 	float 	Current layer height 	 
+max_layer_z 	float 	The maximum layer height 	 
+x_after_toolchange 	float 	Coordinates after changing filaments 	 
+y_after_toolchange 	float 	 
+z_after_toolchange 	float 	 
+filament_extruder_id 	int 	Current type of filament ID  	
+
+If 
+
+Conditional statement
+toolchange_z 	float 	Current total layer height 	
+
+G1 Z{toolchange_z}
+
+Moving the filament extruder
+G-Code Guide
+Obtaining values from variable names
+
+The variable "layer_z" can be accessed directly by using its name.
+
+To obtain its value, use  {layer_z}.
+Accessing the value of an array or vector placeholder using variable name [index]
+
+"cool_plate_temp_initial_layer[0]" accesses the first element of "cool_plate_temp_initial_layer".
+
+To obtain its value, use {cool_plate_temp_initial_layer[0]}.
+Conditional statements
+
+{if scan_first_layer}
+
+;=========register first layer scan=====
+
+M977 S1 P60
+
+{endif}
+The ternary operator/Conditional operator
+
+(<condition> ? <cond_true>:<cond_false>)
+Combining G-code instructions
+
+S[next_extruder]
+
+S{cool_plate_temp_initial_layer[0]}
+Representing the String data type using "string"
+
+Strings:
+
+"Bambu PLA Basic @BBL X1C"
+Regular expression
+
+/regex/
+Compare <, >, ==, !=, <>, <=, >=
+
+toolchange_count > 1
+Logical Operations &&, ||, !
+
+{if old_filament_temp > 142 && next_extruder < 255};dosomething{endif}
+Arithmetic operations +，-， *， /
+
+Arithmetic Operators：
+
+{layer_num+1}
+
+Float operations return float type, while integer operations return integer type. 
+
+If you want the result to be a decimal value, you need to include a float type argument in the operation.
+
+For example, 3/2 will return 1 (an integer), while 3.0/2 will return 1.5 (a float).
+Matching
+
+=~ matching and !~ not matching:
+
+=~ and !~ are comparison operators used in programming to check if a string matches a pattern or not. The =~ operator checks if a string matches a pattern, while the !~ operator checks if a string does not match a pattern.
+Function operations
+
+Functions are a set of instructions that are executed when called upon to do so. In programming, a function may accept arguments and return a result. Here are some common function operations in programming:
+
+    min(a, b): returns the minimum value between a and b.
+    max(a, b): returns the maximum value between a and b.
+    int(a): converts a to an integer type.
+    round(a): rounds a to the nearest integer.
+    digits(a, num_digits, num_decimals=0): rounds the decimal portion of a to an integer and displays num_digits digits using space padding, where num_decimals defaults to 0 and can be left empty.
+    zdigits(a, num_digits, num_decimals=0): same as above, except it uses 0 padding instead of space padding.
