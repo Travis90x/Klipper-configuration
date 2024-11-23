@@ -54,6 +54,12 @@ sudo rm /usr/local/bin/generate-shaper-graph-y
 sudo ln -s ~/printer_data/config/config/scripts/input-shaping/generate-shaper-graph-y.sh /usr/local/bin/generate-shaper-graph-y
 sudo rm /usr/local/bin/generate-belt-tension-graph
 sudo ln -s ~/printer_data/config/config/scripts/input-shaping/generate-belt-tension-graph.sh /usr/local/bin/generate-belt-tension-graph
+sudo rm -f /usr/local/bin/show_graph_belts
+sudo ln -s ~/printer_data/config/config/scripts/input-shaping/show_graph_belts.sh /usr/local/bin/show_graph_belts
+sudo rm -f /usr/local/bin/show_graph_x
+sudo ln -s ~/printer_data/config/config/scripts/input-shaping/show_graph_x.sh /usr/local/bin/show_graph_x
+sudo rm -f /usr/local/bin/show_graph_y
+sudo ln -s ~/printer_data/config/config/scripts/input-shaping/show_graph_y.sh /usr/local/bin/show_graph_y
 
 echo Creating KlipperScreen scripts
 sudo rm /usr/local/bin/Klipperscreen_USB
