@@ -8,6 +8,10 @@ echo Creating update script
 sudo rm /usr/local/bin/klipper-configuration-update
 sudo ln -s ~/printer_data/config/config/scripts/update/klipper-configuration/klipper-configuration.sh /usr/local/bin/klipper-configuration-update
 
+echo Creating welcome scripts
+sudo rm -f /usr/local/bin/welcome
+sudo ln -s ~/printer_data/config/config/scripts/welcome/welcome.sh /usr/local/bin/welcome
+
 echo Creating webcam scripts
 sudo rm /usr/local/bin/webcam_check
 sudo ln -s ~/printer_data/config/config/scripts/webcam/webcam_check.sh /usr/local/bin/webcam_check
