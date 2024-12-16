@@ -162,17 +162,12 @@ gcode:
 
 [gcode_macro MESH_PRINT]
 gcode:
-    # Mesh for print
-    # Set Accel for Bed Mesh
-    SET_VELOCITY_LIMIT ACCEL=3000
-    SET_VELOCITY_LIMIT ACCEL_TO_DECEL=3000
-    M118 MESH Temporanea
-    
+    # Adaptive Mesh if profile not loaded   
     {% if not printer.bed_mesh.profile_name %}
       M118 Bed Mesh not present
       BED_MESH_CALIBRATE PROFILE="kamp"
     {% else %}
-    M118 Bed Mesh "default" present
+      M118 Bed Mesh profile is: {printer.bed_mesh.profile_name}
     {% endif %}
 
 
