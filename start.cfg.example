@@ -20,28 +20,33 @@ gcode:
 # description: The macros when start the printer
 initial_duration: 2.0
 gcode: 
+
+    ## Set the Timer for Auto-Power Off with SonOFF
     {% if printer.save_variables.variables.z_timeout %}
-    M118 Timeout in pending...
-    TIMER_ON
+      {% if printer['gcode_macro TIMER_ON'] is defined %}
+        M118 Timeout in pending...
+        TIMER_ON # Enable Timeout
+      {% endif %}
     {% endif %}
 
     WEBCAM_ON
-    BACKUP_MOVE  # Move printer.cfg backups
-    # BACKUP_CLEAN # Clean printer.cfg older than 10th
+    BACKUP_MOVE
+    # BACKUP_CLEAN
     LOGS_KLIPPER_CLEAN
     LOG_CPU_CLEAN
-    BRUSH_CLEAN_OFF
 
     {% if printer['gcode_macro BRUSH_CLEAN_OFF'] is defined %}
       BRUSH_CLEAN_OFF
     {% endif %}
+
+    # SET_FILAMENT_SENSOR SENSOR=encoder_sensor ENABLE=0   # Disable Filament Sensor to avoid auto load
 
     ## Stop services
     # KLIPPERSCREEN_STOP
     # OCTOEVERYWHERE_STOP
     # OBICO_STOP
 
-    
+    ## Auto Load "default" Mesh
     {% if printer.bed_mesh.profiles.default %}
       BED_MESH_PROFILE LOAD=default
     {% else %}
@@ -52,19 +57,15 @@ gcode:
     SET_VELOCITY_LIMIT ACCEL=12000
     SET_VELOCITY_LIMIT VELOCITY=300
 
-    # Test BL_Touch servo
+    ## Test BL_Touch servo
     {% if printer['gcode_macro BL_TEST'] is defined %}
       BL_TEST
     {% endif %}
 
-    # STRIPS
+    ## STRIPS
     SET_PIN PIN=LED_Strip VALUE=5 # Set Led Strip 5%
 
-    {% if printer['gcode_macro TIMER_ON'] is defined %}
-      TIMER_ON # Enable Timeout
-    {% endif %}
-
-    # Set the bed temperature as the temp measured at boot
+    ## Set the bed temperature as the temp measured at boot
     {% if printer['gcode_macro SET_BED_TEMP_TO_SENSOR '] is defined %}
       # SET_BED_TEMP_TO_SENSOR 
     {% endif %}
