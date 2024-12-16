@@ -28,7 +28,8 @@ gcode:
     WEBCAM_ON
     BACKUP_MOVE
     LOGS_KLIPPER_CLEAN
-    LOG_CPU_CLEAN
+    START_LOG_CPU_CLEAN
+
     {% if printer['gcode_macro BRUSH_CLEAN_OFF'] is defined %}
       BRUSH_CLEAN_OFF
     {% endif %}
