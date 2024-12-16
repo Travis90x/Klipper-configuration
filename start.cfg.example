@@ -1,3 +1,21 @@
+[gcode_macro TEST_MACRO]
+description: execute a macro only if exists
+gcode: 
+    {% if printer['gcode_macro MACRO_NAME'] is defined %}
+      MACRO_NAME
+      M118 MACRO_NAME macro exists
+    {% else %}
+    
+    {% endif %}
+
+#  ██████╗ ██████╗ ██╗███╗   ██╗████████╗███████╗██████╗ 
+#  ██╔══██╗██╔══██╗██║████╗  ██║╚══██╔══╝██╔════╝██╔══██╗
+#  ██████╔╝██████╔╝██║██╔██╗ ██║   ██║   █████╗  ██████╔╝
+#  ██╔═══╝ ██╔══██╗██║██║╚██╗██║   ██║   ██╔══╝  ██╔══██╗
+#  ██║     ██║  ██║██║██║ ╚████║   ██║   ███████╗██║  ██║
+#  ╚═╝     ╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝   ╚═╝   ╚══════╝╚═╝  ╚═╝
+# 
+
 [delayed_gcode _START_PRINTER]
 # description: The macros when start the printer
 initial_duration: 2.0
@@ -11,32 +29,50 @@ gcode:
     BACKUP_MOVE
     LOGS_KLIPPER_CLEAN
     LOG_CPU_CLEAN
-    BRUSH_CLEAN_OFF
+    {% if printer['gcode_macro BRUSH_CLEAN_OFF'] is defined %}
+      BRUSH_CLEAN_OFF
+    {% endif %}
 
-    KLIPPERSCREEN_STOP
-    OCTOEVERYWHERE_STOP
-    OBICO_STOP
+    ## Stop services
+    # KLIPPERSCREEN_STOP
+    # OCTOEVERYWHERE_STOP
+    # OBICO_STOP
 
     
     {% if printer.bed_mesh.profiles.default %}
-    BED_MESH_PROFILE LOAD=default
+      BED_MESH_PROFILE LOAD=default
     {% else %}
-    M118 Bed Mesh "default" not present
+      M118 Bed Mesh "default" not present
     {% endif %}
     
     SET_VELOCITY_LIMIT ACCEL_TO_DECEL=6000
     SET_VELOCITY_LIMIT ACCEL=12000
     SET_VELOCITY_LIMIT VELOCITY=300
 
-    # BL_TEST  # BL TOUCH PIN TEST
+    # Test BL_Touch servo
+    {% if printer['gcode_macro BL_TEST'] is defined %}
+      BL_TEST
+    {% endif %}
 
     # STRIPS
     SET_PIN PIN=LED_Strip VALUE=5 # Set Led Strip 5%
-           
-    TIMER_ON # Enable Timeout
-        
-    SET_BED_TEMP_TO_SENSOR # set the bed temperature as the temp measured at boot
 
+    {% if printer['gcode_macro TIMER_ON'] is defined %}
+      TIMER_ON # Enable Timeout
+    {% endif %}
+
+    # Set the bed temperature as the temp measured at boot
+    {% if printer['gcode_macro SET_BED_TEMP_TO_SENSOR '] is defined %}
+      # SET_BED_TEMP_TO_SENSOR 
+    {% endif %}
+
+#  ███████╗████████╗ █████╗ ██████╗ ████████╗
+#  ██╔════╝╚══██╔══╝██╔══██╗██╔══██╗╚══██╔══╝
+#  ███████╗   ██║   ███████║██████╔╝   ██║   
+#  ╚════██║   ██║   ██╔══██║██╔══██╗   ██║   
+#  ███████║   ██║   ██║  ██║██║  ██║   ██║   
+#  ╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   
+# 
 
 [gcode_macro START_PRINT]  # Recall as "FIRST" START PRINT MACRO in the Slicer
 description: The macros when start a print
@@ -114,6 +150,13 @@ gcode:
 
     FILAMENT_SENSORS_RESTORE # RESTORE FILAMENT SWITCH ENCODER AFTER PURGE
 
+#  ██████╗ ██╗   ██╗██████╗  ██████╗ ███████╗
+#  ██╔══██╗██║   ██║██╔══██╗██╔════╝ ██╔════╝
+#  ██████╔╝██║   ██║██████╔╝██║  ███╗█████╗  
+#  ██╔═══╝ ██║   ██║██╔══██╗██║   ██║██╔══╝  
+#  ██║     ╚██████╔╝██║  ██║╚██████╔╝███████╗
+#  ╚═╝      ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ╚══════╝
+#      
 
 [gcode_macro PURGE_LOAD_FILAMENT]
 gcode:
@@ -160,6 +203,14 @@ gcode:
     G1 Z3 F3000
     G92 E0 
 
+#  ███╗   ███╗███████╗███████╗██╗  ██╗
+#  ████╗ ████║██╔════╝██╔════╝██║  ██║
+#  ██╔████╔██║█████╗  ███████╗███████║
+#  ██║╚██╔╝██║██╔══╝  ╚════██║██╔══██║
+#  ██║ ╚═╝ ██║███████╗███████║██║  ██║
+#  ╚═╝     ╚═╝╚══════╝╚══════╝╚═╝  ╚═╝
+# 
+
 [gcode_macro MESH_PRINT]
 gcode:
     # Adaptive Mesh if profile not loaded   
@@ -170,6 +221,14 @@ gcode:
       M118 Bed Mesh profile is: {printer.bed_mesh.profile_name}
     {% endif %}
 
+
+#  ███████╗███╗   ██╗██████╗ 
+#  ██╔════╝████╗  ██║██╔══██╗
+#  █████╗  ██╔██╗ ██║██║  ██║
+#  ██╔══╝  ██║╚██╗██║██║  ██║
+#  ███████╗██║ ╚████║██████╔╝
+#  ╚══════╝╚═╝  ╚═══╝╚═════╝ 
+#        
 
 [gcode_macro END_PRINT]  # Recall as END PRINT MACRO in the Slicer
 description: The macros when end a print
