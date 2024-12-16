@@ -168,10 +168,11 @@ gcode:
     SET_VELOCITY_LIMIT ACCEL_TO_DECEL=3000
     M118 MESH Temporanea
     
-    {% if not printer.bed_mesh.profiles.print %}
-    BED_MESH_CALIBRATE PROFILE="print"
+    {% if not printer.bed_mesh.profile_name %}
+      M118 Bed Mesh not present
+      BED_MESH_CALIBRATE PROFILE="kamp"
     {% else %}
-    M118 Bed Mesh "print" present
+    M118 Bed Mesh "default" present
     {% endif %}
 
 
