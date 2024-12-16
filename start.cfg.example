@@ -26,10 +26,11 @@ gcode:
     {% endif %}
 
     WEBCAM_ON
-    BACKUP_MOVE
-    BACKUP_CLEAN
+    BACKUP_MOVE  # Move printer.cfg backups
+    # BACKUP_CLEAN # Clean printer.cfg older than 10th
     LOGS_KLIPPER_CLEAN
     LOG_CPU_CLEAN
+    BRUSH_CLEAN_OFF
 
     {% if printer['gcode_macro BRUSH_CLEAN_OFF'] is defined %}
       BRUSH_CLEAN_OFF
