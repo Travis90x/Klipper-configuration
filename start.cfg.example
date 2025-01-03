@@ -246,9 +246,11 @@ gcode:
     {% set y_max = printer.toolhead.axis_maximum.y %}
 
     # Custom filament retraction
-    {% set cooling_pause = params.PAUSE|default(macro.cooling_pause)|int %}
     {% set start_purge_short_lenght = params.SHORT_LENGHT|default(macro.start_purge_short_lenght)|int %}
     {% set start_purge_short_speed = params.SHORT_SPEED|default(macro.start_purge_short_speed)|int %}
+    {% set cooling_pause = params.PAUSE|default(macro.cooling_pause)|int %}
+    {% set start_purge_long_lenght = params.LONG_LENGHT|default(macro.start_purge_long_lenght)|int %}
+    {% set start_purge_long_speed = params.LONG_SPEED|default(macro.start_purge_long_speed)|int %}
 
     G0 X{x_max} Y{y_max} F18000 # Avoid last blob
     
@@ -286,7 +288,7 @@ gcode:
 
     M118 Long retract
     # Retract long 
-    G1 E-{macro.start_purge_long_lenght} F{macro.start_purge_long_speed * 60}
+    G1 E-{start_purge_long_lenght} F{start_purge_long_speed * 60}
 
     # FILAMENT OUT
     SAVE_VARIABLE VARIABLE=z_filament_out VALUE=True  # Filament out of hotend
