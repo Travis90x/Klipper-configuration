@@ -119,7 +119,7 @@ gcode:
     # PARK FOR HEATING
     _TOOLHEAD_PARK_PAUSE_CANCEL
     SET_FAN_SPEED FAN=fan0 SPEED=1 # to detach the petg from the nozzle
-    # G1 X0 Y0 Z5 F{macro.speed_move*60}
+    # G1 X0 Y0 Z5 F{macro.speed_move * 60}
     Z_SAFE Z=50  # Height "brush in your hand"
 
     # Restore Temps after IDM Mesh
@@ -170,15 +170,15 @@ gcode:
     # LOAD FILAMENT
     G90
     G92 E0 
-    G1 X{macro.purge_park_x} Y{macro.purge_park_x}
-    G1 E{macro.start_purge_long_lenght} F{macro.start_purge_long_speed*60}
+    G1 X{macro.purge_park_x Y{macro.purge_park_x}
+    G1 E{macro.start_purge_long_lenght} F{macro.start_purge_long_speed * 60}
     G92 E0
     G4 P4000
-    G1 E{macro.start_purge_short_lenght} F{macro.start_purge_short_speed*60}
+    G1 E{macro.start_purge_short_lenght} F{macro.start_purge_short_speed * 60}
     G92 E0
     G11
     G11
-    G1 E-3 F{macro.start_purge_long_speed*60}
+    G1 E-3 F{macro.start_purge_long_speed * 60}
     G92 E0
 
 [gcode_macro PURGE_LINE]
@@ -244,9 +244,13 @@ gcode:
     {% set y_med = printer.toolhead.axis_maximum.y / 2 %}
     {% set x_max = printer.toolhead.axis_maximum.x %}
     {% set y_max = printer.toolhead.axis_maximum.y %}
+
+    # Custom filament retraction
+    {% set cooling_pause = params.PAUSE|default(macro.cooling_pause)|int %}
+    {% set start_purge_short_lenght = params.SHORT_LENGHT|default(macro.start_purge_short_lenght)|int %}
+    {% set start_purge_short_speed = params.SHORT_SPEED|default(macro.start_purge_short_speed)|int %}
+
     G0 X{x_max} Y{y_max} F18000 # Avoid last blob
-
-
     
     M118 Z SAFE
     Z_SAFE ; Raise Z more
@@ -256,18 +260,17 @@ gcode:
     M118 Short retract
     G91 ; Relative positioning
     # Retract short
-    G1 E-{macro.start_purge_short_lenght} F{macro.start_purge_short_speed*60}
+    G1 E-{start_purge_short_lenght} F{start_purge_short_speed * 60}
     DISABLE_EXTRUDER
     # G10 ; Firmware Retraction
     G92 E0
-    
-    
+       
 
     ## Go to center
     M118 Go to center
     G90
-    G1 X{x_med} Y{y_med} F{macro.speed_move*6}
-    # G1 X{macro.cooling_park_x} Y{macro.cooling_park_x} F{macro.speed_move}
+    G1 X{x_med} Y{y_med} F{macro.speed_move * 60}
+    # G1 X{macro.cooling_park_x} Y{macro.cooling_park_x} F{macro.speed_move * 60}
 
     ##  Steppers OFF
     M118 Steppers OFF
@@ -278,11 +281,12 @@ gcode:
     # M118 Cooling at center
     # M106 S26 ; Fan 10%
     
-    G4 P1000  ; pause between retractions 
+    M118 Pause {cooling_pause} sec.
+    G4 P{cooling_pause * 1000}
 
     M118 Long retract
     # Retract long 
-    G1 E-{macro.start_purge_long_lenght} F{macro.start_purge_long_speed*60}
+    G1 E-{macro.start_purge_long_lenght} F{macro.start_purge_long_speed * 60}
 
     # FILAMENT OUT
     SAVE_VARIABLE VARIABLE=z_filament_out VALUE=True  # Filament out of hotend
