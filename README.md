@@ -35,6 +35,7 @@ Or rename **advanced_macro.cfg** in **°ADV_macro.cfg** (because it will be over
 and in your **printer.cfg** add
 ```
 [include °ADV_macro.cfg]
+[include °START.cfg]
 ```
 
 # Moonraker.conf
