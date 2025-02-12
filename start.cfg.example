@@ -32,7 +32,7 @@ gcode:
     WEBCAM_ON
     BACKUP_MOVE
     # BACKUP_CLEAN
-    LOGS_KLIPPER_CLEAN
+    # LOGS_KLIPPER_CLEAN
     LOG_CPU_CLEAN
 
     {% if printer['gcode_macro BRUSH_CLEAN_OFF'] is defined %}
@@ -60,6 +60,10 @@ gcode:
     ## Test BL_Touch servo
     {% if printer['gcode_macro BL_TEST'] is defined %}
       BL_TEST
+    {% endif %}
+    ## Test Microprobe
+    {% if printer['gcode_macro PROBE_TEST'] is defined %}
+      PROBE_TEST
     {% endif %}
 
     ## STRIPS
@@ -92,45 +96,44 @@ gcode:
 
     LOG_CPU_CLEAN
     LOGS_KLIPPER_CLEAN
-    RUN_SHELL_COMMAND CMD=LOG_CPU_START
+    # RUN_SHELL_COMMAND CMD=LOG_CPU_START
     SAVE_LAST_FILE   # Recall as last MACRO in slicer: needed to generate PLR gcode without purge column in the Start Gcode of slicer
     
     DISABLE_EXTRUDER
     HOMING_IF_NOT
     #######
     # PRECISE_HOMING
-    # G1 Z20 F5000
     
-    # ORCA SLICER
+    ##  ORCA SLICER
     {% set BED_TEMP = params.BED_TEMP|default(70)|int %}
     {% set EXTRUDER_TEMP = params.EXTRUDER_TEMP|default(225)|int %}
     
-    # Heat nozzle for probing
+    ## Heat nozzle for probing
     M104 S{EXTRUDER_TEMP}
     # Heat bed for probing
     M140 S{BED_TEMP}
 
-    # IDM need Bed heater off if it is AC >500w
+    ## IDM need Bed heater off if it is AC >500w
     M140 S0
     M190 S0
     Z_TILT_ADJUST    
     MESH_PRINT  # KAMP MESH  
     
-    # PARK FOR HEATING
+    ## PARK FOR HEATING
     _TOOLHEAD_PARK_PAUSE_CANCEL
     SET_FAN_SPEED FAN=fan0 SPEED=1 # to detach the petg from the nozzle
     # G1 X0 Y0 Z5 F{macro.speed_move * 60}
     Z_SAFE Z=50  # Height "brush in your hand"
 
-    # Restore Temps after IDM Mesh
-    # Heat nozzle for probing
+    ## Restore Temps after IDM Mesh
+    ## Heat nozzle for probing
     M104 S{EXTRUDER_TEMP}
-    # Heat bed for probing
+    ## Heat bed for probing
     M140 S{BED_TEMP}
 
-    # Heat nozzle for probing
+    ## Heat nozzle for probing
     M109 S{EXTRUDER_TEMP}
-    # Heat bed for probing
+    ## Heat bed for probing
     M190 S{BED_TEMP}
 
     {% if printer.save_variables.variables.z_filament_out %}
@@ -279,7 +282,7 @@ gcode:
     M18 ; Klipper disables All Motors 
     M84 ; Klipper disables All Motors
   
-    # Cooldown 20%
+    ## Cooldown 20%
     # M118 Cooling at center
     # M106 S26 ; Fan 10%
     
@@ -287,14 +290,14 @@ gcode:
     G4 P{cooling_pause * 1000}
 
     M118 Long retract
-    # Retract long 
+    ## Retract long 
     G1 E-{start_purge_long_lenght} F{start_purge_long_speed * 60}
 
     # FILAMENT OUT
     SAVE_VARIABLE VARIABLE=z_filament_out VALUE=True  # Filament out of hotend
     DISABLE_EXTRUDER
 
-    # Cooldown
+    ## Cooldown
     M118 Turn Off Heaters
     TURN_OFF_HEATERS
     M106 S51 ; Fan 20%
@@ -313,7 +316,7 @@ gcode:
     M107 ; Turn-off fan
     
     # SET_FAN_SPEED FAN=RSCS SPEED=0
-    # end_tune ; Beeper
+    # end_tune # Beeper/Buzzer
 
 
     # Remove Mesh "print"
@@ -321,7 +324,7 @@ gcode:
     
     clear_last_file   # PLR
     
-    # STOP SERVICES
+    ## STOP SERVICES LOG CPU
     RUN_SHELL_COMMAND CMD=LOG_CPU_STOP
     # WEBCAM_OFF
     
