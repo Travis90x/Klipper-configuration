@@ -12,6 +12,10 @@ echo Creating welcome scripts
 sudo rm -f /usr/local/bin/welcome
 sudo ln -s ~/printer_data/config/config/scripts/welcome/welcome.sh /usr/local/bin/welcome
 
+echo Creating power scripts
+sudo rm -f /usr/local/bin/shutdown_host
+sudo ln -s ~/printer_data/config/config/scripts/power/shutdown_host.sh /usr/local/bin/shutdown_host
+
 echo Creating webcam scripts
 sudo rm -f /usr/local/bin/webcam_check
 sudo ln -s ~/printer_data/config/config/scripts/webcam/webcam_check.sh /usr/local/bin/webcam_check
