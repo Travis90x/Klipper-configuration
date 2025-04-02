@@ -1,1 +1,1 @@
-echo "$1" | sudo systemctl disable KlipperScreen
+echo "$1" | sudo -S systemctl disable KlipperScreen
