@@ -2,7 +2,7 @@
 
 MaxFileSize=204800
 DaysToKeep=3
-log_dir="/home/pi/printer_data/config/config/scripts/logs/CPU"
+log_dir="$HOME/printer_data/config/config/scripts/logs/CPU"
 log_file="$log_dir/CPU.txt"
 
 
