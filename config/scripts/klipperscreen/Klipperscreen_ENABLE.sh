@@ -1,1 +1,1 @@
-echo "$1" | sudo systemctl enable KlipperScreen
+echo "$1" | sudo -S systemctl enable KlipperScreen
