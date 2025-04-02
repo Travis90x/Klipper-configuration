@@ -1,3 +1,1 @@
-if systemctl is-active --quiet KlipperScreen; then
-  service KlipperScreen stop
-fi
+echo "$1" | sudo systemctl stop Klipperscreen
