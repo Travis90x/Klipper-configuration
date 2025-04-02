@@ -1,4 +1,4 @@
-echo "$1" | sudo apt-get install android-tools-adb
+echo "$1" | sudo -S apt-get install android-tools-adb
 cd ~/KlipperScreen/scripts
 rm launch_KlipperScreen.sh
 cp sample-android-adb.sh launch_KlipperScreen.sh
