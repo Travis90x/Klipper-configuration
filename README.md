@@ -93,6 +93,9 @@ Go to settings, General, Mainsail Settings in Moonraker DB, Restore, select **ba
 
 ![Macro Mainsail](https://github.com/Travis90x/Klipper-configuration/assets/23300077/66e5309e-1721-48f7-8b51-a8f002240f1e)
 
+![immagine](https://github.com/user-attachments/assets/faada3aa-bd04-4590-98b6-edef149749bc)
+
+![immagine](https://github.com/user-attachments/assets/9751a355-3d32-42e5-ae79-88493617cb12)
 
 
 #  Home Assistant + Alexa
