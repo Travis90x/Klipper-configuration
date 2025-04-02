@@ -66,12 +66,18 @@ sudo rm -f /usr/local/bin/show_graph_y
 sudo ln -s ~/printer_data/config/config/scripts/input-shaping/show_graph_y.sh /usr/local/bin/show_graph_y
 
 echo Creating KlipperScreen scripts
-sudo rm /usr/local/bin/Klipperscreen_USB
+sudo rm -f /usr/local/bin/Klipperscreen_USB
 sudo ln -s ~/printer_data/config/config/scripts/klipperscreen/Klipperscreen_USB.sh /usr/local/bin/Klipperscreen_USB
-sudo rm /usr/local/bin/Klipperscreen_WIFI
+sudo rm -f /usr/local/bin/Klipperscreen_WIFI
 sudo ln -s ~/printer_data/config/config/scripts/klipperscreen/Klipperscreen_WIFI.sh /usr/local/bin/Klipperscreen_WIFI
-sudo rm /usr/local/bin/Klipperscreen_STOP
+sudo rm -f /usr/local/bin/Klipperscreen_STOP
 sudo ln -s ~/printer_data/config/config/scripts/klipperscreen/Klipperscreen_STOP.sh /usr/local/bin/Klipperscreen_STOP
+sudo rm -f /usr/local/bin/Klipperscreen_START
+sudo ln -s ~/printer_data/config/config/scripts/klipperscreen/Klipperscreen_START.sh /usr/local/bin/Klipperscreen_START
+sudo rm -f /usr/local/bin/Klipperscreen_ENABLE
+sudo ln -s ~/printer_data/config/config/scripts/klipperscreen/Klipperscreen_ENABLE.sh /usr/local/bin/Klipperscreen_ENABLE
+sudo rm -f /usr/local/bin/Klipperscreen_DISABLE
+sudo ln -s ~/printer_data/config/config/scripts/klipperscreen/Klipperscreen_DISABLE.sh /usr/local/bin/Klipperscreen_DISABLE
 
 echo Creating LOGS scripts
 sudo rm /usr/local/bin/LOGS_KLIPPER_CLEAN
