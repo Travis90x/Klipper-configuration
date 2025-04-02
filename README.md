@@ -97,6 +97,8 @@ Go to settings, General, Mainsail Settings in Moonraker DB, Restore, select **ba
 
 ![immagine](https://github.com/user-attachments/assets/9751a355-3d32-42e5-ae79-88493617cb12)
 
+![immagine](https://github.com/user-attachments/assets/8952d387-5dfa-4cda-a72c-987623e9cc94)
+
 
 #  Home Assistant + Alexa
 
