@@ -1,1 +1,1 @@
-echo "$1" | sudo systemctl start KlipperScreen
+echo "$1" | sudo -S systemctl start KlipperScreen
