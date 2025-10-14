@@ -1,5 +1,5 @@
 ;===== machine: X1 by TS90X - END GCODE ====================
-;===== date: 20250826 =====================
+;===== date: 20251014 =====================
 M400 ; wait for buffer to clear
 G92 E0 ; zero the extruder
 G1 E-0.8 F1800 ; retract
@@ -72,8 +72,8 @@ G1 Y265 F3000
 M400 ; wait all motion done
 M17 S
 M17 Z0.4 ; lower z motor current to reduce impact if there is something in the bottom
-{if (max_layer_z + 150.0) < 250}
-    G1 Z{max_layer_z + 150.0} F600
+{if (max_layer_z + 50.0) < 250}
+    G1 Z{max_layer_z + 50.0} F600
 ;    G1 Z{max_layer_z +98.0}
 {else}
     G1 Z256 F600
