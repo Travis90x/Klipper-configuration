@@ -1,5 +1,5 @@
 ;===== machine: X1 by TS90X - START GCODE ====================
-;===== date: 20251014 =====================
+;===== date: 20251110 =====================
 ;===== start printer sound ================
 M17
 M400 S1
@@ -670,7 +670,7 @@ M1002 gcode_claim_action : 0
 M973 S4 ; turn off scanner
 M400 ; wait all motion done before implement the emprical L parameters
 ;M900 L500.0 ; Empirical parameters
-M109 S[nozzle_temperature_initial_layer]
+;M109 S[nozzle_temperature_initial_layer]
 M960 S1 P0 ; turn off laser
 M960 S2 P0 ; turn off laser
 M106 S0 ; turn off fan
@@ -681,11 +681,88 @@ M975 S1 ; turn on mech mode supression
 G90
 M83
 T1000
-;===== purge line to wipe the nozzle ============================
+
+
+;  ██████╗ ██████╗ ██╗   ██╗███████╗██╗  ██╗
+;  ██╔══██╗██╔══██╗██║   ██║██╔════╝██║  ██║
+;  ██████╔╝██████╔╝██║   ██║███████╗███████║
+;  ██╔══██╗██╔══██╗██║   ██║╚════██║██╔══██║
+;  ██████╔╝██║  ██║╚██████╔╝███████║██║  ██║
+;  ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝
+;  
+;===== Heat & Scrubbler nozzle start ==================
+M106 S0
+G90 ; ensure absolute mode (should already be in it, but here for safety)
+G1 Z10 F1200 ; Make sure we don't hit the bed during wiping passes
+G1 X65 Y265 ; return to start position.
+
+M109 S{nozzle_temperature_initial_layer[initial_extruder]}
 G1 E{-retraction_length[initial_no_support_extruder]} F1800
-G1 X18.0 Y2.5 Z0.8 F18000.0;Move to start position
-G1 E{retraction_length[initial_no_support_extruder]} F1800
-M109 S{nozzle_temperature_initial_layer[initial_no_support_extruder]}
+M106 S255
+M400
+
+G1 X128 Y265 F20000; start position, should be very close to where steel plate rub seq. ended
+G91 ; relative mode
+G1 X-45 F20000  ; run snake pattern from top back to front, run at max acceleration.
+G1 Y-0.5 ; increment y slightly , and repeat back/forth while incrementing y.
+G1 X45  
+G1 Y-0.5
+G1 X-45 
+G1 Y-0.5
+G1 X45
+G1 Y-0.5
+G1 X-45 
+G1 Y-0.5
+G1 X45  
+G90 ; restore to absolute mode
+G1 X65 Y265 ; return to start position.
+
+G1 E{-retraction_length[initial_no_support_extruder]} F1800
+G1 F3000 ; restore previous acceleration
+M106 S0
+
+
+
+;===== purge line to wipe the nozzle ============================
+;G1 E{-retraction_length[initial_no_support_extruder]} F1800
+;G1 X18.0 Y2.5 Z0.8 F18000.0;Move to start position
+;G1 E{retraction_length[initial_no_support_extruder]} F1800
+;M109 S{nozzle_temperature_initial_layer[initial_no_support_extruder]}
+;G1 Z0.2
+;G0 X239 E15 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+;G0 Y12 E0.7 F{outer_wall_volumetric_speed/(0.3*0.5)/4* 60}
+
+
+;===== nozzle load line - adaptive purge ===============================
+
+M975 S1 ; turn on vibration supression
+G90
+M83
+T1000
+;check if okay to default to KAMP
+{if ((first_layer_print_min[0] - 5 < 18) && (first_layer_print_min[1]-5 < 28)) || (first_layer_print_min[0] < 6) || (first_layer_print_min[1] < 6) || (first_layer_print_min[0] > 200)}
+G1 Z5
+G1 X255.5 Y0.5 F18000;Move to start position
 G1 Z0.2
-G0 X239 E15 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
-G0 Y12 E0.7 F{outer_wall_volumetric_speed/(0.3*0.5)/4* 60}
+M109 S{nozzle_temperature_initial_layer[initial_extruder]}
+G0 E2 F300
+M400
+G1 X230.5 E25 F300
+G0 X210 E1.36 F{outer_wall_volumetric_speed/(0.3*0.5) * 60}
+G0 X186 E-0.5 F18000 ;Move quickly away
+G1 Z1.5 E0.5 F4000;
+{else} ;Fallback
+G1 Z5
+G1 X{first_layer_print_min[0]-2} Y{first_layer_print_min[1]-2} Z1.5 F18000;Move to start position
+G1 Z0.8
+M109 S{nozzle_temperature_initial_layer[initial_extruder]}
+
+G1 E{retraction_length[initial_no_support_extruder]} F1800
+G0 E2 F300
+M400
+G1 X{first_layer_print_min[0]+15} E20 F150
+G1 Z0.2
+G0 X{first_layer_print_min[0]+45} F18000 ;Move quickly away
+{endif}
+M400
+G92 E0
