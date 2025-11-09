@@ -1,5 +1,5 @@
 ;===== machine: A1 Travis90x ==============
-;===== Start G-Code date: 20251012 ========
+;===== Start G-Code date: 20251110 ========
 G392 S0  ; turn off clog detection
 M9833.2
 ;M400
@@ -178,6 +178,7 @@ M83
 G0 X-20 F20000
 M109 S{nozzle_temperature_initial_layer[initial_extruder]}
 G0 X-48.2 F5000  ; remove blob slowly
+M104 S0
 M106 S255
 G1 E-1 F1200
 
@@ -237,7 +238,7 @@ G0 X-48.2 F3000
 ;   
 
 G90
-G0 Z0.8 F1200 ; brush height
+G0 Z0.7 F1200 ; brush height
 G0 X55 Y262.5 F6000 ; start brush point
 
 G91
@@ -271,9 +272,12 @@ G0 Z5.000 F1200
 M106 S0
 ; M109 S[nozzle_temperature_initial_layer]
 G28 X; re-homing XY without blob
-G90
+
+G91
 G0 Z5 F1200
-G0 X128 Y128 F6000
+G90
+
+G0 X135 Y261 F6000
 G28 Z P0 T300 ; homing Z with dirty nozzle
 G0 X-48.2 F30000
 
@@ -287,7 +291,7 @@ G0 X-48.2 F30000
 ;   
 
 G90
-G0 Z0.8 F1200 ; brush height
+G0 Z0.7 F1200 ; brush height
 G0 X55 Y262.5 F6000 ; start brush point
 
 G91
@@ -305,7 +309,7 @@ G0 X45
 G90
 
 G0 X-48.2 F20000
-G0 Z5.000 F1200
+G0 Z5 F1200
 
 ; nozzle cleaned
 
@@ -329,14 +333,16 @@ G0 Z5.000 F1200
 
 
 G90
-G0 Y262 F6000
-G0 X128 F18000
+G0 Y262 X128 F6000
+
 M1002 judge_flag build_plate_detect_flag
 M622 S1
   G39.4
   G90
   G0 Z5 F1200
 M623
+G0 X0 F30000
+G0 X-48.2 F20000
 
 ;M400
 ;M73 P1.717
@@ -782,7 +788,7 @@ G29.2 S0 ; turn off ABL - Bed Mesh
 M106 S255
 
 G90
-G0 Z1.1 F1200   ; first one brush height
+G0 Z1 F1200   ; first one brush height
 G0 X55 Y262.5 F6000 ; start brush point slowly, dirty nozzle after load filament
 
 G91
@@ -829,7 +835,7 @@ M106 P1 S255
 ;  ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝
 
 G90
-G0 Z0.8 F1200 ; second brush height
+G0 Z0.7 F1200 ; second brush height
 G0 X55 Y262.5 F6000 ; start brush point
 
 G91
@@ -1220,7 +1226,7 @@ G0 X-48.2 F3000
 
 G90
 G1 E0.2 F1200
-G0 Z1.1 F1200 ; brush height
+G0 Z1 F1200 ; brush height
 G0 X55 Y262.5 F6000 ; start brush point
 
 G1 E-0.1 F1200
@@ -1309,4 +1315,36 @@ G29.1 Z{-0.02} ; for Textured PEI Plate
 ;===== for Textured PEI Plate end =====
 
 
+G92 E0
+
+;===== nozzle load line - adaptive purge ===============================
+
+M975 S1 ; turn on vibration supression
+G90
+M83
+T1000
+;check if okay to default to KAMP
+{if ((first_layer_print_min[0] - 5 < 18) && (first_layer_print_min[1]-5 < 28)) || (first_layer_print_min[0] < 6) || (first_layer_print_min[1] < 6) || (first_layer_print_min[0] > 200)}
+G1 Z5
+G1 X255.5 Y0.5 F18000;Move to start position
+G1 Z0.2
+M109 S{nozzle_temperature_initial_layer[initial_extruder]}
+G0 E2 F300
+M400
+G1 X230.5 E25 F300
+G0 X210 E1.36 F{outer_wall_volumetric_speed/(0.3*0.5) * 60}
+G0 X186 E-0.5 F18000 ;Move quickly away
+G1 Z1.5 E0.5 F4000;
+{else} ;Fallback
+G1 Z5
+G1 X{first_layer_print_min[0]-2} Y{first_layer_print_min[1]-2} Z1.5 F18000;Move to start position
+G1 Z0.8
+M109 S{nozzle_temperature_initial_layer[initial_extruder]}
+G0 E2 F300
+M400
+G1 X{first_layer_print_min[0]+15} E20 F150
+G1 Z0.2
+G0 X{first_layer_print_min[0]+45} F18000 ;Move quickly away
+{endif}
+M400
 G92 E0
