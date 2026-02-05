@@ -1,5 +1,5 @@
 ;===== machine: A1 Travis90x ==============
-;===== Start G-Code date: 20251110 ========
+;===== Start G-Code date: 2020502 ========
 G392 S0  ; turn off clog detection
 M9833.2
 ;M400
@@ -18,7 +18,7 @@ M1002 set_filament_type:{filament_type[initial_no_support_extruder]}
 ; M104 S140  ; Soft the material sticked on nozzle for unprecise homing
 ; M104 S{nozzle_temperature_initial_layer[initial_extruder]}
 ; heat bed
-;M140 S[bed_temperature_initial_layer_single]
+M140 S[bed_temperature_initial_layer_single]
 
 
 ;=====start printer sound ===================
@@ -1317,34 +1317,40 @@ G29.1 Z{-0.02} ; for Textured PEI Plate
 
 G92 E0
 
-;===== nozzle load line - adaptive purge ===============================
+;===== nozzle load line - adaptive purge =====	
+;===== by Travis90x 29.01.2026
 
 M975 S1 ; turn on vibration supression
 G90
 M83
 T1000
-;check if okay to default to KAMP
-{if ((first_layer_print_min[0] - 5 < 18) && (first_layer_print_min[1]-5 < 28)) || (first_layer_print_min[0] < 6) || (first_layer_print_min[1] < 6) || (first_layer_print_min[0] > 200)}
-G1 Z5
-G1 X255.5 Y0.5 F18000;Move to start position
-G1 Z0.2
 M109 S{nozzle_temperature_initial_layer[initial_extruder]}
-G0 E2 F300
-M400
-G1 X230.5 E25 F300
-G0 X210 E1.36 F{outer_wall_volumetric_speed/(0.3*0.5) * 60}
-G0 X186 E-0.5 F18000 ;Move quickly away
-G1 Z1.5 E0.5 F4000;
-{else} ;Fallback
 G1 Z5
-G1 X{first_layer_print_min[0]-2} Y{first_layer_print_min[1]-2} Z1.5 F18000;Move to start position
-G1 Z0.8
-M109 S{nozzle_temperature_initial_layer[initial_extruder]}
-G0 E2 F300
-M400
-G1 X{first_layer_print_min[0]+15} E20 F150
-G1 Z0.2
-G0 X{first_layer_print_min[0]+45} F18000 ;Move quickly away
+
+; --- choose position ---
+{if (first_layer_print_min[1] > 4)} ;Front free
+G0 X{first_layer_print_min[0]} Y{first_layer_print_min[1]-4} Z1.5 F18000 ;Move to start position
+{else} ; Front occupied
+{if (first_layer_print_max[1] < 252)} ;Back free
+G0 X{first_layer_print_min[0]} Y{first_layer_print_max[1]+4} Z1.5 F18000 ;Move to start position
+{else} ; Front and back occupied
+G0 X110 Y262.5 Z1.5 F18000 ;Move to start position
 {endif}
+{endif}
+
+G1 Z0.8
+G1 E2 F300
+G92 E0
+M400
+G91 ;Relative mode
+G1 X15 E20 F150
+G92 E0
+G90
+G0 Z0.4
+G91
+G0 X30 F18000 ;Move quickly away
+G90 ;Absolute mode
+G1 E-.2 F300
 M400
 G92 E0
+; ---- #### END START G-CODE #### ----
