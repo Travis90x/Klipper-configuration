@@ -8,26 +8,16 @@ Stato attuale: **solo attivazione/disattivazione degli include**. Editing dei
 valori delle macro (es. coordinate) e rilevamento conflitti tra include
 alternativi non sono ancora implementati.
 
-## Installazione ed avvio (test, branch Klipper_AI_macro)
+## Installazione ed avvio
 
-Per ora, mentre questo branch è in test, il repo va clonato **isolato in una
-cartella a parte nella home** (`~/Klipper_AI_Macro`), non copiato dentro
-`~/printer_data/config/` (vedi il `README.md` principale) — così non si
-tocca la configurazione usata in produzione.
+Dopo aver copiato il repo in `~/printer_data/config/` (vedi il `README.md`
+principale), la cartella `ai/` si trova direttamente dentro
+`~/printer_data/config/`, allo stesso livello di `advanced_macro.cfg` e di
+`config/` — **non** dentro `config/`.
 
 ```
-cd ~/Klipper_AI_Macro/ai
+cd ~/printer_data/config/ai
 ```
-
-Con questa modalità il servizio legge/scrive `advanced_macro.cfg` (o
-`°ADV_macro.cfg`, se creato) dentro `~/Klipper_AI_Macro/`, non quello reale
-della stampante.
-
-> Dopo il merge in `main`, l'uso in produzione sarà: copiare il repo in
-> `~/printer_data/config/` come da `README.md` principale, e la cartella
-> `ai/` si troverà allo stesso livello di `advanced_macro.cfg` e di
-> `config/` — quindi `cd ~/printer_data/config/ai` invece del percorso qui
-> sopra. Il resto delle istruzioni sotto è identico in entrambi i casi.
 
 ### 1) Verifica che la porta 7136 sia libera
 
@@ -46,12 +36,10 @@ passo 3, es. `PORT=7137 python3 app.py`.
 
 ### 2) Verifica/crea °ADV_macro.cfg
 
-Il servizio modifica `°ADV_macro.cfg` (in produzione è la copia realmente
-inclusa dalla stampante, vedi il `README.md` principale). Se non esiste
-ancora, va creata copiando il master `advanced_macro.cfg`. I comandi sotto
-sono relativi: eseguili da dentro `ai/` (come al passo precedente) e
-funzionano sia in test (`~/Klipper_AI_Macro/`) sia in produzione
-(`~/printer_data/config/`), senza doverli riscrivere:
+Il servizio modifica `°ADV_macro.cfg`, la copia realmente inclusa dalla
+stampante (vedi il `README.md` principale). Se non esiste ancora, va creata
+copiando il master `advanced_macro.cfg`. Esegui i comandi da dentro `ai/`
+(come al passo precedente):
 
 ```
 if [ -f ../°ADV_macro.cfg ]; then
