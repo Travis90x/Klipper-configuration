@@ -51,12 +51,12 @@ def parse_includes(path):
             continue
         target = m.group('target').strip()
         enabled = m.group('hash') is None
-        label = label_from_comment(lines, lineno) or label_from_target(target)
         includes.append({
             'line': lineno,
             'target': target,
             'enabled': enabled,
-            'label': label,
+            'title': label_from_target(target),
+            'description': label_from_comment(lines, lineno),
         })
     return includes
 

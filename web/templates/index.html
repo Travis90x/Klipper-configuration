@@ -31,7 +31,7 @@
     color: var(--text);
     padding: 2rem 1rem;
   }
-  .wrap { max-width: 640px; margin: 0 auto; }
+  .wrap { max-width: min(920px, 94vw); margin: 0 auto; }
   h1 { font-size: 1.4rem; margin-bottom: 0.25rem; }
   .file-path {
     font-family: ui-monospace, Menlo, Consolas, monospace;
@@ -51,15 +51,21 @@
     padding: 0.85rem 1rem;
     margin-bottom: 0.6rem;
   }
-  .row-text { min-width: 0; }
+  .row-text { min-width: 0; flex: 1; }
   .row-label { font-weight: 600; }
   .row-target {
     font-family: ui-monospace, Menlo, Consolas, monospace;
-    font-size: 0.75rem;
+    font-size: 0.78rem;
     color: var(--muted);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    overflow-wrap: anywhere;
+    margin-top: 0.2rem;
+  }
+  .row-description {
+    font-size: 0.85rem;
+    color: var(--muted);
+    overflow-wrap: anywhere;
+    line-height: 1.4;
+    margin-top: 0.35rem;
   }
   .switch {
     position: relative;
@@ -126,12 +132,18 @@ function renderIncludes(data) {
     text.className = 'row-text';
     const label = document.createElement('div');
     label.className = 'row-label';
-    label.textContent = item.label;
+    label.textContent = item.title;
     const target = document.createElement('div');
     target.className = 'row-target';
     target.textContent = item.target;
     text.appendChild(label);
     text.appendChild(target);
+    if (item.description) {
+      const description = document.createElement('div');
+      description.className = 'row-description';
+      description.textContent = item.description;
+      text.appendChild(description);
+    }
 
     const switchLabel = document.createElement('label');
     switchLabel.className = 'switch';
