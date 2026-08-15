@@ -24,12 +24,18 @@ def resolve_config_file():
 
 
 def label_from_comment(lines, include_lineno):
-    for i in range(include_lineno - 1, -1, -1):
+    i = include_lineno - 1
+    while i >= 0:
         stripped = lines[i].strip()
         if not stripped:
+            i -= 1
             continue
         if stripped.startswith('#'):
-            return stripped.lstrip('#').strip()
+            text = stripped.lstrip('#').strip()
+            if text.startswith('IT:'):
+                i -= 1
+                continue
+            return text
         break
     return None
 
