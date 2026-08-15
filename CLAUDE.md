@@ -76,6 +76,30 @@ In diversi file la stessa sezione compare due volte (`[duplicate_pin_override]`,
 `[tmc2209 extruder]`, `[board_pins ...]`, alcune macro). **Sono alternative:**
 l'utente ne attiva una e commenta l'altra. Non vanno unite né deduplicate.
 
+Il meccanismo di scelta più comune non è commentare singole righe dentro una
+sezione, ma commentare/decommentare interi `[include ...]` verso file diversi,
+es.:
+
+```
+[include config/.../tmc_motor_uart.cfg]
+#[include config/.../tmc_motor_spi.cfg]
+```
+
+per passare da SPI a UART. Quando invece la stessa sezione (es.
+`[tmc2209 extruder]`) compare due volte nello **stesso** file con opzioni
+diverse (`stealthchop_threshold` in un blocco, `uart_pin` nell'altro), Klipper
+non dà errore: la parsa con `configparser.RawConfigParser(strict=False, ...)`,
+che **accoda/unisce** le opzioni delle due occorrenze nella stessa sezione
+finale. Questo è il pattern voluto e va lasciato com'è.
+
+**Diverso invece è il caso di un `[include ...]` con lo stesso identico target,
+ripetuto due volte nello stesso file, entrambe le righe attive (non
+commentate).** Non è una scelta tra alternative (non ci sono due file diversi
+tra cui scegliere): è la stessa identica inclusione duplicata per errore di
+copia-incolla. Questo va corretto rimuovendo la ripetizione, come già fatto per
+`Vivedino_Troodon_V2_adv_macro.cfg` (includeva due volte, entrambe attive,
+`config/scripts/input-shaping/input-shaping.cfg` e `shaper-graphs.cfg`).
+
 ## Se devi validare la sintassi
 
 Klipper usa Jinja2 con delimitatori **non standard**: `{% %}` per i blocchi ma
