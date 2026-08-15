@@ -10,7 +10,17 @@ press CTRL+F5 to clean the cache of the browser.
 ```
 cd
 git clone -b Klipper_AI_macro https://github.com/Travis90x/Klipper-configuration.git ~/Klipper_AI_Macro
+
+mkdir -p ~/Klipper_AI_Macro/backup
+if [ -d ~/printer_data/config ]; then
+    cp -r ~/printer_data/config ~/Klipper_AI_Macro/backup/config_$(date +%Y%m%d_%H%M%S)
+    echo "Backup di ~/printer_data/config creato in ~/Klipper_AI_Macro/backup/"
+else
+    echo "Nessuna ~/printer_data/config esistente, backup saltato"
+fi
+
 mkdir -p ~/printer_data/config/ && cp -r ~/Klipper_AI_Macro/* ~/printer_data/config/
+rm -rf ~/printer_data/config/backup
 sudo chown -R $USER: ~/printer_data
 sudo find ~/printer_data/config/config/scripts/ -type f -name "*.sh" -exec chmod +x {} \;
 bash ~/printer_data/config/config/scripts/update/klipper-configuration/klipper-configuration.sh
@@ -20,12 +30,32 @@ bash ~/printer_data/config/config/scripts/update/klipper-configuration/klipper-c
 ```
 cd
 cd ~/Klipper_AI_Macro && git pull --rebase && cd -
+
+mkdir -p ~/Klipper_AI_Macro/backup
+if [ -d ~/printer_data/config ]; then
+    cp -r ~/printer_data/config ~/Klipper_AI_Macro/backup/config_$(date +%Y%m%d_%H%M%S)
+    echo "Backup di ~/printer_data/config creato in ~/Klipper_AI_Macro/backup/"
+else
+    echo "Nessuna ~/printer_data/config esistente, backup saltato"
+fi
+
 mkdir -p ~/printer_data/config/ && cp -r ~/Klipper_AI_Macro/* ~/printer_data/config/
+rm -rf ~/printer_data/config/backup
 sudo chown -R $USER: ~/printer_data
 sudo find ~/printer_data/config/config/scripts/ -type f -name "*.sh" -exec chmod +x {} \;
 bash ~/printer_data/config/config/scripts/update/klipper-configuration/klipper-configuration.sh
 ```
 or update using the Macro **UPDATE KLIPPER CONF** in Klipper or **UPDATE MANAGER** in Moonraker
+
+La cartella `~/Klipper_AI_Macro/backup/` non è tracciata da git (vedi
+`.gitignore`): contiene una copia della tua vera configurazione, con
+eventuali dati personali, e non deve mai finire nel repo pubblico. Ogni
+backup viene salvato con la data/ora, quelli vecchi non si sovrascrivono —
+puoi cancellarli a mano quando non ti servono più. Il comando `rm -rf
+~/printer_data/config/backup` subito dopo la copia serve solo a togliere la
+cartella `backup` duplicata dentro `printer_data/config` (il `cp -r .../*`
+la copia insieme al resto): il backup vero resta comunque al sicuro in
+`~/Klipper_AI_Macro/backup/`.
 
 # Printer.cfg
 
