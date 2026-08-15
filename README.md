@@ -9,7 +9,7 @@ press CTRL+F5 to clean the cache of the browser.
 # Download & Install
 ```
 cd
-git clone https://github.com/Travis90x/Klipper-configuration.git
+git clone -b Klipper_AI_macro https://github.com/Travis90x/Klipper-configuration.git
 mkdir -p ~/printer_data/config/ && cp -r ~/Klipper-configuration/* ~/printer_data/config/
 sudo chown -R $USER: ~/printer_data
 sudo find ~/printer_data/config/config/scripts/ -type f -name "*.sh" -exec chmod +x {} \;
@@ -43,7 +43,7 @@ add this in moonraker.conf to update klipper-configuration
 ```
 [update_manager klipper-configuration]
 type: git_repo
-primary_branch: main
+primary_branch: Klipper_AI_macro
 path: ~/Klipper-configuration
 origin: https://github.com/Travis90x/Klipper-configuration.git
 install_script: config/scripts/update/klipper-configuration/klipper-configuration.sh # Deprecated by Moonraker
