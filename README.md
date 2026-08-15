@@ -22,8 +22,8 @@ fi
 mkdir -p ~/printer_data/config/ && cp -r ~/Klipper_AI_Macro/* ~/printer_data/config/
 rm -rf ~/printer_data/config/backup
 sudo chown -R $USER: ~/printer_data
-sudo find ~/printer_data/config/config/scripts/ -type f -name "*.sh" -exec chmod +x {} \;
-bash ~/printer_data/config/config/scripts/update/klipper-configuration/klipper-configuration.sh
+sudo find ~/printer_data/config/macro/scripts/ -type f -name "*.sh" -exec chmod +x {} \;
+bash ~/printer_data/config/macro/scripts/update/klipper-configuration/klipper-configuration.sh
 ```
 
 # Manual Update
@@ -42,8 +42,8 @@ fi
 mkdir -p ~/printer_data/config/ && cp -r ~/Klipper_AI_Macro/* ~/printer_data/config/
 rm -rf ~/printer_data/config/backup
 sudo chown -R $USER: ~/printer_data
-sudo find ~/printer_data/config/config/scripts/ -type f -name "*.sh" -exec chmod +x {} \;
-bash ~/printer_data/config/config/scripts/update/klipper-configuration/klipper-configuration.sh
+sudo find ~/printer_data/config/macro/scripts/ -type f -name "*.sh" -exec chmod +x {} \;
+bash ~/printer_data/config/macro/scripts/update/klipper-configuration/klipper-configuration.sh
 ```
 or update using the Macro **UPDATE KLIPPER CONF** in Klipper or **UPDATE MANAGER** in Moonraker
 
@@ -76,7 +76,7 @@ type: git_repo
 primary_branch: Klipper_AI_macro
 path: ~/Klipper_AI_Macro
 origin: https://github.com/Travis90x/Klipper-configuration.git
-install_script: config/scripts/update/klipper-configuration/klipper-configuration.sh # Deprecated by Moonraker
+install_script: macro/scripts/update/klipper-configuration/klipper-configuration.sh # Deprecated by Moonraker
 # Manual Update with putty:
 # cp -r ~/Klipper_AI_Macro/* ~/printer_data/config
 managed_services: klipper moonraker
@@ -84,20 +84,20 @@ managed_services: klipper moonraker
 After updating from "Update Manager", use the Macro **UPDATE KLIPPER CONF** in Klipper
 or 
 ```
-sudo ~/printer_data/config/config/scripts/update/klipper-configuration/klipper-configuration.sh
+sudo ~/printer_data/config/macro/scripts/update/klipper-configuration/klipper-configuration.sh
 ```
 
 # CPU LOG
 ```
-sudo cp -r ~/printer_data/config/config/scripts/cpu/etc_systemd_system/* /etc/systemd/system/
+sudo cp -r ~/printer_data/config/macro/scripts/cpu/etc_systemd_system/* /etc/systemd/system/
 sudo sed -i "s|/home/pi|$(eval echo ~$USER)|g" /etc/systemd/system/log_cpu.service
-sed -i 's|/home/pi|'"$HOME"'|g' ~/printer_data/config/config/scripts/cpu/LOG_CPU.sh
+sed -i 's|/home/pi|'"$HOME"'|g' ~/printer_data/config/macro/scripts/cpu/LOG_CPU.sh
 sudo systemctl daemon-reload
 sudo systemctl enable log_cpu.timer
 sudo systemctl enable log_cpu.service
 sudo systemctl start log_cpu.timer
 ```
-#### Example .../config/scripts/logs/CPU/CPU.txt
+#### Example .../macro/scripts/logs/CPU/CPU.txt
 ##### https://www.site24x7.com/blog/load-average-what-is-it-and-whats-the-best-load-average-for-your-linux-servers
 ```
 "load average: 0,46, 0,53, 0,46": 

@@ -6,7 +6,8 @@ Non è la configurazione di una singola stampante: è una libreria.
 
 ## Come viene usata
 
-Il repo si clona in `~/Klipper-configuration` e il contenuto si copia in
+Il repo si clona in `~/Klipper-configuration` (o in una cartella con altro
+nome, es. `~/Klipper_AI_Macro` sul branch di test) e il contenuto si copia in
 `~/printer_data/config/`. L'aggiornamento avviene via `update_manager` di
 Moonraker o con la macro `UPDATE_KLIPPER_CONF`.
 
@@ -15,36 +16,39 @@ Moonraker o con la macro `UPDATE_KLIPPER_CONF`.
 non solo quelli di questo repo. Il comando di installazione è:
 
 ```
-cp -r ~/Klipper-configuration/* ~/printer_data/config/
+cp -r ~/Klipper_AI_Macro/* ~/printer_data/config/
 ```
 
 Questo copia **ogni elemento di primo livello del repo** direttamente dentro
-`~/printer_data/config/`. Il repo ha una sua sottocartella chiamata proprio
-`config/` (con dentro `macros/`, `sensors/`, `scripts/`, ecc.): essendo un
-elemento di primo livello, viene copiata *come sottocartella*, quindi il
-risultato è **`~/printer_data/config/config/`** (doppio "config" — voluto,
-non un errore). È per questo che tutti gli `[include config/macros/...]` in
-`advanced_macro.cfg` risolvono correttamente: sono relativi a
-`~/printer_data/config/`.
-
-Le altre cartelle/file di primo livello del repo (`advanced_macro.cfg`,
-`START.cfg`, `ai/`, `README.md`, ...) **non** sono dentro la sottocartella
-`config/` del repo, quindi finiscono come fratelli diretti, con un solo
-`config`: `~/printer_data/config/advanced_macro.cfg`,
-`~/printer_data/config/ai/`, ecc. — **non** raddoppiano.
+`~/printer_data/config/`, come fratelli diretti dei file di Klipper già
+presenti lì (`printer.cfg`, `moonraker.conf`, ...):
 
 ```
 ~/printer_data/config/            <- cartella di Klipper/Moonraker
 ├── printer.cfg                   <- non di questo repo
 ├── moonraker.conf                <- non di questo repo
-├── advanced_macro.cfg            <- repo, primo livello -> "config" singolo
+├── advanced_macro.cfg            <- repo, primo livello
 ├── °ADV_macro.cfg                <- copia rinominata di advanced_macro.cfg
-├── ai/                           <- repo, primo livello -> "config" singolo
-└── config/                       <- repo, sottocartella del repo -> "config" doppio
+├── web/                          <- repo, primo livello (tool config manager)
+└── macro/                        <- repo, primo livello
     ├── macros/
     ├── sensors/
     └── scripts/
 ```
+
+Nessuna cartella raddoppia: il repo ha una sua sottocartella chiamata
+`macro/` (con dentro `macros/`, `sensors/`, `scripts/`, ecc.), nome scelto
+apposta per non collidere con `config/` — la cartella di Klipper stessa. È
+per questo che tutti gli `[include macro/macros/...]` in `advanced_macro.cfg`
+risolvono correttamente: sono relativi a `~/printer_data/config/`.
+
+> Prima di rinominarla, questa sottocartella del repo si chiamava anch'essa
+> `config/`, il che produceva un doppio `~/printer_data/config/config/` dopo
+> la copia (voluto, non un errore, mai "corretto" prima). Se trovi ancora
+> riferimenti a `config/config/` o a `[include config/...]` in file non
+> aggiornati (es. sul branch `main`, o in copie non allineate), è quel vecchio
+> schema: non è un errore da segnalare, è solo uno stato non ancora migrato a
+> questa convenzione.
 
 Nel `printer.cfg` l'utente include due soli file:
 
@@ -77,18 +81,18 @@ Di conseguenza:
 ## Struttura
 
 `advanced_macro.cfg` è un indice: non contiene quasi logica, ma una lunga serie
-di `[include ...]` verso `config/`, con blocchi ASCII-art come separatori.
+di `[include ...]` verso `macro/`, con blocchi ASCII-art come separatori.
 I file inclusi sono di due tipi:
 
-- **macro** (`config/macros/`, `config/scripts/`, `config/kamp/`)
+- **macro** (`macro/macros/`, `macro/scripts/`, `macro/kamp/`)
 - **sezioni Klipper** che abilitano hardware — sensori, accelerometri, ventole,
-  neopixel, probe, driver TMC (`config/accelerometer/`, `config/sensors/`,
-  `config/fans/`, `config/neopixel/`, ...)
+  neopixel, probe, driver TMC (`macro/accelerometer/`, `macro/sensors/`,
+  `macro/fans/`, `macro/neopixel/`, ...)
 
 La maggior parte degli `[include]` è **commentata di proposito**: l'utente
 scommenta solo ciò che gli serve. Una riga commentata non è un errore.
 
-## `config/PRINTER_&_START_CONFIG_examples/`
+## `macro/PRINTER_&_START_CONFIG_examples/`
 
 Cartella di **backup ed esempi**, non codice attivo. Contiene `printer.cfg`,
 `°ADV_macro.cfg` e `°START.cfg` reali di stampanti diverse:
@@ -117,8 +121,8 @@ sezione, ma commentare/decommentare interi `[include ...]` verso file diversi,
 es.:
 
 ```
-[include config/.../tmc_motor_uart.cfg]
-#[include config/.../tmc_motor_spi.cfg]
+[include macro/.../tmc_motor_uart.cfg]
+#[include macro/.../tmc_motor_spi.cfg]
 ```
 
 per passare da SPI a UART. Quando invece la stessa sezione (es.
@@ -134,7 +138,7 @@ commentate).** Non è una scelta tra alternative (non ci sono due file diversi
 tra cui scegliere): è la stessa identica inclusione duplicata per errore di
 copia-incolla. Questo va corretto rimuovendo la ripetizione, come già fatto per
 `Vivedino_Troodon_V2_adv_macro.cfg` (includeva due volte, entrambe attive,
-`config/scripts/input-shaping/input-shaping.cfg` e `shaper-graphs.cfg`).
+`macro/scripts/input-shaping/input-shaping.cfg` e `shaper-graphs.cfg`).
 
 ## Se devi validare la sintassi
 
