@@ -10,6 +10,42 @@ Il repo si clona in `~/Klipper-configuration` e il contenuto si copia in
 `~/printer_data/config/`. L'aggiornamento avviene via `update_manager` di
 Moonraker o con la macro `UPDATE_KLIPPER_CONF`.
 
+`~/printer_data/config/` è la cartella che usa Klipper/Moonraker: contiene
+`printer.cfg`, `moonraker.conf`, `mainsail.conf` e tutti i file dell'utente,
+non solo quelli di questo repo. Il comando di installazione è:
+
+```
+cp -r ~/Klipper-configuration/* ~/printer_data/config/
+```
+
+Questo copia **ogni elemento di primo livello del repo** direttamente dentro
+`~/printer_data/config/`. Il repo ha una sua sottocartella chiamata proprio
+`config/` (con dentro `macros/`, `sensors/`, `scripts/`, ecc.): essendo un
+elemento di primo livello, viene copiata *come sottocartella*, quindi il
+risultato è **`~/printer_data/config/config/`** (doppio "config" — voluto,
+non un errore). È per questo che tutti gli `[include config/macros/...]` in
+`advanced_macro.cfg` risolvono correttamente: sono relativi a
+`~/printer_data/config/`.
+
+Le altre cartelle/file di primo livello del repo (`advanced_macro.cfg`,
+`START.cfg`, `ai/`, `README.md`, ...) **non** sono dentro la sottocartella
+`config/` del repo, quindi finiscono come fratelli diretti, con un solo
+`config`: `~/printer_data/config/advanced_macro.cfg`,
+`~/printer_data/config/ai/`, ecc. — **non** raddoppiano.
+
+```
+~/printer_data/config/            <- cartella di Klipper/Moonraker
+├── printer.cfg                   <- non di questo repo
+├── moonraker.conf                <- non di questo repo
+├── advanced_macro.cfg            <- repo, primo livello -> "config" singolo
+├── °ADV_macro.cfg                <- copia rinominata di advanced_macro.cfg
+├── ai/                           <- repo, primo livello -> "config" singolo
+└── config/                       <- repo, sottocartella del repo -> "config" doppio
+    ├── macros/
+    ├── sensors/
+    └── scripts/
+```
+
 Nel `printer.cfg` l'utente include due soli file:
 
 ```
