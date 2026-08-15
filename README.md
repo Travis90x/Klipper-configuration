@@ -6,10 +6,35 @@ If Klipper does not update information
 
 press CTRL+F5 to clean the cache of the browser.
 
-# Download & Install
+# Download & Install (branch Klipper_AI_macro — per ora, solo per test)
+
+Questo branch è ancora in fase di test: **non va copiato dentro
+`~/printer_data/config/`**, che resta la cartella usata in produzione dal
+branch `main`/dalla stampante. Il branch di test vive isolato in una cartella
+a parte nella home:
+
 ```
 cd
-git clone -b Klipper_AI_macro https://github.com/Travis90x/Klipper-configuration.git
+git clone -b Klipper_AI_macro https://github.com/Travis90x/Klipper-configuration.git ~/Klipper_AI_Macro
+```
+
+Per testare lo strumento `ai/` (config manager):
+```
+cd ~/Klipper_AI_Macro/ai
+```
+e segui `ai/README.md`. Non serve nessuna copia in `~/printer_data/config/`.
+
+# Manual Update (branch Klipper_AI_macro)
+```
+cd ~/Klipper_AI_Macro && git pull --rebase
+```
+
+---
+
+# Download & Install (main, uso in produzione)
+```
+cd
+git clone https://github.com/Travis90x/Klipper-configuration.git
 mkdir -p ~/printer_data/config/ && cp -r ~/Klipper-configuration/* ~/printer_data/config/
 sudo chown -R $USER: ~/printer_data
 sudo find ~/printer_data/config/config/scripts/ -type f -name "*.sh" -exec chmod +x {} \;
@@ -43,7 +68,7 @@ add this in moonraker.conf to update klipper-configuration
 ```
 [update_manager klipper-configuration]
 type: git_repo
-primary_branch: Klipper_AI_macro
+primary_branch: main
 path: ~/Klipper-configuration
 origin: https://github.com/Travis90x/Klipper-configuration.git
 install_script: config/scripts/update/klipper-configuration/klipper-configuration.sh # Deprecated by Moonraker
