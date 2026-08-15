@@ -6,7 +6,7 @@ from flask import Flask, jsonify, render_template, request
 
 app = Flask(__name__)
 
-REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 INCLUDE_RE = re.compile(
     r'^(?P<indent>\s*)(?P<hash>#\s*)?\[include\s+(?P<target>[^\]]+)\]\s*(?P<trailing>#.*)?\s*$'
