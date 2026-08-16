@@ -154,6 +154,7 @@ sudo apt install udisks2
 
 Go to settings, General, Mainsail Settings in Moonraker DB, Restore, select **backup-mainsail_macro_"date".json**, select Macro and Restore.
 
+<img width="1920" alt="AI Macro" src="https://github.com/user-attachments/assets/5e93e97d-bbc8-4f36-9984-5447a2af6752" />
 
 ![Macro Mainsail](https://github.com/Travis90x/Klipper-configuration/assets/23300077/66e5309e-1721-48f7-8b51-a8f002240f1e)
 
