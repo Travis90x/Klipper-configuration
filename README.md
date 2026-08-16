@@ -6,11 +6,8 @@ If Klipper does not update information
 
 press CTRL+F5 to clean the cache of the browser.
 
-# Download & Install
+# Backup
 ```
-cd
-git clone -b Klipper_AI_macro https://github.com/Travis90x/Klipper-configuration.git ~/Klipper_AI_Macro
-
 mkdir -p ~/printer_data/config/backup
 
 if [ -d ~/printer_data/config ]; then
@@ -21,6 +18,22 @@ if [ -d ~/printer_data/config ]; then
 else
     echo "Nessuna ~/printer_data/config esistente, backup saltato"
 fi
+```
+
+Il backup vive dentro `~/printer_data/config/backup/`, non dentro il clone
+del repo: non è quindi mai a rischio di finire committato nel repo pubblico.
+Ogni backup è una copia con data/ora (`rsync -a --exclude='backup/' ...`
+esclude la cartella `backup/` stessa dalla copia, così non si annida in se
+stessa a ogni aggiornamento successivo). I backup vecchi non si
+sovrascrivono — cancellali a mano quando non ti servono più.
+
+Esegui questo comando prima di **Download & Install** e prima di ogni
+**Manual Update**.
+
+# Download & Install
+```
+cd
+git clone -b Klipper_AI_macro https://github.com/Travis90x/Klipper-configuration.git ~/Klipper_AI_Macro
 
 cp -r ~/Klipper_AI_Macro/* ~/printer_data/config/
 sudo chown -R $USER: ~/printer_data
@@ -33,30 +46,12 @@ bash ~/printer_data/config/macro/scripts/update/klipper-configuration/klipper-co
 cd
 cd ~/Klipper_AI_Macro && git pull --rebase && cd -
 
-mkdir -p ~/printer_data/config/backup
-
-if [ -d ~/printer_data/config ]; then
-    BACKUP_DIR=~/printer_data/config/backup/config_$(date +%Y%m%d_%H%M%S)
-    mkdir -p "$BACKUP_DIR"
-    rsync -a --exclude='backup/' ~/printer_data/config/ "$BACKUP_DIR/"
-    echo "Backup di ~/printer_data/config creato in $BACKUP_DIR"
-else
-    echo "Nessuna ~/printer_data/config esistente, backup saltato"
-fi
-
 cp -r ~/Klipper_AI_Macro/* ~/printer_data/config/
 sudo chown -R $USER: ~/printer_data
 sudo find ~/printer_data/config/macro/scripts/ -type f -name "*.sh" -exec chmod +x {} \;
 bash ~/printer_data/config/macro/scripts/update/klipper-configuration/klipper-configuration.sh
 ```
 or update using the Macro **UPDATE KLIPPER CONF** in Klipper or **UPDATE MANAGER** in Moonraker
-
-Il backup vive dentro `~/printer_data/config/backup/`, non dentro il clone
-del repo: non è quindi mai a rischio di finire committato nel repo pubblico.
-Ogni backup è una copia con data/ora (`rsync -a --exclude='backup/' ...`
-esclude la cartella `backup/` stessa dalla copia, così non si annida in se
-stessa a ogni aggiornamento successivo). I backup vecchi non si
-sovrascrivono — cancellali a mano quando non ti servono più.
 
 # Printer.cfg
 
