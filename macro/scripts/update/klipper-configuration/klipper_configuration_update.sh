@@ -1,6 +1,6 @@
-if [ ! -d ~/Klipper-configuration/ ]; then git clone https://github.com/Travis90x/Klipper-configuration.git ~/Klipper-configuration/; fi
-cd ~/Klipper-configuration && git pull && cd -
-cp -r ~/Klipper-configuration/* ~/printer_data/config
+if [ ! -d ~/Klipper_AI_Macro/ ]; then git clone -b Klipper_AI_macro https://github.com/Travis90x/Klipper-configuration.git ~/Klipper_AI_Macro/; fi
+cd ~/Klipper_AI_Macro && git pull --rebase && cd -
+cp -r ~/Klipper_AI_Macro/* ~/printer_data/config
 sudo -S chown -R $USER: ~/printer_data
 sudo find ~/printer_data/config/macro/scripts/ -type f -name "*.sh" -exec chmod +x {} \;
 

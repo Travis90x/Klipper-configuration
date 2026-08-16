@@ -212,8 +212,16 @@
 <script>
 let currentLang = 'en';
 let lastData = null;
-let editingInclude = null; // line number of the include row being edited
-let editingSection = null; // anchor_line of the section being edited
+let editingInclude = null; // {file, line} of the include row being edited
+let editingSection = null; // {file, anchor_line} of the section being edited
+
+function sameIncludeTarget(a, item) {
+  return a && a.file === item.file && a.line === item.line;
+}
+
+function sameSectionTarget(a, section) {
+  return a && a.file === section.file && a.anchor_line === section.anchor_line;
+}
 
 const STR = {
   en: { save: 'Save', cancel: 'Cancel', name: 'Name', description: 'Description', order: 'Order', sectionName: 'Section name', empty: 'No [include ...] found.', networkError: 'Network error: ', error: 'Error: ' },
@@ -265,7 +273,7 @@ function renderIncludes(data) {
 
     const head = document.createElement('div');
     head.className = 'section-head';
-    if (editingSection === section.anchor_line) {
+    if (sameSectionTarget(editingSection, section)) {
       head.appendChild(buildSectionEditForm(section));
     } else {
       const title = document.createElement('div');
@@ -273,7 +281,7 @@ function renderIncludes(data) {
       title.textContent = currentLang === 'it' ? section.label_it : section.label_en;
       head.appendChild(title);
       head.appendChild(makePencilBtn(() => {
-        editingSection = section.anchor_line;
+        editingSection = { file: section.file, anchor_line: section.anchor_line };
         renderIncludes(lastData);
       }));
     }
@@ -283,7 +291,7 @@ function renderIncludes(data) {
       const row = document.createElement('div');
       row.className = 'row';
 
-      if (editingInclude === item.line) {
+      if (sameIncludeTarget(editingInclude, item)) {
         row.appendChild(buildIncludeEditForm(item));
       } else {
         const text = document.createElement('div');
@@ -295,7 +303,7 @@ function renderIncludes(data) {
         label.textContent = item.title;
         labelLine.appendChild(label);
         labelLine.appendChild(makePencilBtn(() => {
-          editingInclude = item.line;
+          editingInclude = { file: item.file, line: item.line };
           renderIncludes(lastData);
         }));
         const target = document.createElement('div');
@@ -319,7 +327,7 @@ function renderIncludes(data) {
         const input = document.createElement('input');
         input.type = 'checkbox';
         input.checked = item.enabled;
-        input.addEventListener('change', () => toggle(item.line, input));
+        input.addEventListener('change', () => toggle(item.file, item.line, input));
         const slider = document.createElement('span');
         slider.className = 'slider';
         switchLabel.appendChild(input);
@@ -440,7 +448,7 @@ function buildIncludeEditForm(item) {
 
 async function saveSection(section, name, order, saveBtn) {
   saveBtn.disabled = true;
-  const payload = { anchor_line: section.anchor_line, order };
+  const payload = { anchor_line: section.anchor_line, order, file: section.file };
   if (currentLang === 'it') {
     payload.label_it = name;
   } else {
@@ -468,7 +476,7 @@ async function saveSection(section, name, order, saveBtn) {
 
 async function saveInclude(item, name, description, order, saveBtn) {
   saveBtn.disabled = true;
-  const payload = { line: item.line, name, order };
+  const payload = { line: item.line, name, order, file: item.file };
   if (currentLang === 'it') {
     payload.description_it = description;
   } else {
@@ -494,13 +502,13 @@ async function saveInclude(item, name, description, order, saveBtn) {
   }
 }
 
-async function toggle(line, input) {
+async function toggle(file, line, input) {
   input.disabled = true;
   try {
     const res = await fetch('/api/includes/toggle', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ line }),
+      body: JSON.stringify({ line, file }),
     });
     const data = await res.json();
     if (!res.ok) {
