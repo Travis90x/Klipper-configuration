@@ -15,6 +15,22 @@ INCLUDE_RE = re.compile(
 ORDER_RE = re.compile(r'^##\s*(\d+)\s*$')
 SECTION_OVERRIDE_RE = re.compile(r'^##\s*(\d+)\s*-\s*(.+)$')
 SECTION_OVERRIDE_IT_RE = re.compile(r'^##\s*IT:\s*(.+)$', re.IGNORECASE)
+SECTION_COLOR_SUFFIX_RE = re.compile(r'^(?P<label>.+?)\s*-\s*(?P<color>[0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})$')
+COLOR_RE = re.compile(r'^#?([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})$')
+
+
+def expand_hex(value):
+    return ''.join(c * 2 for c in value) if len(value) == 3 else value
+
+
+def split_label_color(text):
+    """Split a "## N - Name" marker's label text into (label, color): a
+    trailing "- RRGGBB" (or the 3-digit shorthand) is a background color for
+    that section, e.g. "## 1 - System - 202020"."""
+    m = SECTION_COLOR_SUFFIX_RE.match(text)
+    if not m:
+        return text, None
+    return m.group('label').strip(), expand_hex(m.group('color')).upper()
 
 
 def resolve_config_file():
@@ -149,7 +165,9 @@ def slugify(text):
 # overrides that section's order/name; placed anywhere else, it instead
 # declares a brand new "virtual" section (see resolve_sections()) that
 # includes can be moved into with a "## Section: Name" marker of their own,
-# regardless of where they physically sit in the file.
+# regardless of where they physically sit in the file. "Name" may end with
+# "- RRGGBB" (e.g. "## 1 - System - 202020") to set that section's
+# background color in the web UI.
 SECTION_MARKERS = [
     (re.compile(r'^#?\s*\[include\s+mainsail\.cfg\]$'), 'mainsail', 'Mainsail', 'Mainsail'),
     (re.compile(r'^\[gcode_macro _MACRO_VARIABLE\]$'), 'macros', 'Macros', 'Macro'),
@@ -177,6 +195,7 @@ def resolve_sections(lines):
         'order': 0,
         'label_en': 'Setup',
         'label_it': 'Impostazioni',
+        'color': None,
     }]
     for lineno, line in enumerate(lines):
         stripped = line.strip()
@@ -188,6 +207,7 @@ def resolve_sections(lines):
                     'order': len(sections),
                     'label_en': label_en,
                     'label_it': label_it,
+                    'color': None,
                 })
                 break
 
@@ -198,7 +218,7 @@ def resolve_sections(lines):
         if not m:
             continue
         order = int(m.group(1))
-        label_en = m.group(2).strip()
+        label_en, color = split_label_color(m.group(2).strip())
         label_it = None
         if lineno + 1 < len(lines):
             m_it = SECTION_OVERRIDE_IT_RE.match(lines[lineno + 1].strip())
@@ -209,6 +229,7 @@ def resolve_sections(lines):
         if owner is not None:
             owner['order'] = order
             owner['label_en'] = label_en
+            owner['color'] = color
             if label_it is not None:
                 owner['label_it'] = label_it
         else:
@@ -219,6 +240,7 @@ def resolve_sections(lines):
                 'order': order,
                 'label_en': label_en,
                 'label_it': label_it if label_it is not None else label_en,
+                'color': color,
                 'virtual': True,
             }
 
@@ -241,6 +263,7 @@ def find_owning_section(sections, item_lineno, section_name):
             'order': 900_000 + item_lineno,
             'label_en': section_name,
             'label_it': section_name,
+            'color': None,
             'virtual': True,
         }
         sections.append(fallback)
@@ -355,6 +378,18 @@ def clean_order(value):
         raise ValueError("'order' must be an integer or null")
 
 
+def clean_color(value):
+    if value is None:
+        return None
+    value = value.strip()
+    if not value:
+        return None
+    m = COLOR_RE.match(value)
+    if not m:
+        raise ValueError("'color' must be a hex color like 202020 or #202020")
+    return expand_hex(m.group(1)).upper()
+
+
 def edit_include(path, lineno, payload):
     with open(path, encoding='utf-8') as fh:
         lines = fh.readlines()
@@ -392,15 +427,29 @@ def edit_section(path, anchor_line, payload):
         raise ValueError("'order' is required for a section")
     label_en = clean_text(payload.get('label_en')) or current['label_en']
     label_it = clean_text(payload.get('label_it')) if 'label_it' in payload else current['label_it']
+    color = clean_color(payload['color']) if 'color' in payload else current.get('color')
 
-    insert_at = anchor_line + 1
-    existing_span = 0
-    if insert_at < len(lines) and SECTION_OVERRIDE_RE.match(lines[insert_at].strip()):
+    # A "virtual" section's anchor_line points at its own "## N - Name"
+    # marker line (it has no ASCII-art banner of its own), so that marker
+    # must be replaced in place; a banner-anchored section's anchor_line is
+    # the banner line, with any existing marker sitting right after it.
+    if SECTION_OVERRIDE_RE.match(lines[anchor_line].strip()):
+        insert_at = anchor_line
         existing_span = 1
-        if insert_at + 1 < len(lines) and SECTION_OVERRIDE_IT_RE.match(lines[insert_at + 1].strip()):
+        if anchor_line + 1 < len(lines) and SECTION_OVERRIDE_IT_RE.match(lines[anchor_line + 1].strip()):
             existing_span = 2
+    else:
+        insert_at = anchor_line + 1
+        existing_span = 0
+        if insert_at < len(lines) and SECTION_OVERRIDE_RE.match(lines[insert_at].strip()):
+            existing_span = 1
+            if insert_at + 1 < len(lines) and SECTION_OVERRIDE_IT_RE.match(lines[insert_at + 1].strip()):
+                existing_span = 2
 
-    new_block = [f'## {order} - {label_en}\n']
+    marker_line = f'## {order} - {label_en}'
+    if color:
+        marker_line += f' - {color}'
+    new_block = [marker_line + '\n']
     if label_it:
         new_block.append(f'## IT: {label_it}\n')
 
