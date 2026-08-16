@@ -14,21 +14,19 @@ if [ -d ~/printer_data/config ]; then
     BACKUP_DIR=~/printer_data/config/backup/config_$(date +%Y%m%d_%H%M%S)
     mkdir -p "$BACKUP_DIR"
     rsync -a --exclude='backup/' ~/printer_data/config/ "$BACKUP_DIR/"
-    echo "Backup di ~/printer_data/config creato in $BACKUP_DIR"
+    echo "Backup of ~/printer_data/config created in $BACKUP_DIR"
 else
-    echo "Nessuna ~/printer_data/config esistente, backup saltato"
+    echo "No existing ~/printer_data/config, skipping backup"
 fi
 ```
 
-Il backup vive dentro `~/printer_data/config/backup/`, non dentro il clone
-del repo: non è quindi mai a rischio di finire committato nel repo pubblico.
-Ogni backup è una copia con data/ora (`rsync -a --exclude='backup/' ...`
-esclude la cartella `backup/` stessa dalla copia, così non si annida in se
-stessa a ogni aggiornamento successivo). I backup vecchi non si
-sovrascrivono — cancellali a mano quando non ti servono più.
+The backup lives inside `~/printer_data/config/backup/`, not inside the repo
+clone, so it can never end up committed to the public repo. Each backup is a
+timestamped copy (`rsync -a --exclude='backup/' ...` excludes the `backup/`
+folder itself, so it doesn't nest into itself on later runs). Old backups
+are never overwritten — delete them by hand when you no longer need them.
 
-Esegui questo comando prima di **Download & Install** e prima di ogni
-**Manual Update**.
+Run this before **Download & Install** and before every **Manual Update**.
 
 # Download & Install
 ```
@@ -83,22 +81,20 @@ or
 sudo ~/printer_data/config/macro/scripts/update/klipper-configuration/klipper-configuration.sh
 ```
 
-`klipper_ai_macro` in `managed_services` riavvia il [Config Manager](web/README.md)
-(`klipper_ai_macro.service`) ad ogni update. Ha effetto solo se lo hai già
-installato come servizio systemd (vedi la sezione **WEB AI MACRO** più sotto);
-altrimenti Moonraker prova comunque a riavviarlo e fallisce senza bloccare
-il resto dell'update.
+`klipper_ai_macro` in `managed_services` restarts the [Config Manager](web/README.md)
+(`klipper_ai_macro.service`) after every update. Only takes effect if you've
+already installed it as a systemd service (see the **WEB AI MACRO** section
+below); otherwise Moonraker still tries to restart it and fails without
+blocking the rest of the update.
 
 # WEB AI MACRO
 
-Config Manager: una piccola interfaccia web per attivare/disattivare gli
-`[include ...]` di `°ADV_macro.cfg` con un toggle dal browser, raggruppati
-per sezione (Mainsail, Macros, KAMP, Fans, Probe, MCU, Input Shaping,
-Filament, Cutter, LED, Neopixel, MKS Robin Nano...), invece di commentare/
-decommentare le righe a mano.
+Config Manager: a small web UI to toggle `[include ...]` lines in
+`°ADV_macro.cfg` from the browser, grouped by section (Mainsail, Macros,
+KAMP, Fans, Probe, MCU, Input Shaping, Filament, Cutter, LED, Neopixel, MKS
+Robin Nano...), instead of commenting/uncommenting lines by hand.
 
-Guida completa a installazione, avvio ed esecuzione in background come
-servizio systemd: [web/README.md](web/README.md)
+Full install, run and update guide: [web/README.md](web/README.md)
 
 # CPU LOG
 ```

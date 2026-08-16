@@ -1,68 +1,56 @@
 # Klipper Config Manager (WIP)
 
-Piccolo servizio web locale per attivare/disattivare gli `[include ...]` di
-`°ADV_macro.cfg` con un toggle dal browser, invece di commentare/decommentare
-le righe a mano.
+Local web service to toggle `[include ...]` lines in `°ADV_macro.cfg` from
+the browser, grouped by section, instead of commenting/uncommenting lines
+by hand.
 
-Stato attuale: **solo attivazione/disattivazione degli include**. Editing dei
-valori delle macro (es. coordinate) e rilevamento conflitti tra include
-alternativi non sono ancora implementati.
+Current status: include toggling only. Editing macro values (e.g.
+coordinates) and conflict detection between alternative includes are not
+implemented yet.
 
-## Installazione ed avvio
+## Install & Run
 
-Dopo aver copiato il repo in `~/printer_data/config/` (vedi il `README.md`
-principale), la cartella `web/` si trova direttamente dentro
-`~/printer_data/config/`, allo stesso livello di `advanced_macro.cfg` e di
-`macro/` — **non** dentro `macro/`.
+After deploying the repo to `~/printer_data/config/` (see the main
+`README.md`), `web/` sits directly inside `~/printer_data/config/`, next to
+`advanced_macro.cfg` and `macro/` — **not** inside `macro/`.
 
 ```
 cd ~/printer_data/config/web
 ```
 
-### 1) Verifica che la porta 7136 sia libera
+### 1) Check port 7136 is free
 
 ```
 if command -v ss >/dev/null 2>&1; then
-    sudo ss -tulpn | grep ':7136 ' && echo ">>> PORTA 7136 OCCUPATA (vedi riga sopra)" || echo ">>> Porta 7136 libera"
+    sudo ss -tulpn | grep ':7136 ' && echo ">>> PORT 7136 IN USE (see line above)" || echo ">>> Port 7136 free"
 elif command -v lsof >/dev/null 2>&1; then
-    sudo lsof -i :7136 && echo ">>> PORTA 7136 OCCUPATA (vedi sopra)" || echo ">>> Porta 7136 libera"
+    sudo lsof -i :7136 && echo ">>> PORT 7136 IN USE (see above)" || echo ">>> Port 7136 free"
 else
-    echo ">>> Né 'ss' né 'lsof' installati: sudo apt install iproute2, poi riprova"
+    echo ">>> Neither 'ss' nor 'lsof' installed: sudo apt install iproute2, then retry"
 fi
 ```
 
-Se stampa `PORTA 7136 OCCUPATA`, avvia il servizio su un'altra porta al
-passo 3, es. `PORT=7137 venv/bin/python3 app.py`.
+If it's occupied, run on another port in step 3, e.g.
+`PORT=7137 ~/klipper-config-manager-venv/bin/python3 app.py`.
 
-### 2) Verifica/crea °ADV_macro.cfg
+### 2) Create °ADV_macro.cfg if missing
 
-Il servizio modifica `°ADV_macro.cfg`, la copia realmente inclusa dalla
-stampante (vedi il `README.md` principale). Se non esiste ancora, va creata
-copiando il master `advanced_macro.cfg`. Esegui i comandi da dentro `web/`
-(come al passo precedente):
+The service edits `°ADV_macro.cfg`, the copy actually included by the
+printer (see the main `README.md`). Run from inside `web/`:
 
 ```
 if [ -f ../°ADV_macro.cfg ]; then
-    echo "°ADV_macro.cfg esiste già, non lo tocco"
+    echo "°ADV_macro.cfg already exists, leaving it alone"
 else
     cp ../advanced_macro.cfg ../°ADV_macro.cfg
-    echo "Creato °ADV_macro.cfg da advanced_macro.cfg"
+    echo "Created °ADV_macro.cfg from advanced_macro.cfg"
 fi
 ```
 
-### 3) Installa le dipendenze e avvia
+### 3) Install dependencies and run
 
-Su Raspberry Pi OS recenti (Bookworm e successivi) `pip install` di sistema è
-bloccato di default ("externally-managed-environment") e può fallire in modo
-poco chiaro. Per evitarlo, usa un virtualenv dedicato a questo tool.
-
-**Il virtualenv va creato FUORI da `~/printer_data/config`**, non dentro
-`web/`: Moonraker tiene sotto osservazione (inotify) tutto l'albero di
-`~/printer_data/config`, e i symlink interni di un virtualenv (es.
-`venv/lib64 -> venv/lib`) fanno sì che Moonraker provi ad aggiungere due
-watch sullo stesso percorso fisico, producendo in log l'errore
-`file_manager: Inotify watch already exists for path '.../web/venv/lib' ...
-roots overlap`. Creandolo altrove il problema non si presenta:
+Create the virtualenv outside `~/printer_data/config` (not inside `web/`),
+e.g. in `~/klipper-config-manager-venv`:
 
 ```
 python3 -m venv ~/klipper-config-manager-venv
@@ -70,40 +58,35 @@ python3 -m venv ~/klipper-config-manager-venv
 ~/klipper-config-manager-venv/bin/python3 app.py
 ```
 
-Se `python3 -m venv` dà errore (es. "ensurepip is not available"):
+If `python3 -m venv` fails (e.g. "ensurepip is not available"):
 ```
 sudo apt install -y python3-venv
 ```
-poi riprova il comando sopra.
+then retry the command above.
 
-Apri `http://<ip-stampante>:7136/` nel browser.
+Open `http://<printer-ip>:7136/` in your browser.
 
-Il servizio individua da solo `°ADV_macro.cfg` accanto a `app.py` (nella
-directory superiore, `~/printer_data/config/`); se non lo trova usa
-`advanced_macro.cfg`. Per puntare esplicitamente a un altro file:
+The service auto-detects `°ADV_macro.cfg` next to `app.py` (in the parent
+directory, `~/printer_data/config/`); falls back to `advanced_macro.cfg` if
+missing. To point at another file explicitly:
 
 ```
-KLIPPER_CONFIG_MANAGER_FILE=/percorso/a/°ADV_macro.cfg ~/klipper-config-manager-venv/bin/python3 app.py
+KLIPPER_CONFIG_MANAGER_FILE=/path/to/°ADV_macro.cfg ~/klipper-config-manager-venv/bin/python3 app.py
 ```
 
-> Hai già creato il virtualenv dentro `web/venv` (versione precedente di
-> questa guida)? Fermalo, spostalo fuori e rifai l'installazione:
+> Already have a venv inside `web/venv` (older guide)? Move it:
 > ```
 > sudo systemctl stop klipper_ai_macro.service 2>/dev/null
 > rm -rf ~/printer_data/config/web/venv
 > python3 -m venv ~/klipper-config-manager-venv
 > ~/klipper-config-manager-venv/bin/pip install -r ~/printer_data/config/web/requirements.txt
 > ```
-> poi rifai il passo 4 per riavviare il servizio con il percorso aggiornato.
+> then redo step 4 to restart the service with the new path.
 
-### 4) (Opzionale) Avvialo in background come servizio systemd
+### 4) (Optional) Run in the background as a systemd service
 
-Il comando `~/klipper-config-manager-venv/bin/python3 app.py` del passo 3
-resta legato al terminale: se lo chiudi, il servizio si ferma. Per farlo
-girare in background, avviarsi da solo al boot e riavviarsi da solo in caso
-di crash, installalo come servizio systemd (richiede che il passo 3 sia già
-stato eseguito almeno una volta, cioè che `~/klipper-config-manager-venv`
-esista già):
+Requires step 3 to have run at least once, so `~/klipper-config-manager-venv`
+already exists:
 
 ```
 sudo cp -r ~/printer_data/config/web/etc_systemd_system/* /etc/systemd/system/
@@ -112,17 +95,30 @@ sudo systemctl daemon-reload
 sudo systemctl enable --now klipper_ai_macro.service
 ```
 
-Comandi utili:
+Useful commands:
 
 ```
-sudo systemctl status klipper_ai_macro.service   # stato
-journalctl -u klipper_ai_macro.service -f        # log in tempo reale
-sudo systemctl restart klipper_ai_macro.service  # riavvio (es. dopo un update)
-sudo systemctl stop klipper_ai_macro.service     # ferma il servizio
-sudo systemctl disable klipper_ai_macro.service  # non avviarlo più al boot
+sudo systemctl status klipper_ai_macro.service   # status
+journalctl -u klipper_ai_macro.service -f        # live logs
+sudo systemctl restart klipper_ai_macro.service  # restart (e.g. after an update)
+sudo systemctl stop klipper_ai_macro.service     # stop the service
+sudo systemctl disable klipper_ai_macro.service  # don't start on boot anymore
 ```
 
-## Sicurezza
+## Update
 
-Il servizio non ha autenticazione e può modificare la configurazione della
-stampante: va esposto solo sulla rete locale fidata, non su internet.
+After a manual update (`git pull` + `cp`, see the main README's Manual
+Update), reinstall dependencies and restart the service:
+
+```
+~/klipper-config-manager-venv/bin/pip install -r ~/printer_data/config/web/requirements.txt
+sudo systemctl restart klipper_ai_macro.service
+```
+
+Skip this if you update via the `UPDATE_KLIPPER_CONF` macro or Moonraker's
+Update Manager — both already do it automatically.
+
+## Security
+
+No authentication; it can modify the printer's configuration — expose it
+only on the trusted local network, never on the internet.
