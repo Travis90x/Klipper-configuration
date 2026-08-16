@@ -152,7 +152,7 @@ sudo apt install udisks2
 
 ## Restore Macro Buttons
 
-Go to settings, General, Mainsail Settings in Moonraker DB, Restore, select **backup-mainsail_macro_"date".json**, select Macro and Restore.
+Go to settings, General, Mainsail Settings in Moonraker DB, Restore, select **z_backup_mainsail_macro.json**, select Macro and Restore.
 
 <img width="1920" alt="AI Macro" src="https://github.com/user-attachments/assets/5e93e97d-bbc8-4f36-9984-5447a2af6752" />
 
@@ -163,11 +163,11 @@ Go to settings, General, Mainsail Settings in Moonraker DB, Restore, select **ba
 
 ## Dashboard and Alexa automation here:
 Reload WEB AI MACRO service
-<img width="185" height="372" alt="AI_Macro_2" src="https://github.com/user-attachments/assets/3e183d0b-959e-45a2-acc7-022c1c5acbe3" />
+<img width="185" alt="AI_Macro_2" src="https://github.com/user-attachments/assets/3e183d0b-959e-45a2-acc7-022c1c5acbe3" />
 
 ## WEB AI MACRO
 
-<img width="955" height="810" alt="AI_Macro_3" src="https://github.com/user-attachments/assets/55b5d3af-dcbd-4581-a131-a58950cefb14" />
+<img width="955" alt="AI_Macro_3" src="https://github.com/user-attachments/assets/55b5d3af-dcbd-4581-a131-a58950cefb14" />
 
 ## Dashboard and Alexa automation here:
 
