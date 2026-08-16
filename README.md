@@ -13,8 +13,8 @@ git clone -b Klipper_AI_macro https://github.com/Travis90x/Klipper-configuration
 
 mkdir -p ~/Klipper_AI_Macro/backup
 if [ -d ~/printer_data/config ]; then
-    cp -r ~/printer_data/config ~/Klipper_AI_Macro/backup/config_$(date +%Y%m%d_%H%M%S)
-    echo "Backup di ~/printer_data/config creato in ~/Klipper_AI_Macro/backup/"
+    cp -r ~/printer_data/config ~/printer_data/config/backup/config_$(date +%Y%m%d_%H%M%S)
+    echo "Backup di ~/printer_data/config creato in ~/printer_data/config/backup/config_$(date +%Y%m%d_%H%M%S)
 else
     echo "Nessuna ~/printer_data/config esistente, backup saltato"
 fi
