@@ -75,7 +75,7 @@ origin: https://github.com/Travis90x/Klipper-configuration.git
 install_script: macro/scripts/update/klipper-configuration/klipper-configuration.sh # Deprecated by Moonraker
 # Manual Update with putty:
 # cp -r ~/Klipper_AI_Macro/* ~/printer_data/config
-managed_services: klipper moonraker
+managed_services: klipper moonraker klipper_ai_macro
 ```
 After updating from "Update Manager", use the Macro **UPDATE KLIPPER CONF** in Klipper
 or 
@@ -83,18 +83,22 @@ or
 sudo ~/printer_data/config/macro/scripts/update/klipper-configuration/klipper-configuration.sh
 ```
 
-Se hai installato il [Config Manager](web/README.md) come servizio systemd
-(`klipper_ai_macro.service`), aggiungi anche questo blocco a `moonraker.conf`
-così Moonraker può gestirlo (riavviarlo dall'Update Manager, ecc.):
+`klipper_ai_macro` in `managed_services` riavvia il [Config Manager](web/README.md)
+(`klipper_ai_macro.service`) ad ogni update. Ha effetto solo se lo hai già
+installato come servizio systemd (vedi la sezione **WEB AI MACRO** più sotto);
+altrimenti Moonraker prova comunque a riavviarlo e fallisce senza bloccare
+il resto dell'update.
 
-```
-[update_manager AI_Macro]
-type: git_repo
-primary_branch: Klipper_AI_macro
-path: ~/Klipper_AI_Macro
-origin: https://github.com/Travis90x/Klipper-configuration.git
-managed_services: klipper_ai_macro
-```
+# WEB AI MACRO
+
+Config Manager: una piccola interfaccia web per attivare/disattivare gli
+`[include ...]` di `°ADV_macro.cfg` con un toggle dal browser, raggruppati
+per sezione (Mainsail, Macros, KAMP, Fans, Probe, MCU, Input Shaping,
+Filament, Cutter, LED, Neopixel, MKS Robin Nano...), invece di commentare/
+decommentare le righe a mano.
+
+Guida completa a installazione, avvio ed esecuzione in background come
+servizio systemd: [web/README.md](web/README.md)
 
 # CPU LOG
 ```
