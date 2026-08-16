@@ -1,5 +1,6 @@
 /backup/
 web/venv/
+__pycache__/
 
 # Copie personalizzate per la singola stampante (vedi CLAUDE.md):
 # generate localmente da advanced_macro.cfg/START.cfg, mai tracciate nel repo.

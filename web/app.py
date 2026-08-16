@@ -50,9 +50,52 @@ def label_from_target(target):
     return base.replace('_', ' ').replace('-', ' ').strip().title()
 
 
+# Each marker is matched against a single stripped line; the first one found
+# (top to bottom) starts a new section that runs until the next marker.
+# Mirrors the ASCII-art banners that already separate advanced_macro.cfg into
+# sections, so a section here always matches one there.
+SECTION_MARKERS = [
+    (re.compile(r'^#?\s*\[include\s+mainsail\.cfg\]$'), 'mainsail', 'Mainsail', 'Mainsail'),
+    (re.compile(r'^\[gcode_macro _MACRO_VARIABLE\]$'), 'macros', 'Macros', 'Macro'),
+    (re.compile(r'^#\s*KAMP$'), 'kamp', 'KAMP', 'KAMP'),
+    (re.compile(r'^#\s*FANS$'), 'fans', 'Fans', 'Ventole'),
+    (re.compile(r'^#\s*PROBE$'), 'probe', 'Probe', 'Sonda'),
+    (re.compile(r'^#\s*mcu$'), 'mcu', 'MCU', 'MCU'),
+    (re.compile(r'^#\s*INPUT SHAPING$'), 'input_shaping', 'Input Shaping & Accelerometer', 'Input Shaping e Accelerometro'),
+    (re.compile(r'^#\s*Filament Runout or Encoder$'), 'filament', 'Filament (Load / Unload / Purge)', 'Filamento (Carico / Scarico / Spurgo)'),
+    (re.compile(r'^#+\s*END - FILAMENT MACRO - END\s*#+$'), 'cutter', 'Cutter', 'Taglierina'),
+    (re.compile(r'^#\s*LED$'), 'led', 'LED', 'LED'),
+    (re.compile(r'^#\s*NEOPIXEL$'), 'neopixel', 'Neopixel & LED Effects', 'Neopixel ed Effetti LED'),
+    (re.compile(r'^#\s*Only for MKS Robin Nano 1\.2$'), 'robin_nano', 'MKS Robin Nano 1.2', 'MKS Robin Nano 1.2'),
+]
+DEFAULT_SECTION = ('setup', 'Setup', 'Impostazioni')
+
+
+def find_section_boundaries(lines):
+    boundaries = []
+    for lineno, line in enumerate(lines):
+        stripped = line.strip()
+        for pattern, key, label_en, label_it in SECTION_MARKERS:
+            if pattern.match(stripped):
+                boundaries.append((lineno, key, label_en, label_it))
+                break
+    return boundaries
+
+
+def section_for_line(boundaries, lineno):
+    current = DEFAULT_SECTION
+    for boundary_lineno, key, label_en, label_it in boundaries:
+        if boundary_lineno > lineno:
+            break
+        current = (key, label_en, label_it)
+    return current
+
+
 def parse_includes(path):
     with open(path, encoding='utf-8') as fh:
         lines = fh.readlines()
+
+    boundaries = find_section_boundaries(lines)
 
     includes = []
     for lineno, line in enumerate(lines):
@@ -62,6 +105,7 @@ def parse_includes(path):
         target = m.group('target').strip()
         enabled = m.group('hash') is None
         description_en, description_it = descriptions_from_comment(lines, lineno)
+        section, section_en, section_it = section_for_line(boundaries, lineno)
         includes.append({
             'line': lineno,
             'target': target,
@@ -69,6 +113,9 @@ def parse_includes(path):
             'title': label_from_target(target),
             'description_en': description_en,
             'description_it': description_it,
+            'section': section,
+            'section_en': section_en,
+            'section_it': section_it,
         })
     return includes
 

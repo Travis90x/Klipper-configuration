@@ -59,6 +59,25 @@
     word-break: break-all;
     margin-bottom: 1.5rem;
   }
+  .section { margin-bottom: 1.75rem; }
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0 0.1rem 0.5rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0.6rem;
+  }
+  .section-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+  }
+  .section-count {
+    font-size: 0.78rem;
+    color: var(--muted);
+    white-space: nowrap;
+  }
   .row {
     display: flex;
     align-items: center;
@@ -162,44 +181,78 @@ function renderIncludes(data) {
     return;
   }
 
+  const sections = [];
+  const sectionByKey = new Map();
   for (const item of data.includes) {
-    const row = document.createElement('div');
-    row.className = 'row';
+    let section = sectionByKey.get(item.section);
+    if (!section) {
+      section = { key: item.section, label_en: item.section_en, label_it: item.section_it, items: [] };
+      sectionByKey.set(item.section, section);
+      sections.push(section);
+    }
+    section.items.push(item);
+  }
 
-    const text = document.createElement('div');
-    text.className = 'row-text';
-    const label = document.createElement('div');
-    label.className = 'row-label';
-    label.textContent = item.title;
-    const target = document.createElement('div');
-    target.className = 'row-target';
-    target.textContent = item.target;
-    text.appendChild(label);
-    text.appendChild(target);
-    const descriptionText = (currentLang === 'it' && item.description_it)
-      ? item.description_it
-      : item.description_en;
-    if (descriptionText) {
-      const description = document.createElement('div');
-      description.className = 'row-description';
-      description.textContent = descriptionText;
-      text.appendChild(description);
+  const enabledWord = currentLang === 'it' ? 'abilitati' : 'enabled';
+
+  for (const section of sections) {
+    const sectionEl = document.createElement('div');
+    sectionEl.className = 'section';
+
+    const head = document.createElement('div');
+    head.className = 'section-head';
+    const title = document.createElement('div');
+    title.className = 'section-title';
+    title.textContent = currentLang === 'it' ? section.label_it : section.label_en;
+    const count = document.createElement('div');
+    count.className = 'section-count';
+    const enabledCount = section.items.filter((item) => item.enabled).length;
+    count.textContent = `${enabledCount}/${section.items.length} ${enabledWord}`;
+    head.appendChild(title);
+    head.appendChild(count);
+    sectionEl.appendChild(head);
+
+    for (const item of section.items) {
+      const row = document.createElement('div');
+      row.className = 'row';
+
+      const text = document.createElement('div');
+      text.className = 'row-text';
+      const label = document.createElement('div');
+      label.className = 'row-label';
+      label.textContent = item.title;
+      const target = document.createElement('div');
+      target.className = 'row-target';
+      target.textContent = item.target;
+      text.appendChild(label);
+      text.appendChild(target);
+      const descriptionText = (currentLang === 'it' && item.description_it)
+        ? item.description_it
+        : item.description_en;
+      if (descriptionText) {
+        const description = document.createElement('div');
+        description.className = 'row-description';
+        description.textContent = descriptionText;
+        text.appendChild(description);
+      }
+
+      const switchLabel = document.createElement('label');
+      switchLabel.className = 'switch';
+      const input = document.createElement('input');
+      input.type = 'checkbox';
+      input.checked = item.enabled;
+      input.addEventListener('change', () => toggle(item.line, input));
+      const slider = document.createElement('span');
+      slider.className = 'slider';
+      switchLabel.appendChild(input);
+      switchLabel.appendChild(slider);
+
+      row.appendChild(text);
+      row.appendChild(switchLabel);
+      sectionEl.appendChild(row);
     }
 
-    const switchLabel = document.createElement('label');
-    switchLabel.className = 'switch';
-    const input = document.createElement('input');
-    input.type = 'checkbox';
-    input.checked = item.enabled;
-    input.addEventListener('change', () => toggle(item.line, input));
-    const slider = document.createElement('span');
-    slider.className = 'slider';
-    switchLabel.appendChild(input);
-    switchLabel.appendChild(slider);
-
-    row.appendChild(text);
-    row.appendChild(switchLabel);
-    container.appendChild(row);
+    container.appendChild(sectionEl);
   }
 }
 
