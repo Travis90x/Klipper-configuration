@@ -5,7 +5,7 @@ After=network.target
 [Service]
 Type=simple
 WorkingDirectory=/home/pi/printer_data/config/web
-ExecStart=/home/pi/printer_data/config/web/venv/bin/python3 app.py
+ExecStart=/home/pi/klipper-config-manager-venv/bin/python3 app.py
 Restart=on-failure
 RestartSec=5
 

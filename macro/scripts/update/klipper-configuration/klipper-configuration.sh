@@ -1,6 +1,6 @@
-if [ ! -d ~/Klipper-configuration/ ]; then git clone https://github.com/Travis90x/Klipper-configuration.git ~/Klipper-configuration/; fi
-cd ~/Klipper-configuration && git pull && cd -
-cp -r ~/Klipper-configuration/* ~/printer_data/config
+if [ ! -d ~/Klipper_AI_Macro/ ]; then git clone -b Klipper_AI_macro https://github.com/Travis90x/Klipper-configuration.git ~/Klipper_AI_Macro/; fi
+cd ~/Klipper_AI_Macro && git pull --rebase && cd -
+cp -r ~/Klipper_AI_Macro/* ~/printer_data/config
 echo "$1" | sudo -S chown -R $USER: ~/printer_data
 sudo find ~/printer_data/config/macro/scripts/ -type f -name "*.sh" -exec chmod +x {} \;
 
@@ -128,3 +128,11 @@ sudo ln -s ~/printer_data/config/macro/scripts/wifi/Show_WIFI.sh /usr/local/bin/
 
 sudo find ~/printer_data/config/macro/scripts/ -type f -name "*.sh" -exec chmod +x {} \;
 echo "$1" | sudo -S chown -R $USER: /usr/local/bin/*
+
+echo Updating Config Manager web service
+if [ -d ~/klipper-config-manager-venv ]; then
+    ~/klipper-config-manager-venv/bin/pip install -q -r ~/printer_data/config/web/requirements.txt
+fi
+if systemctl list-unit-files klipper_ai_macro.service >/dev/null 2>&1; then
+    echo "$1" | sudo -S systemctl restart klipper_ai_macro.service
+fi
