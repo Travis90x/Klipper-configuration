@@ -12,15 +12,17 @@ cd
 git clone -b Klipper_AI_macro https://github.com/Travis90x/Klipper-configuration.git ~/Klipper_AI_Macro
 
 mkdir -p ~/printer_data/config/backup
+
 if [ -d ~/printer_data/config ]; then
-    cp -r ~/printer_data/config ~/printer_data/config/backup/config_$(date +%Y%m%d_%H%M%S)
-    echo "Backup di ~/printer_data/config creato in ~/printer_data/config/backup/config_$(date +%Y%m%d_%H%M%S)
+    BACKUP_DIR=~/printer_data/config/backup/config_$(date +%Y%m%d_%H%M%S)
+    mkdir -p "$BACKUP_DIR"
+    rsync -a --exclude='backup/' ~/printer_data/config/ "$BACKUP_DIR/"
+    echo "Backup di ~/printer_data/config creato in $BACKUP_DIR"
 else
     echo "Nessuna ~/printer_data/config esistente, backup saltato"
 fi
 
-mkdir -p ~/printer_data/config/ && cp -r ~/Klipper_AI_Macro/* ~/printer_data/config/
-rm -rf ~/printer_data/config/backup
+cp -r ~/Klipper_AI_Macro/* ~/printer_data/config/
 sudo chown -R $USER: ~/printer_data
 sudo find ~/printer_data/config/macro/scripts/ -type f -name "*.sh" -exec chmod +x {} \;
 bash ~/printer_data/config/macro/scripts/update/klipper-configuration/klipper-configuration.sh
