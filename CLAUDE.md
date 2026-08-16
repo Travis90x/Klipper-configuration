@@ -42,13 +42,12 @@ apposta per non collidere con `config/` — la cartella di Klipper stessa. È
 per questo che tutti gli `[include macro/macros/...]` in `advanced_macro.cfg`
 risolvono correttamente: sono relativi a `~/printer_data/config/`.
 
-> Prima di rinominarla, questa sottocartella del repo si chiamava anch'essa
-> `config/`, il che produceva un doppio `~/printer_data/config/config/` dopo
-> la copia (voluto, non un errore, mai "corretto" prima). Se trovi ancora
-> riferimenti a `config/config/` o a `[include config/...]` in file non
-> aggiornati (es. sul branch `main`, o in copie non allineate), è quel vecchio
-> schema: non è un errore da segnalare, è solo uno stato non ancora migrato a
-> questa convenzione.
+> `macro/` è l'unico nome valido per questa sottocartella. Il vecchio schema
+> `config/` (che produceva `~/printer_data/config/config/`) è stato abbandonato
+> e non va più supportato: se trovi riferimenti a `config/config/` o a
+> `[include config/...]`, sono errori da correggere, non stati legacy da
+> preservare. Nessuno script deve contenere logica di migrazione dal vecchio
+> schema.
 
 Nel `printer.cfg` l'utente include due soli file:
 

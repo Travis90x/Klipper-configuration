@@ -156,8 +156,7 @@ Go to settings, General, Mainsail Settings in Moonraker DB, Restore, select **z_
 
 <img width="1920" alt="AI Macro" src="https://github.com/user-attachments/assets/5e93e97d-bbc8-4f36-9984-5447a2af6752" />
 
-## Dashboard and Alexa automation here:
-Reload WEB AI MACRO service
+## Reload WEB AI MACRO service
 
 
 <img width="200" alt="AI_Macro_2" src="https://github.com/user-attachments/assets/8067ad96-29f7-4e0e-83b8-8d908e679619" />
@@ -185,7 +184,7 @@ Dashboard Lovelace Source:
 ##### https://github.com/NonaSuomy/Moonraker-Home-Assistant?tab=readme-ov-file#lovelace-cards
 
 ## My custom dashboards and automations here:
-##### https://github.com/Travis90x/Klipper-configuration/tree/main/config/home_assistant
+##### https://github.com/Travis90x/Klipper-configuration/tree/Klipper_AI_macro/macro/home_assistant
 
 ### Automation: 
 #### Alexa notify all Klipper messages with "M117 Alexa <message_to_notify>"
@@ -202,17 +201,17 @@ Dashboard Lovelace Source:
 #  Schedule a print or job queue with Home Assistant automation
 
 #### Add this dashboard
-https://github.com/Travis90x/Klipper-configuration/blob/main/config/home_assistant/dashboard_start_print.yaml
+https://github.com/Travis90x/Klipper-configuration/blob/Klipper_AI_macro/macro/home_assistant/dashboard_start_print.yaml
 
 
 <img src="https://onedrive.live.com/embed?resid=2A6BE858ABEEB97B%21716451&authkey=%21AJHak2fAaqFmY-U&width=398&height=110" width="398" height="110" />
 
 Add in Home assistant configuration.yaml the code in the link below with your Moonraker printer IP, then restart HA.
-#### https://github.com/Travis90x/Klipper-configuration/blob/main/config/home_assistant/configuration_start_print.yaml
+#### https://github.com/Travis90x/Klipper-configuration/blob/Klipper_AI_macro/macro/home_assistant/configuration_start_print.yaml
 
 #### Create an automation by customizing the code in the link below.
 ### Clean queue, start print file.gcode, add to queue 1.gcode, 2.gcode, print the queue
 #### Customize these functions and schedule them as you need.
-#### https://github.com/Travis90x/Klipper-configuration/blob/main/config/home_assistant/automation_start_print.yaml
+#### https://github.com/Travis90x/Klipper-configuration/blob/Klipper_AI_macro/macro/home_assistant/automation_start_print.yaml
 
 
