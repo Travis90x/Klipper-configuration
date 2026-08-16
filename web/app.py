@@ -233,7 +233,7 @@ def find_owning_section(sections, item_lineno, section_name):
     if section_name:
         key = slugify(section_name)
         for section in sections:
-            if section['key'] == key:
+            if key in (section['key'], slugify(section['label_en']), slugify(section['label_it'])):
                 return section
         fallback = {
             'key': key,
