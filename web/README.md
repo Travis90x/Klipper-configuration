@@ -32,7 +32,7 @@ fi
 ```
 
 Se stampa `PORTA 7136 OCCUPATA`, avvia il servizio su un'altra porta al
-passo 3, es. `PORT=7137 python3 app.py`.
+passo 3, es. `PORT=7137 venv/bin/python3 app.py`.
 
 ### 2) Verifica/crea °ADV_macro.cfg
 
@@ -52,10 +52,22 @@ fi
 
 ### 3) Installa le dipendenze e avvia
 
+Su Raspberry Pi OS recenti (Bookworm e successivi) `pip install` di sistema è
+bloccato di default ("externally-managed-environment") e può fallire in modo
+poco chiaro. Per evitarlo, usa un virtualenv dedicato a questo tool — non
+serve toccare il Python di sistema:
+
 ```
-pip install -r requirements.txt
-python3 app.py
+python3 -m venv venv
+venv/bin/pip install -r requirements.txt
+venv/bin/python3 app.py
 ```
+
+Se `python3 -m venv` dà errore (es. "ensurepip is not available"):
+```
+sudo apt install -y python3-venv
+```
+poi riprova il comando sopra.
 
 Apri `http://<ip-stampante>:7136/` nel browser.
 
@@ -64,7 +76,7 @@ directory superiore, `~/printer_data/config/`); se non lo trova usa
 `advanced_macro.cfg`. Per puntare esplicitamente a un altro file:
 
 ```
-KLIPPER_CONFIG_MANAGER_FILE=/percorso/a/°ADV_macro.cfg python3 app.py
+KLIPPER_CONFIG_MANAGER_FILE=/percorso/a/°ADV_macro.cfg venv/bin/python3 app.py
 ```
 
 ## Sicurezza
