@@ -34,6 +34,16 @@ cd
 git clone -b Klipper_AI_macro https://github.com/Travis90x/Klipper-configuration.git ~/Klipper_AI_Macro
 
 cp -r ~/Klipper_AI_Macro/* ~/printer_data/config/
+
+for pair in "advanced_macro.cfg:°ADV_macro.cfg" "START.cfg:°START.cfg" "Accelerometer.cfg:°Accelerometer.cfg"; do
+    src="${pair%%:*}"
+    dst="${pair##*:}"
+    if [ ! -f ~/printer_data/config/"$dst" ]; then
+        cp ~/printer_data/config/"$src" ~/printer_data/config/"$dst"
+        echo "Created $dst from $src"
+    fi
+done
+
 sudo chown -R $USER: ~/printer_data
 sudo find ~/printer_data/config/macro/scripts/ -type f -name "*.sh" -exec chmod +x {} \;
 bash ~/printer_data/config/macro/scripts/update/klipper-configuration/klipper-configuration.sh
@@ -45,6 +55,16 @@ cd
 cd ~/Klipper_AI_Macro && git pull --rebase && cd -
 
 cp -r ~/Klipper_AI_Macro/* ~/printer_data/config/
+
+for pair in "advanced_macro.cfg:°ADV_macro.cfg" "START.cfg:°START.cfg" "Accelerometer.cfg:°Accelerometer.cfg"; do
+    src="${pair%%:*}"
+    dst="${pair##*:}"
+    if [ ! -f ~/printer_data/config/"$dst" ]; then
+        cp ~/printer_data/config/"$src" ~/printer_data/config/"$dst"
+        echo "Created $dst from $src"
+    fi
+done
+
 sudo chown -R $USER: ~/printer_data
 sudo find ~/printer_data/config/macro/scripts/ -type f -name "*.sh" -exec chmod +x {} \;
 bash ~/printer_data/config/macro/scripts/update/klipper-configuration/klipper-configuration.sh
@@ -53,12 +73,17 @@ or update using the Macro **UPDATE KLIPPER CONF** in Klipper or **UPDATE MANAGER
 
 # Printer.cfg
 
-Rename **advanced_macro.cfg** in **°ADV_macro.cfg**
-and in your **printer.cfg** add
+Rename **advanced_macro.cfg** in **°ADV_macro.cfg**, **START.cfg** in **°START.cfg**
+and **Accelerometer.cfg** in **°Accelerometer.cfg**, then in your **printer.cfg** add
 ```
 [include °ADV_macro.cfg]
 [include °START.cfg]
 ```
+
+`advanced_macro.cfg`, `START.cfg` and `Accelerometer.cfg` are reserve files kept in the
+repo as version-tracked defaults. The `°`-prefixed copies are the ones actually loaded
+by the printer and are meant to be customized by the user: edit them freely, an update
+will never touch or overwrite them.
 
 # Moonraker.conf
 
