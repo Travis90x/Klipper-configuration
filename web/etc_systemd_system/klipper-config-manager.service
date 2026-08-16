@@ -1,0 +1,13 @@
+[Unit]
+Description=Klipper Config Manager (web toggle UI for advanced_macro.cfg includes)
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/pi/printer_data/config/web
+ExecStart=/home/pi/printer_data/config/web/venv/bin/python3 app.py
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

@@ -79,6 +79,31 @@ directory superiore, `~/printer_data/config/`); se non lo trova usa
 KLIPPER_CONFIG_MANAGER_FILE=/percorso/a/°ADV_macro.cfg venv/bin/python3 app.py
 ```
 
+### 4) (Opzionale) Avvialo in background come servizio systemd
+
+Il comando `venv/bin/python3 app.py` del passo 3 resta legato al terminale:
+se lo chiudi, il servizio si ferma. Per farlo girare in background, avviarsi
+da solo al boot e riavviarsi da solo in caso di crash, installalo come
+servizio systemd (richiede che il passo 3 sia già stato eseguito almeno una
+volta, cioè che `web/venv` esista già):
+
+```
+sudo cp -r ~/printer_data/config/web/etc_systemd_system/* /etc/systemd/system/
+sudo sed -i "s|/home/pi|$(eval echo ~$USER)|g" /etc/systemd/system/klipper-config-manager.service
+sudo systemctl daemon-reload
+sudo systemctl enable --now klipper-config-manager.service
+```
+
+Comandi utili:
+
+```
+sudo systemctl status klipper-config-manager.service   # stato
+journalctl -u klipper-config-manager.service -f        # log in tempo reale
+sudo systemctl restart klipper-config-manager.service  # riavvio (es. dopo un update)
+sudo systemctl stop klipper-config-manager.service     # ferma il servizio
+sudo systemctl disable klipper-config-manager.service  # non avviarlo più al boot
+```
+
 ## Sicurezza
 
 Il servizio non ha autenticazione e può modificare la configurazione della
