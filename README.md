@@ -33,31 +33,30 @@ bash ~/printer_data/config/macro/scripts/update/klipper-configuration/klipper-co
 cd
 cd ~/Klipper_AI_Macro && git pull --rebase && cd -
 
-mkdir -p ~/Klipper_AI_Macro/backup
+mkdir -p ~/printer_data/config/backup
+
 if [ -d ~/printer_data/config ]; then
-    cp -r ~/printer_data/config ~/Klipper_AI_Macro/backup/config_$(date +%Y%m%d_%H%M%S)
-    echo "Backup di ~/printer_data/config creato in ~/Klipper_AI_Macro/backup/"
+    BACKUP_DIR=~/printer_data/config/backup/config_$(date +%Y%m%d_%H%M%S)
+    mkdir -p "$BACKUP_DIR"
+    rsync -a --exclude='backup/' ~/printer_data/config/ "$BACKUP_DIR/"
+    echo "Backup di ~/printer_data/config creato in $BACKUP_DIR"
 else
     echo "Nessuna ~/printer_data/config esistente, backup saltato"
 fi
 
-mkdir -p ~/printer_data/config/ && cp -r ~/Klipper_AI_Macro/* ~/printer_data/config/
-rm -rf ~/printer_data/config/backup
+cp -r ~/Klipper_AI_Macro/* ~/printer_data/config/
 sudo chown -R $USER: ~/printer_data
 sudo find ~/printer_data/config/macro/scripts/ -type f -name "*.sh" -exec chmod +x {} \;
 bash ~/printer_data/config/macro/scripts/update/klipper-configuration/klipper-configuration.sh
 ```
 or update using the Macro **UPDATE KLIPPER CONF** in Klipper or **UPDATE MANAGER** in Moonraker
 
-La cartella `~/Klipper_AI_Macro/backup/` non è tracciata da git (vedi
-`.gitignore`): contiene una copia della tua vera configurazione, con
-eventuali dati personali, e non deve mai finire nel repo pubblico. Ogni
-backup viene salvato con la data/ora, quelli vecchi non si sovrascrivono —
-puoi cancellarli a mano quando non ti servono più. Il comando `rm -rf
-~/printer_data/config/backup` subito dopo la copia serve solo a togliere la
-cartella `backup` duplicata dentro `printer_data/config` (il `cp -r .../*`
-la copia insieme al resto): il backup vero resta comunque al sicuro in
-`~/Klipper_AI_Macro/backup/`.
+Il backup vive dentro `~/printer_data/config/backup/`, non dentro il clone
+del repo: non è quindi mai a rischio di finire committato nel repo pubblico.
+Ogni backup è una copia con data/ora (`rsync -a --exclude='backup/' ...`
+esclude la cartella `backup/` stessa dalla copia, così non si annida in se
+stessa a ogni aggiornamento successivo). I backup vecchi non si
+sovrascrivono — cancellali a mano quando non ti servono più.
 
 # Printer.cfg
 
