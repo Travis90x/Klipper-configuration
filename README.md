@@ -158,9 +158,12 @@ Go to settings, General, Mainsail Settings in Moonraker DB, Restore, select **z_
 
 ## Dashboard and Alexa automation here:
 Reload WEB AI MACRO service
-<img width="185" alt="AI_Macro_2" src="https://github.com/user-attachments/assets/3e183d0b-959e-45a2-acc7-022c1c5acbe3" />
+
+
+<img width="200" alt="AI_Macro_2" src="https://github.com/user-attachments/assets/8067ad96-29f7-4e0e-83b8-8d908e679619" />
 
 ## WEB AI MACRO
+
 
 <img width="955" alt="AI_Macro_3" src="https://github.com/user-attachments/assets/55b5d3af-dcbd-4581-a131-a58950cefb14" />
 
