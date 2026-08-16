@@ -89,19 +89,19 @@ volta, cioè che `web/venv` esista già):
 
 ```
 sudo cp -r ~/printer_data/config/web/etc_systemd_system/* /etc/systemd/system/
-sudo sed -i "s|/home/pi|$(eval echo ~$USER)|g" /etc/systemd/system/klipper-config-manager.service
+sudo sed -i "s|/home/pi|$(eval echo ~$USER)|g" /etc/systemd/system/klipper_ai_macro.service
 sudo systemctl daemon-reload
-sudo systemctl enable --now klipper-config-manager.service
+sudo systemctl enable --now klipper_ai_macro.service
 ```
 
 Comandi utili:
 
 ```
-sudo systemctl status klipper-config-manager.service   # stato
-journalctl -u klipper-config-manager.service -f        # log in tempo reale
-sudo systemctl restart klipper-config-manager.service  # riavvio (es. dopo un update)
-sudo systemctl stop klipper-config-manager.service     # ferma il servizio
-sudo systemctl disable klipper-config-manager.service  # non avviarlo più al boot
+sudo systemctl status klipper_ai_macro.service   # stato
+journalctl -u klipper_ai_macro.service -f        # log in tempo reale
+sudo systemctl restart klipper_ai_macro.service  # riavvio (es. dopo un update)
+sudo systemctl stop klipper_ai_macro.service     # ferma il servizio
+sudo systemctl disable klipper_ai_macro.service  # non avviarlo più al boot
 ```
 
 ## Sicurezza

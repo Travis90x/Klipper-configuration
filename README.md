@@ -83,6 +83,19 @@ or
 sudo ~/printer_data/config/macro/scripts/update/klipper-configuration/klipper-configuration.sh
 ```
 
+Se hai installato il [Config Manager](web/README.md) come servizio systemd
+(`klipper_ai_macro.service`), aggiungi anche questo blocco a `moonraker.conf`
+così Moonraker può gestirlo (riavviarlo dall'Update Manager, ecc.):
+
+```
+[update_manager AI_Macro]
+type: git_repo
+primary_branch: Klipper_AI_macro
+path: ~/Klipper_AI_Macro
+origin: https://github.com/Travis90x/Klipper-configuration.git
+managed_services: klipper_ai_macro
+```
+
 # CPU LOG
 ```
 sudo cp -r ~/printer_data/config/macro/scripts/cpu/etc_systemd_system/* /etc/systemd/system/
