@@ -1,25 +1,44 @@
-# Klipper Config Manager (WIP)
+# Klipper Config Manager
 
 Local web service to toggle `[include ...]` lines in `°ADV_macro.cfg` from
 the browser, grouped by section, instead of commenting/uncommenting lines
 by hand.
 
-Current status: include toggling only. Editing macro values (e.g.
-coordinates) and conflict detection between alternative includes are not
-implemented yet.
-
-## Install & Run
-
-After deploying the repo to `~/printer_data/config/` (see the main
-`README.md`), `web/` sits directly inside `~/printer_data/config/`, next to
+`web/` sits directly inside `~/printer_data/config/`, next to
 `advanced_macro.cfg` and `macro/` — **not** inside `macro/`.
+
+## Install (first time)
+
+Runs as a systemd service by default, so it starts on boot and survives
+reboots without needing a terminal open.
 
 ```
 cd ~/printer_data/config/web
+
+python3 -m venv ~/klipper-config-manager-venv
+~/klipper-config-manager-venv/bin/pip install -r requirements.txt
+
+sudo cp -r etc_systemd_system/* /etc/systemd/system/
+sudo sed -i "s|/home/pi|$(eval echo ~$USER)|g" /etc/systemd/system/klipper_ai_macro.service
+sudo systemctl daemon-reload
+sudo systemctl enable --now klipper_ai_macro.service
 ```
 
-### 1) Check port 7136 is free
+If `python3 -m venv` fails (e.g. "ensurepip is not available"):
+```
+sudo apt install -y python3-venv
+```
+then retry the block above.
 
+Open `http://<printer-ip>:7136/` in your browser.
+
+The venv lives outside `~/printer_data/config` (in `~/klipper-config-manager-venv`)
+so it isn't touched by updates, which only copy repo files into
+`~/printer_data/config/`.
+
+### Port 7136 already in use?
+
+Check:
 ```
 if command -v ss >/dev/null 2>&1; then
     sudo ss -tulpn | grep ':7136 ' && echo ">>> PORT 7136 IN USE (see line above)" || echo ">>> Port 7136 free"
@@ -30,72 +49,26 @@ else
 fi
 ```
 
-If it's occupied, run on another port in step 3, e.g.
-`PORT=7137 ~/klipper-config-manager-venv/bin/python3 app.py`.
-
-### 2) Create °ADV_macro.cfg if missing
-
-The service edits `°ADV_macro.cfg`, the copy actually included by the
-printer (see the main `README.md`). Run from inside `web/`:
-
+If it's busy, set a different port permanently in the service unit (replace
+`7137` with whichever port you want):
 ```
-if [ -f ../°ADV_macro.cfg ]; then
-    echo "°ADV_macro.cfg already exists, leaving it alone"
-else
-    cp ../advanced_macro.cfg ../°ADV_macro.cfg
-    echo "Created °ADV_macro.cfg from advanced_macro.cfg"
-fi
-```
-
-### 3) Install dependencies and run
-
-Create the virtualenv outside `~/printer_data/config` (not inside `web/`),
-e.g. in `~/klipper-config-manager-venv`:
-
-```
-python3 -m venv ~/klipper-config-manager-venv
-~/klipper-config-manager-venv/bin/pip install -r requirements.txt
-~/klipper-config-manager-venv/bin/python3 app.py
-```
-
-If `python3 -m venv` fails (e.g. "ensurepip is not available"):
-```
-sudo apt install -y python3-venv
-```
-then retry the command above.
-
-Open `http://<printer-ip>:7136/` in your browser.
-
-The service auto-detects `°ADV_macro.cfg` next to `app.py` (in the parent
-directory, `~/printer_data/config/`); falls back to `advanced_macro.cfg` if
-missing. To point at another file explicitly:
-
-```
-KLIPPER_CONFIG_MANAGER_FILE=/path/to/°ADV_macro.cfg ~/klipper-config-manager-venv/bin/python3 app.py
-```
-
-> Already have a venv inside `web/venv` (older guide)? Move it:
-> ```
-> sudo systemctl stop klipper_ai_macro.service 2>/dev/null
-> rm -rf ~/printer_data/config/web/venv
-> python3 -m venv ~/klipper-config-manager-venv
-> ~/klipper-config-manager-venv/bin/pip install -r ~/printer_data/config/web/requirements.txt
-> ```
-> then redo step 4 to restart the service with the new path.
-
-### 4) (Optional) Run in the background as a systemd service
-
-Requires step 3 to have run at least once, so `~/klipper-config-manager-venv`
-already exists:
-
-```
-sudo cp -r ~/printer_data/config/web/etc_systemd_system/* /etc/systemd/system/
-sudo sed -i "s|/home/pi|$(eval echo ~$USER)|g" /etc/systemd/system/klipper_ai_macro.service
+sudo sed -i '/^\[Service\]/a Environment=PORT=7137' /etc/systemd/system/klipper_ai_macro.service
 sudo systemctl daemon-reload
-sudo systemctl enable --now klipper_ai_macro.service
+sudo systemctl restart klipper_ai_macro.service
 ```
 
-Useful commands:
+## Update (e.g. after a manual `git pull --rebase`)
+
+```
+~/klipper-config-manager-venv/bin/pip install -r ~/printer_data/config/web/requirements.txt
+sudo systemctl restart klipper_ai_macro.service
+```
+
+Skip this if you update via the `UPDATE_KLIPPER_CONF` macro or Moonraker's
+Update Manager — both already do it automatically (see `managed_services` in
+the main README's Moonraker.conf section).
+
+## Useful commands
 
 ```
 sudo systemctl status klipper_ai_macro.service   # status
@@ -105,20 +78,17 @@ sudo systemctl stop klipper_ai_macro.service     # stop the service
 sudo systemctl disable klipper_ai_macro.service  # don't start on boot anymore
 ```
 
-## Update
+Once `managed_services: klipper moonraker klipper_ai_macro` is set in
+`moonraker.conf` (see the main README), `klipper_ai_macro.service` can also
+be restarted from Mainsail/Fluidd the same way you restart the Klipper
+service — no SSH needed.
 
-After a manual update (`git pull` + `cp`, see the main README's Manual
-Update), reinstall dependencies and restart the service:
+## Editing a different file
+
+The service auto-detects `°ADV_macro.cfg` next to `app.py` (in the parent
+directory, `~/printer_data/config/`); falls back to `advanced_macro.cfg` if
+missing. To point at another file explicitly:
 
 ```
-~/klipper-config-manager-venv/bin/pip install -r ~/printer_data/config/web/requirements.txt
-sudo systemctl restart klipper_ai_macro.service
+KLIPPER_CONFIG_MANAGER_FILE=/path/to/°ADV_macro.cfg ~/klipper-config-manager-venv/bin/python3 app.py
 ```
-
-Skip this if you update via the `UPDATE_KLIPPER_CONF` macro or Moonraker's
-Update Manager — both already do it automatically.
-
-## Security
-
-No authentication; it can modify the printer's configuration — expose it
-only on the trusted local network, never on the internet.
