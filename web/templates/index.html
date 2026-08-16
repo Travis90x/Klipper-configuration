@@ -32,7 +32,26 @@
     padding: 2rem 1rem;
   }
   .wrap { max-width: min(920px, 94vw); margin: 0 auto; }
+  .top-bar {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+  }
   h1 { font-size: 1.4rem; margin-bottom: 0.25rem; }
+  .lang-switcher {
+    flex: 0 0 auto;
+  }
+  .lang-switcher select {
+    font-family: inherit;
+    font-size: 0.85rem;
+    color: var(--text);
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.35rem 0.6rem;
+    cursor: pointer;
+  }
   .file-path {
     font-family: ui-monospace, Menlo, Consolas, monospace;
     font-size: 0.8rem;
@@ -102,19 +121,38 @@
 </head>
 <body>
   <div class="wrap">
-    <h1>Klipper Config Manager</h1>
+    <div class="top-bar">
+      <h1>Klipper Config Manager</h1>
+      <div class="lang-switcher">
+        <select id="lang-select">
+          <option value="en">English</option>
+          <option value="it">Italiano</option>
+        </select>
+      </div>
+    </div>
     <div class="file-path" id="file-path">{{ config_file }}</div>
     <div id="rows"><div class="empty">Caricamento...</div></div>
   </div>
 
 <script>
+let currentLang = 'en';
+let lastData = null;
+
 async function loadIncludes() {
   const res = await fetch('/api/includes');
   const data = await res.json();
   renderIncludes(data);
 }
 
+document.getElementById('lang-select').addEventListener('change', (e) => {
+  currentLang = e.target.value;
+  if (lastData) {
+    renderIncludes(lastData);
+  }
+});
+
 function renderIncludes(data) {
+  lastData = data;
   document.getElementById('file-path').textContent = data.config_file;
   const container = document.getElementById('rows');
   container.innerHTML = '';
@@ -138,10 +176,13 @@ function renderIncludes(data) {
     target.textContent = item.target;
     text.appendChild(label);
     text.appendChild(target);
-    if (item.description) {
+    const descriptionText = (currentLang === 'it' && item.description_it)
+      ? item.description_it
+      : item.description_en;
+    if (descriptionText) {
       const description = document.createElement('div');
       description.className = 'row-description';
-      description.textContent = item.description;
+      description.textContent = descriptionText;
       text.appendChild(description);
     }
 

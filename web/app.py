@@ -23,21 +23,25 @@ def resolve_config_file():
     return os.path.join(REPO_ROOT, 'advanced_macro.cfg')
 
 
-def label_from_comment(lines, include_lineno):
+def descriptions_from_comment(lines, include_lineno):
+    it = None
     i = include_lineno - 1
     while i >= 0:
         stripped = lines[i].strip()
         if not stripped:
             i -= 1
             continue
-        if stripped.startswith('#'):
-            text = stripped.lstrip('#').strip()
-            if text.startswith('IT:'):
-                i -= 1
-                continue
-            return text
-        break
-    return None
+        if not stripped.startswith('#'):
+            break
+        text = stripped.lstrip('#').strip()
+        if text[:3].upper() == 'IT:':
+            it = text[3:].strip()
+            i -= 1
+            continue
+        if text[:12].lower() == 'description:':
+            return text[12:].strip(), it
+        return text, it
+    return None, it
 
 
 def label_from_target(target):
@@ -57,12 +61,14 @@ def parse_includes(path):
             continue
         target = m.group('target').strip()
         enabled = m.group('hash') is None
+        description_en, description_it = descriptions_from_comment(lines, lineno)
         includes.append({
             'line': lineno,
             'target': target,
             'enabled': enabled,
             'title': label_from_target(target),
-            'description': label_from_comment(lines, lineno),
+            'description_en': description_en,
+            'description_it': description_it,
         })
     return includes
 
