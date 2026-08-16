@@ -53,6 +53,16 @@ def resolve_accelerometer_file():
     return os.path.join(REPO_ROOT, 'Accelerometer.cfg')
 
 
+def resolve_start_file():
+    override = os.environ.get('KLIPPER_START_FILE')
+    if override:
+        return override
+    dot_copy = os.path.join(REPO_ROOT, '°START.cfg')
+    if os.path.isfile(dot_copy):
+        return dot_copy
+    return os.path.join(REPO_ROOT, 'START.cfg')
+
+
 def resolve_path_for(file_key):
     if file_key == 'accelerometer':
         return resolve_accelerometer_file()
@@ -491,12 +501,22 @@ def build_response():
             )
             main_sections[insert_at:insert_at] = accel_sections
 
-    return {'config_file': main_path, 'sections': main_sections}
+    return {
+        'config_file': main_path,
+        'start_file': resolve_start_file(),
+        'accelerometer_file': resolve_accelerometer_file(),
+        'sections': main_sections,
+    }
 
 
 @app.route('/')
 def index():
-    return render_template('index.html', config_file=resolve_config_file())
+    return render_template(
+        'index.html',
+        config_file=resolve_config_file(),
+        start_file=resolve_start_file(),
+        accelerometer_file=resolve_accelerometer_file(),
+    )
 
 
 @app.route('/api/includes')

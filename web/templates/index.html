@@ -219,7 +219,7 @@
         </select>
       </div>
     </div>
-    <div class="file-path" id="file-path">{{ config_file }}</div>
+    <div class="file-path" id="file-path">{{ config_file }}<br>{{ start_file }}<br>{{ accelerometer_file }}</div>
     <div id="rows"><div class="empty">Caricamento...</div></div>
   </div>
 
@@ -283,7 +283,13 @@ function makePencilBtn(onClick) {
 
 function renderIncludes(data) {
   lastData = data;
-  document.getElementById('file-path').textContent = data.config_file;
+  const filePathEl = document.getElementById('file-path');
+  filePathEl.innerHTML = '';
+  for (const path of [data.config_file, data.start_file, data.accelerometer_file]) {
+    if (!path) continue;
+    if (filePathEl.childNodes.length) filePathEl.appendChild(document.createElement('br'));
+    filePathEl.appendChild(document.createTextNode(path));
+  }
   const container = document.getElementById('rows');
   container.innerHTML = '';
 
