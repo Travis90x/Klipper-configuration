@@ -72,6 +72,11 @@ def read_include_block(lines, include_lineno):
             continue
         if not stripped.startswith('#'):
             break
+        if INCLUDE_RE.match(stripped):
+            # another (possibly disabled) [include ...] line right above,
+            # with no description block of its own in between - stop here
+            # instead of swallowing it as this include's fallback description.
+            break
 
         m = ORDER_RE.match(stripped)
         if m:
@@ -81,7 +86,7 @@ def read_include_block(lines, include_lineno):
             continue
 
         text = stripped.lstrip('#').strip()
-        if text[:3].upper() == 'IT:':
+        if text[:3].upper() == 'IT:' and it is None:
             it = text[3:].strip()
             block_start = i
             i -= 1
