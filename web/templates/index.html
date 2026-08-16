@@ -63,8 +63,8 @@
   .section-head {
     display: flex;
     align-items: baseline;
-    justify-content: space-between;
-    gap: 0.75rem;
+    justify-content: flex-start;
+    gap: 0.4rem;
     padding: 0 0.1rem 0.5rem;
     border-bottom: 1px solid var(--border);
     margin-bottom: 0.6rem;
@@ -73,11 +73,17 @@
     font-size: 1.05rem;
     font-weight: 700;
   }
-  .section-count {
-    font-size: 0.78rem;
+  .icon-btn {
+    border: none;
+    background: transparent;
     color: var(--muted);
-    white-space: nowrap;
+    cursor: pointer;
+    font-size: 0.85rem;
+    line-height: 1;
+    padding: 0.2rem 0.3rem;
+    border-radius: 5px;
   }
+  .icon-btn:hover { background: var(--border); color: var(--text); }
   .row {
     display: flex;
     align-items: center;
@@ -90,6 +96,7 @@
     margin-bottom: 0.6rem;
   }
   .row-text { min-width: 0; flex: 1; }
+  .row-label-line { display: flex; align-items: center; gap: 0.35rem; }
   .row-label { font-weight: 600; }
   .row-target {
     font-family: ui-monospace, Menlo, Consolas, monospace;
@@ -136,6 +143,55 @@
     padding: 1rem 0;
   }
   .error { color: #d9534f; }
+  .edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+    min-width: 0;
+  }
+  .edit-form.section-edit-form { flex-direction: row; align-items: center; flex-wrap: wrap; }
+  .edit-row { display: flex; gap: 0.5rem; align-items: center; }
+  .edit-form input[type="text"],
+  .edit-form textarea {
+    font-family: inherit;
+    font-size: 0.85rem;
+    color: var(--text);
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.4rem 0.55rem;
+    width: 100%;
+  }
+  .edit-form textarea { resize: vertical; min-height: 3.2rem; }
+  .edit-form input[type="number"] {
+    font-family: inherit;
+    font-size: 0.85rem;
+    color: var(--text);
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.4rem 0.55rem;
+    width: 5.5rem;
+  }
+  .edit-form label {
+    font-size: 0.72rem;
+    color: var(--muted);
+    display: block;
+    margin-bottom: 0.15rem;
+  }
+  .edit-actions { display: flex; gap: 0.4rem; }
+  .btn {
+    font-family: inherit;
+    font-size: 0.8rem;
+    border-radius: 6px;
+    padding: 0.35rem 0.75rem;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--card-bg);
+    color: var(--text);
+  }
+  .btn-primary { background: var(--accent); border-color: var(--accent); color: white; }
 </style>
 </head>
 <body>
@@ -156,6 +212,17 @@
 <script>
 let currentLang = 'en';
 let lastData = null;
+let editingInclude = null; // line number of the include row being edited
+let editingSection = null; // anchor_line of the section being edited
+
+const STR = {
+  en: { save: 'Save', cancel: 'Cancel', name: 'Name', description: 'Description', order: 'Order', sectionName: 'Section name', empty: 'No [include ...] found.', networkError: 'Network error: ', error: 'Error: ' },
+  it: { save: 'Salva', cancel: 'Annulla', name: 'Nome', description: 'Descrizione', order: 'Ordine', sectionName: 'Nome sezione', empty: 'Nessun [include ...] trovato.', networkError: 'Errore di rete: ', error: 'Errore: ' },
+};
+
+function t(key) {
+  return STR[currentLang][key];
+}
 
 async function loadIncludes() {
   const res = await fetch('/api/includes');
@@ -170,30 +237,27 @@ document.getElementById('lang-select').addEventListener('change', (e) => {
   }
 });
 
+function makePencilBtn(onClick) {
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'icon-btn';
+  btn.title = currentLang === 'it' ? 'Modifica' : 'Edit';
+  btn.textContent = '✎';
+  btn.addEventListener('click', onClick);
+  return btn;
+}
+
 function renderIncludes(data) {
   lastData = data;
   document.getElementById('file-path').textContent = data.config_file;
   const container = document.getElementById('rows');
   container.innerHTML = '';
 
-  if (!data.includes || data.includes.length === 0) {
-    container.innerHTML = '<div class="empty">Nessun [include ...] trovato.</div>';
+  const sections = data.sections || [];
+  if (sections.length === 0) {
+    container.innerHTML = `<div class="empty">${t('empty')}</div>`;
     return;
   }
-
-  const sections = [];
-  const sectionByKey = new Map();
-  for (const item of data.includes) {
-    let section = sectionByKey.get(item.section);
-    if (!section) {
-      section = { key: item.section, label_en: item.section_en, label_it: item.section_it, items: [] };
-      sectionByKey.set(item.section, section);
-      sections.push(section);
-    }
-    section.items.push(item);
-  }
-
-  const enabledWord = currentLang === 'it' ? 'abilitati' : 'enabled';
 
   for (const section of sections) {
     const sectionEl = document.createElement('div');
@@ -201,58 +265,232 @@ function renderIncludes(data) {
 
     const head = document.createElement('div');
     head.className = 'section-head';
-    const title = document.createElement('div');
-    title.className = 'section-title';
-    title.textContent = currentLang === 'it' ? section.label_it : section.label_en;
-    const count = document.createElement('div');
-    count.className = 'section-count';
-    const enabledCount = section.items.filter((item) => item.enabled).length;
-    count.textContent = `${enabledCount}/${section.items.length} ${enabledWord}`;
-    head.appendChild(title);
-    head.appendChild(count);
+    if (editingSection === section.anchor_line) {
+      head.appendChild(buildSectionEditForm(section));
+    } else {
+      const title = document.createElement('div');
+      title.className = 'section-title';
+      title.textContent = currentLang === 'it' ? section.label_it : section.label_en;
+      head.appendChild(title);
+      head.appendChild(makePencilBtn(() => {
+        editingSection = section.anchor_line;
+        renderIncludes(lastData);
+      }));
+    }
     sectionEl.appendChild(head);
 
     for (const item of section.items) {
       const row = document.createElement('div');
       row.className = 'row';
 
-      const text = document.createElement('div');
-      text.className = 'row-text';
-      const label = document.createElement('div');
-      label.className = 'row-label';
-      label.textContent = item.title;
-      const target = document.createElement('div');
-      target.className = 'row-target';
-      target.textContent = item.target;
-      text.appendChild(label);
-      text.appendChild(target);
-      const descriptionText = (currentLang === 'it' && item.description_it)
-        ? item.description_it
-        : item.description_en;
-      if (descriptionText) {
-        const description = document.createElement('div');
-        description.className = 'row-description';
-        description.textContent = descriptionText;
-        text.appendChild(description);
+      if (editingInclude === item.line) {
+        row.appendChild(buildIncludeEditForm(item));
+      } else {
+        const text = document.createElement('div');
+        text.className = 'row-text';
+        const labelLine = document.createElement('div');
+        labelLine.className = 'row-label-line';
+        const label = document.createElement('div');
+        label.className = 'row-label';
+        label.textContent = item.title;
+        labelLine.appendChild(label);
+        labelLine.appendChild(makePencilBtn(() => {
+          editingInclude = item.line;
+          renderIncludes(lastData);
+        }));
+        const target = document.createElement('div');
+        target.className = 'row-target';
+        target.textContent = item.target;
+        text.appendChild(labelLine);
+        text.appendChild(target);
+        const descriptionText = (currentLang === 'it' && item.description_it)
+          ? item.description_it
+          : item.description_en;
+        if (descriptionText) {
+          const description = document.createElement('div');
+          description.className = 'row-description';
+          description.textContent = descriptionText;
+          text.appendChild(description);
+        }
+        row.appendChild(text);
+
+        const switchLabel = document.createElement('label');
+        switchLabel.className = 'switch';
+        const input = document.createElement('input');
+        input.type = 'checkbox';
+        input.checked = item.enabled;
+        input.addEventListener('change', () => toggle(item.line, input));
+        const slider = document.createElement('span');
+        slider.className = 'slider';
+        switchLabel.appendChild(input);
+        switchLabel.appendChild(slider);
+        row.appendChild(switchLabel);
       }
 
-      const switchLabel = document.createElement('label');
-      switchLabel.className = 'switch';
-      const input = document.createElement('input');
-      input.type = 'checkbox';
-      input.checked = item.enabled;
-      input.addEventListener('change', () => toggle(item.line, input));
-      const slider = document.createElement('span');
-      slider.className = 'slider';
-      switchLabel.appendChild(input);
-      switchLabel.appendChild(slider);
-
-      row.appendChild(text);
-      row.appendChild(switchLabel);
       sectionEl.appendChild(row);
     }
 
     container.appendChild(sectionEl);
+  }
+}
+
+function buildSectionEditForm(section) {
+  const form = document.createElement('div');
+  form.className = 'edit-form section-edit-form';
+
+  const nameWrap = document.createElement('div');
+  const nameLabel = document.createElement('label');
+  nameLabel.textContent = t('sectionName');
+  const nameInput = document.createElement('input');
+  nameInput.type = 'text';
+  nameInput.value = currentLang === 'it' ? section.label_it : section.label_en;
+  nameWrap.appendChild(nameLabel);
+  nameWrap.appendChild(nameInput);
+
+  const orderWrap = document.createElement('div');
+  const orderLabel = document.createElement('label');
+  orderLabel.textContent = t('order');
+  const orderInput = document.createElement('input');
+  orderInput.type = 'number';
+  orderInput.value = section.order;
+  orderWrap.appendChild(orderLabel);
+  orderWrap.appendChild(orderInput);
+
+  const actions = document.createElement('div');
+  actions.className = 'edit-actions';
+  const saveBtn = document.createElement('button');
+  saveBtn.type = 'button';
+  saveBtn.className = 'btn btn-primary';
+  saveBtn.textContent = t('save');
+  saveBtn.addEventListener('click', () => saveSection(section, nameInput.value, orderInput.value, saveBtn));
+  const cancelBtn = document.createElement('button');
+  cancelBtn.type = 'button';
+  cancelBtn.className = 'btn';
+  cancelBtn.textContent = t('cancel');
+  cancelBtn.addEventListener('click', () => {
+    editingSection = null;
+    renderIncludes(lastData);
+  });
+  actions.appendChild(saveBtn);
+  actions.appendChild(cancelBtn);
+
+  form.appendChild(nameWrap);
+  form.appendChild(orderWrap);
+  form.appendChild(actions);
+  return form;
+}
+
+function buildIncludeEditForm(item) {
+  const form = document.createElement('div');
+  form.className = 'edit-form';
+
+  const nameWrap = document.createElement('div');
+  const nameLabel = document.createElement('label');
+  nameLabel.textContent = t('name');
+  const nameInput = document.createElement('input');
+  nameInput.type = 'text';
+  nameInput.value = item.title;
+  nameWrap.appendChild(nameLabel);
+  nameWrap.appendChild(nameInput);
+
+  const descWrap = document.createElement('div');
+  const descLabel = document.createElement('label');
+  descLabel.textContent = `${t('description')} (${currentLang.toUpperCase()})`;
+  const descInput = document.createElement('textarea');
+  descInput.value = (currentLang === 'it' ? item.description_it : item.description_en) || '';
+  descWrap.appendChild(descLabel);
+  descWrap.appendChild(descInput);
+
+  const orderWrap = document.createElement('div');
+  const orderLabel = document.createElement('label');
+  orderLabel.textContent = t('order');
+  const orderInput = document.createElement('input');
+  orderInput.type = 'number';
+  orderInput.value = item.order === null || item.order === undefined ? '' : item.order;
+  orderWrap.appendChild(orderLabel);
+  orderWrap.appendChild(orderInput);
+
+  const actions = document.createElement('div');
+  actions.className = 'edit-actions';
+  const saveBtn = document.createElement('button');
+  saveBtn.type = 'button';
+  saveBtn.className = 'btn btn-primary';
+  saveBtn.textContent = t('save');
+  saveBtn.addEventListener('click', () => saveInclude(item, nameInput.value, descInput.value, orderInput.value, saveBtn));
+  const cancelBtn = document.createElement('button');
+  cancelBtn.type = 'button';
+  cancelBtn.className = 'btn';
+  cancelBtn.textContent = t('cancel');
+  cancelBtn.addEventListener('click', () => {
+    editingInclude = null;
+    renderIncludes(lastData);
+  });
+  actions.appendChild(saveBtn);
+  actions.appendChild(cancelBtn);
+
+  form.appendChild(nameWrap);
+  form.appendChild(descWrap);
+  const orderActionsRow = document.createElement('div');
+  orderActionsRow.className = 'edit-row';
+  orderActionsRow.appendChild(orderWrap);
+  orderActionsRow.appendChild(actions);
+  form.appendChild(orderActionsRow);
+  return form;
+}
+
+async function saveSection(section, name, order, saveBtn) {
+  saveBtn.disabled = true;
+  const payload = { anchor_line: section.anchor_line, order };
+  if (currentLang === 'it') {
+    payload.label_it = name;
+  } else {
+    payload.label_en = name;
+  }
+  try {
+    const res = await fetch('/api/section/edit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      alert(t('error') + data.error);
+      saveBtn.disabled = false;
+      return;
+    }
+    editingSection = null;
+    renderIncludes(data);
+  } catch (e) {
+    alert(t('networkError') + e);
+    saveBtn.disabled = false;
+  }
+}
+
+async function saveInclude(item, name, description, order, saveBtn) {
+  saveBtn.disabled = true;
+  const payload = { line: item.line, name, order };
+  if (currentLang === 'it') {
+    payload.description_it = description;
+  } else {
+    payload.description_en = description;
+  }
+  try {
+    const res = await fetch('/api/include/edit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      alert(t('error') + data.error);
+      saveBtn.disabled = false;
+      return;
+    }
+    editingInclude = null;
+    renderIncludes(data);
+  } catch (e) {
+    alert(t('networkError') + e);
+    saveBtn.disabled = false;
   }
 }
 
@@ -266,11 +504,11 @@ async function toggle(line, input) {
     });
     const data = await res.json();
     if (!res.ok) {
-      alert('Errore: ' + data.error);
+      alert(t('error') + data.error);
     }
     renderIncludes(data);
   } catch (e) {
-    alert('Errore di rete: ' + e);
+    alert(t('networkError') + e);
   }
 }
 
