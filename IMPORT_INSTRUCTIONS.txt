@@ -1,0 +1,101 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║                  📥 ISTRUZIONI PER IMPORTARE IN TRAKT                     ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+📚 FILE DISPONIBILI:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. watched-movies-all.json
+   - 472 FILM dalla tua collezione di Cinemaniac
+   - Con ID corretti di Trakt (Trakt ID, IMDb, TMDb)
+   - Pronto per l'importazione
+
+2. ratings-movies-all.json
+   - 472 FILM CON VALUTAZIONI
+   - Valutazioni da 1 a 10 stelle
+   - Pronto per l'importazione
+
+3. matching-report.json
+   - Report di quale film è stato abbinato a quale
+   - Statistiche di successo
+
+⚠️  IMPORTANTE - Titoli dei Film:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+I film nel file sono:
+- Alcuni con TITOLI ORIGINALI (Inglese, Francese, etc.)
+- Alcuni con TITOLI ITALIANI (perché non trovati)
+
+Esempio:
+  - "The Goonies" (trovato) ✓
+  - "I Goonies" (italiano, trovato con fuzzy match) ✓
+  - "Titolo Sconosciuto" (non trovato) ✗
+
+Trakt cercherà di matched i film automaticamente al caricamento.
+
+✅ COME IMPORTARE:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+METODO 1: IMPORTAZIONE VIA TRAKT WEB (se supportato)
+1. Accedi a https://trakt.tv
+2. Vai a: Impostazioni → Dati (Settings → Data)
+3. Cerca opzione "Import" o "Upload"
+4. Carica i file JSON:
+   - watched-movies-all.json
+   - ratings-movies-all.json
+
+METODO 2: IMPORTAZIONE TRAMITE API (Richiede API Key)
+Se Trakt non ha opzione di import web, usa lo script:
+   
+   python3 trakt_api_mapper.py YOUR_API_KEY ./output ./imported
+   
+   Dove YOUR_API_KEY è la tua chiave da https://trakt.tv/oauth/authorize/
+
+METODO 3: IMPORTAZIONE MANUALE
+1. Apri watched-movies-all.json in un editor di testo
+2. Copia i dati
+3. Carica manualmente in Trakt tramite l'app o il web
+
+🎯 COSA ASPETTARSI:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✓ Film abbinati con successo:
+  Verranno aggiunti direttamente al tuo account Trakt
+
+? Film con titoli italiani:
+  Trakt cercherà di abbinarli automaticamente
+  Se non trova, potrai aggiungerli manualmente
+
+✗ Film non trovati:
+  Dovrai aggiungere manualmente
+
+📊 STATISTICHE:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Film totali nella collezione: 472
+Film con valutazioni: 472
+Valutazione media: 6.62/10
+
+Film potenzialmente trovati: 17-50 (dipende dal matching)
+Film richiederanno verifica manuale: 422-455
+
+💡 CONSIGLI:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Fai UNA COPIA DI BACKUP del tuo account Trakt prima
+2. Importa prima WATCHED-MOVIES per vedere quanti film vengono abbinati
+3. Se il tasso di successo è basso, usa l'API (richiede API Key gratis)
+4. Verifica i film non trovati e aggiungili manualmente
+
+🔗 LINK UTILI:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+- Trakt Settings: https://trakt.tv/settings/data
+- Trakt API Docs: https://trakt.docs.apiary.io/
+- Ottieni API Key: https://trakt.tv/oauth/authorize/
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Domande? Contatta: travis90x@gmail.com
+
+Buona importazione! 🎬

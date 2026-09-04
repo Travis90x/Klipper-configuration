@@ -39,3 +39,7 @@ Thumbs.db
 .temp/
 *.temp
 trakt_migration_files.zip
+IMPORT_INSTRUCTIONS.txt
+TRAKT_IMPORT_READY.zip
+trakt_ready_to_import/
+
