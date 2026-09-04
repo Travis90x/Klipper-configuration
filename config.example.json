@@ -1,0 +1,24 @@
+{
+  "trakt_api": {
+    "enabled": false,
+    "api_key": "YOUR_TRAKT_API_KEY_HERE",
+    "api_url": "https://api.trakt.tv",
+    "username": "YOUR_TRAKT_USERNAME"
+  },
+  "cinemaniac": {
+    "backup_file": "Cinemaniac.bak",
+    "output_directory": "./trakt_output"
+  },
+  "migration": {
+    "auto_search_tmdb": true,
+    "auto_search_imdb": true,
+    "merge_existing_data": false,
+    "update_ratings": true,
+    "skip_duplicates": true
+  },
+  "logging": {
+    "enabled": true,
+    "level": "INFO",
+    "output_file": "migration.log"
+  }
+}

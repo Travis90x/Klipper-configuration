@@ -1,0 +1,40 @@
+# Migration files
+Cinemaniac.bak
+*.bak
+trakt_migration_output/
+trakt_output/
+trakt_export/
+
+# Configuration files
+config.json
+config.local.json
+!config.example.json
+
+# Logs
+*.log
+migration.log
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+.Python
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+.temp/
+*.temp
