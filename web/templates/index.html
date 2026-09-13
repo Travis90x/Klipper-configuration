@@ -1,0 +1,604 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Klipper Config Manager</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #f4f5f7;
+    --card-bg: #ffffff;
+    --text: #1b1f24;
+    --muted: #6b7280;
+    --accent: #2f6fed;
+    --border: #e2e4e9;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14161a;
+      --card-bg: #1f2228;
+      --text: #eceef1;
+      --muted: #9aa1ab;
+      --border: #2c3038;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 2rem 1rem;
+  }
+  .wrap { max-width: min(920px, 94vw); margin: 0 auto; }
+  .top-bar {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  h1 { font-size: 1.4rem; margin-bottom: 0.25rem; }
+  .lang-switcher {
+    flex: 0 0 auto;
+  }
+  .lang-switcher select {
+    font-family: inherit;
+    font-size: 0.85rem;
+    color: var(--text);
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.35rem 0.6rem;
+    cursor: pointer;
+  }
+  .file-path {
+    font-family: ui-monospace, Menlo, Consolas, monospace;
+    font-size: 0.8rem;
+    color: var(--muted);
+    word-break: break-all;
+    margin-bottom: 1.5rem;
+  }
+  .section { margin-bottom: 1.75rem; border-radius: 12px; }
+  .section-colored { padding: 0.75rem 0.9rem 0.9rem; }
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: flex-start;
+    gap: 0.4rem;
+    padding: 0 0.1rem 0.5rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0.6rem;
+  }
+  .section-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+  }
+  .icon-btn {
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 0.85rem;
+    line-height: 1;
+    padding: 0.2rem 0.3rem;
+    border-radius: 5px;
+  }
+  .icon-btn:hover { background: var(--border); color: var(--text); }
+  .color-swatch {
+    width: 20px;
+    height: 20px;
+    flex: 0 0 auto;
+    padding: 0;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    cursor: pointer;
+    background: none;
+  }
+  .color-swatch::-webkit-color-swatch-wrapper { padding: 0; border-radius: 50%; }
+  .color-swatch::-webkit-color-swatch { border: none; border-radius: 50%; }
+  .color-swatch::-moz-color-swatch { border: none; border-radius: 50%; }
+  .row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.85rem 1rem;
+    margin-bottom: 0.6rem;
+  }
+  .row-text { min-width: 0; flex: 1; }
+  .row-label-line { display: flex; align-items: center; gap: 0.35rem; }
+  .row-label { font-weight: 600; }
+  .row-target {
+    font-family: ui-monospace, Menlo, Consolas, monospace;
+    font-size: 0.78rem;
+    color: var(--muted);
+    overflow-wrap: anywhere;
+    margin-top: 0.2rem;
+  }
+  .row-description {
+    font-size: 0.85rem;
+    color: var(--muted);
+    overflow-wrap: anywhere;
+    line-height: 1.4;
+    margin-top: 0.35rem;
+  }
+  .switch {
+    position: relative;
+    width: 44px;
+    height: 26px;
+    flex: 0 0 auto;
+  }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .slider {
+    position: absolute; cursor: pointer; inset: 0;
+    background: var(--border);
+    border-radius: 999px;
+    transition: background 0.15s ease;
+  }
+  .slider::before {
+    content: "";
+    position: absolute;
+    height: 20px; width: 20px;
+    left: 3px; top: 3px;
+    background: white;
+    border-radius: 50%;
+    transition: transform 0.15s ease;
+  }
+  input:checked + .slider { background: var(--accent); }
+  input:checked + .slider::before { transform: translateX(18px); }
+  input:disabled + .slider { opacity: 0.5; cursor: wait; }
+  .empty, .error {
+    color: var(--muted);
+    font-size: 0.9rem;
+    padding: 1rem 0;
+  }
+  .error { color: #d9534f; }
+  .edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+    min-width: 0;
+  }
+  .edit-form.section-edit-form { flex-direction: row; align-items: center; flex-wrap: wrap; }
+  .edit-row { display: flex; gap: 0.5rem; align-items: center; }
+  .edit-form input[type="text"],
+  .edit-form textarea {
+    font-family: inherit;
+    font-size: 0.85rem;
+    color: var(--text);
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.4rem 0.55rem;
+    width: 100%;
+  }
+  .edit-form textarea { resize: vertical; min-height: 3.2rem; }
+  .edit-form input[type="number"] {
+    font-family: inherit;
+    font-size: 0.85rem;
+    color: var(--text);
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.4rem 0.55rem;
+    width: 5.5rem;
+  }
+  .edit-form label {
+    font-size: 0.72rem;
+    color: var(--muted);
+    display: block;
+    margin-bottom: 0.15rem;
+  }
+  .edit-actions { display: flex; gap: 0.4rem; }
+  .btn {
+    font-family: inherit;
+    font-size: 0.8rem;
+    border-radius: 6px;
+    padding: 0.35rem 0.75rem;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--card-bg);
+    color: var(--text);
+  }
+  .btn-primary { background: var(--accent); border-color: var(--accent); color: white; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top-bar">
+      <h1>Klipper Config Manager</h1>
+      <div class="lang-switcher">
+        <select id="lang-select">
+          <option value="en">English</option>
+          <option value="it">Italiano</option>
+        </select>
+      </div>
+    </div>
+    <div class="file-path" id="file-path">{{ config_file }}<br>{{ start_file }}<br>{{ accelerometer_file }}</div>
+    <div id="rows"><div class="empty">Caricamento...</div></div>
+  </div>
+
+<script>
+let currentLang = 'en';
+let lastData = null;
+let editingInclude = null; // {file, line} of the include row being edited
+let editingSection = null; // {file, anchor_line} of the section being edited
+
+function sameIncludeTarget(a, item) {
+  return a && a.file === item.file && a.line === item.line;
+}
+
+function sameSectionTarget(a, section) {
+  return a && a.file === section.file && a.anchor_line === section.anchor_line;
+}
+
+const STR = {
+  en: { save: 'Save', cancel: 'Cancel', name: 'Name', description: 'Description', order: 'Order', sectionName: 'Section name', empty: 'No [include ...] found.', networkError: 'Network error: ', error: 'Error: ', color: 'Background color', resetColor: 'Reset color' },
+  it: { save: 'Salva', cancel: 'Annulla', name: 'Nome', description: 'Descrizione', order: 'Ordine', sectionName: 'Nome sezione', empty: 'Nessun [include ...] trovato.', networkError: 'Errore di rete: ', error: 'Errore: ', color: 'Colore sfondo', resetColor: 'Ripristina colore' },
+};
+
+function t(key) {
+  return STR[currentLang][key];
+}
+
+function relativeLuminance(hex) {
+  const chan = (h) => {
+    const c = parseInt(h, 16) / 255;
+    return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+  };
+  return 0.2126 * chan(hex.substr(0, 2)) + 0.7152 * chan(hex.substr(2, 2)) + 0.0722 * chan(hex.substr(4, 2));
+}
+
+function contrastTextColor(hex) {
+  return relativeLuminance(hex) > 0.4 ? '#111111' : '#f5f5f5';
+}
+
+async function loadIncludes() {
+  const res = await fetch('/api/includes');
+  const data = await res.json();
+  renderIncludes(data);
+}
+
+document.getElementById('lang-select').addEventListener('change', (e) => {
+  currentLang = e.target.value;
+  if (lastData) {
+    renderIncludes(lastData);
+  }
+});
+
+function makePencilBtn(onClick) {
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'icon-btn';
+  btn.title = currentLang === 'it' ? 'Modifica' : 'Edit';
+  btn.textContent = '✎';
+  btn.addEventListener('click', onClick);
+  return btn;
+}
+
+function renderIncludes(data) {
+  lastData = data;
+  const filePathEl = document.getElementById('file-path');
+  filePathEl.innerHTML = '';
+  for (const path of [data.config_file, data.start_file, data.accelerometer_file]) {
+    if (!path) continue;
+    if (filePathEl.childNodes.length) filePathEl.appendChild(document.createElement('br'));
+    filePathEl.appendChild(document.createTextNode(path));
+  }
+  const container = document.getElementById('rows');
+  container.innerHTML = '';
+
+  const sections = data.sections || [];
+  if (sections.length === 0) {
+    container.innerHTML = `<div class="empty">${t('empty')}</div>`;
+    return;
+  }
+
+  for (const section of sections) {
+    const sectionEl = document.createElement('div');
+    sectionEl.className = 'section';
+    const fg = section.color ? contrastTextColor(section.color) : null;
+    if (section.color) {
+      sectionEl.classList.add('section-colored');
+      sectionEl.style.backgroundColor = '#' + section.color;
+    }
+
+    const head = document.createElement('div');
+    head.className = 'section-head';
+    if (fg) {
+      head.style.color = fg;
+      head.style.borderBottomColor = fg;
+    }
+    if (sameSectionTarget(editingSection, section)) {
+      head.appendChild(buildSectionEditForm(section));
+    } else {
+      const title = document.createElement('div');
+      title.className = 'section-title';
+      title.textContent = currentLang === 'it' ? section.label_it : section.label_en;
+      head.appendChild(title);
+      head.appendChild(makePencilBtn(() => {
+        editingSection = { file: section.file, anchor_line: section.anchor_line };
+        renderIncludes(lastData);
+      }));
+
+      const colorInput = document.createElement('input');
+      colorInput.type = 'color';
+      colorInput.className = 'color-swatch';
+      colorInput.title = t('color');
+      colorInput.value = section.color ? ('#' + section.color) : '#ffffff';
+      colorInput.addEventListener('change', () => {
+        saveSectionColor(section, colorInput.value.replace('#', ''));
+      });
+      head.appendChild(colorInput);
+
+      if (section.color) {
+        const resetBtn = makePencilBtn(() => saveSectionColor(section, ''));
+        resetBtn.title = t('resetColor');
+        resetBtn.textContent = '⟲';
+        if (fg) resetBtn.style.color = fg;
+        head.appendChild(resetBtn);
+      }
+    }
+    sectionEl.appendChild(head);
+
+    for (const item of section.items) {
+      const row = document.createElement('div');
+      row.className = 'row';
+
+      if (sameIncludeTarget(editingInclude, item)) {
+        row.appendChild(buildIncludeEditForm(item));
+      } else {
+        const text = document.createElement('div');
+        text.className = 'row-text';
+        const labelLine = document.createElement('div');
+        labelLine.className = 'row-label-line';
+        const label = document.createElement('div');
+        label.className = 'row-label';
+        label.textContent = item.title;
+        labelLine.appendChild(label);
+        labelLine.appendChild(makePencilBtn(() => {
+          editingInclude = { file: item.file, line: item.line };
+          renderIncludes(lastData);
+        }));
+        const target = document.createElement('div');
+        target.className = 'row-target';
+        target.textContent = item.target;
+        text.appendChild(labelLine);
+        text.appendChild(target);
+        const descriptionText = (currentLang === 'it' && item.description_it)
+          ? item.description_it
+          : item.description_en;
+        if (descriptionText) {
+          const description = document.createElement('div');
+          description.className = 'row-description';
+          description.textContent = descriptionText;
+          text.appendChild(description);
+        }
+        row.appendChild(text);
+
+        const switchLabel = document.createElement('label');
+        switchLabel.className = 'switch';
+        const input = document.createElement('input');
+        input.type = 'checkbox';
+        input.checked = item.enabled;
+        input.addEventListener('change', () => toggle(item.file, item.line, input));
+        const slider = document.createElement('span');
+        slider.className = 'slider';
+        switchLabel.appendChild(input);
+        switchLabel.appendChild(slider);
+        row.appendChild(switchLabel);
+      }
+
+      sectionEl.appendChild(row);
+    }
+
+    container.appendChild(sectionEl);
+  }
+}
+
+function buildSectionEditForm(section) {
+  const form = document.createElement('div');
+  form.className = 'edit-form section-edit-form';
+
+  const nameWrap = document.createElement('div');
+  const nameLabel = document.createElement('label');
+  nameLabel.textContent = t('sectionName');
+  const nameInput = document.createElement('input');
+  nameInput.type = 'text';
+  nameInput.value = currentLang === 'it' ? section.label_it : section.label_en;
+  nameWrap.appendChild(nameLabel);
+  nameWrap.appendChild(nameInput);
+
+  const orderWrap = document.createElement('div');
+  const orderLabel = document.createElement('label');
+  orderLabel.textContent = t('order');
+  const orderInput = document.createElement('input');
+  orderInput.type = 'number';
+  orderInput.value = section.order;
+  orderWrap.appendChild(orderLabel);
+  orderWrap.appendChild(orderInput);
+
+  const actions = document.createElement('div');
+  actions.className = 'edit-actions';
+  const saveBtn = document.createElement('button');
+  saveBtn.type = 'button';
+  saveBtn.className = 'btn btn-primary';
+  saveBtn.textContent = t('save');
+  saveBtn.addEventListener('click', () => saveSection(section, nameInput.value, orderInput.value, saveBtn));
+  const cancelBtn = document.createElement('button');
+  cancelBtn.type = 'button';
+  cancelBtn.className = 'btn';
+  cancelBtn.textContent = t('cancel');
+  cancelBtn.addEventListener('click', () => {
+    editingSection = null;
+    renderIncludes(lastData);
+  });
+  actions.appendChild(saveBtn);
+  actions.appendChild(cancelBtn);
+
+  form.appendChild(nameWrap);
+  form.appendChild(orderWrap);
+  form.appendChild(actions);
+  return form;
+}
+
+function buildIncludeEditForm(item) {
+  const form = document.createElement('div');
+  form.className = 'edit-form';
+
+  const nameWrap = document.createElement('div');
+  const nameLabel = document.createElement('label');
+  nameLabel.textContent = t('name');
+  const nameInput = document.createElement('input');
+  nameInput.type = 'text';
+  nameInput.value = item.title;
+  nameWrap.appendChild(nameLabel);
+  nameWrap.appendChild(nameInput);
+
+  const descWrap = document.createElement('div');
+  const descLabel = document.createElement('label');
+  descLabel.textContent = `${t('description')} (${currentLang.toUpperCase()})`;
+  const descInput = document.createElement('textarea');
+  descInput.value = (currentLang === 'it' ? item.description_it : item.description_en) || '';
+  descWrap.appendChild(descLabel);
+  descWrap.appendChild(descInput);
+
+  const orderWrap = document.createElement('div');
+  const orderLabel = document.createElement('label');
+  orderLabel.textContent = t('order');
+  const orderInput = document.createElement('input');
+  orderInput.type = 'number';
+  orderInput.value = item.order === null || item.order === undefined ? '' : item.order;
+  orderWrap.appendChild(orderLabel);
+  orderWrap.appendChild(orderInput);
+
+  const actions = document.createElement('div');
+  actions.className = 'edit-actions';
+  const saveBtn = document.createElement('button');
+  saveBtn.type = 'button';
+  saveBtn.className = 'btn btn-primary';
+  saveBtn.textContent = t('save');
+  saveBtn.addEventListener('click', () => saveInclude(item, nameInput.value, descInput.value, orderInput.value, saveBtn));
+  const cancelBtn = document.createElement('button');
+  cancelBtn.type = 'button';
+  cancelBtn.className = 'btn';
+  cancelBtn.textContent = t('cancel');
+  cancelBtn.addEventListener('click', () => {
+    editingInclude = null;
+    renderIncludes(lastData);
+  });
+  actions.appendChild(saveBtn);
+  actions.appendChild(cancelBtn);
+
+  form.appendChild(nameWrap);
+  form.appendChild(descWrap);
+  const orderActionsRow = document.createElement('div');
+  orderActionsRow.className = 'edit-row';
+  orderActionsRow.appendChild(orderWrap);
+  orderActionsRow.appendChild(actions);
+  form.appendChild(orderActionsRow);
+  return form;
+}
+
+async function saveSection(section, name, order, saveBtn) {
+  saveBtn.disabled = true;
+  const payload = { anchor_line: section.anchor_line, order, file: section.file };
+  if (currentLang === 'it') {
+    payload.label_it = name;
+  } else {
+    payload.label_en = name;
+  }
+  try {
+    const res = await fetch('/api/section/edit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      alert(t('error') + data.error);
+      saveBtn.disabled = false;
+      return;
+    }
+    editingSection = null;
+    renderIncludes(data);
+  } catch (e) {
+    alert(t('networkError') + e);
+    saveBtn.disabled = false;
+  }
+}
+
+async function saveSectionColor(section, colorValue) {
+  const payload = { anchor_line: section.anchor_line, order: section.order, file: section.file, color: colorValue };
+  try {
+    const res = await fetch('/api/section/edit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      alert(t('error') + data.error);
+      return;
+    }
+    renderIncludes(data);
+  } catch (e) {
+    alert(t('networkError') + e);
+  }
+}
+
+async function saveInclude(item, name, description, order, saveBtn) {
+  saveBtn.disabled = true;
+  const payload = { line: item.line, name, order, file: item.file };
+  if (currentLang === 'it') {
+    payload.description_it = description;
+  } else {
+    payload.description_en = description;
+  }
+  try {
+    const res = await fetch('/api/include/edit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      alert(t('error') + data.error);
+      saveBtn.disabled = false;
+      return;
+    }
+    editingInclude = null;
+    renderIncludes(data);
+  } catch (e) {
+    alert(t('networkError') + e);
+    saveBtn.disabled = false;
+  }
+}
+
+async function toggle(file, line, input) {
+  input.disabled = true;
+  try {
+    const res = await fetch('/api/includes/toggle', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ line, file }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      alert(t('error') + data.error);
+    }
+    renderIncludes(data);
+  } catch (e) {
+    alert(t('networkError') + e);
+  }
+}
+
+loadIncludes();
+</script>
+</body>
+</html>
