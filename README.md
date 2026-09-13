@@ -54,8 +54,11 @@ managed_services: klipper moonraker
 After updating from "Update Manager", use the Macro **UPDATE KLIPPER CONF** in Klipper
 or 
 ```
-sudo ~/printer_data/config/config/scripts/update/klipper-configuration/klipper-configuration.sh
+bash ~/printer_data/config/config/scripts/update/klipper-configuration/klipper-configuration.sh
 ```
+Run it **without `sudo`**: the script elevates on its own only where needed. Under
+`sudo`, `~` becomes `/root` and it would install into `/root/printer_data` instead
+of yours.
 
 # CPU LOG
 ```

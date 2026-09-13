@@ -1,3 +1,14 @@
+# Must run as the printer user, never as root: every path below is built from ~,
+# so under sudo it would clone into /root/Klipper-configuration and try to install
+# into /root/printer_data instead of the real config. The script elevates on its own
+# (sudo -S) only for the steps that need it.
+if [ "$(id -u)" -eq 0 ]; then
+    echo "ERROR: do not run this script as root / with sudo."
+    echo "Run it as the printer user, e.g.:"
+    echo "  bash ~/printer_data/config/config/scripts/update/klipper-configuration/klipper-configuration.sh <password>"
+    exit 1
+fi
+
 if [ ! -d ~/Klipper-configuration/ ]; then git clone https://github.com/Travis90x/Klipper-configuration.git ~/Klipper-configuration/; fi
 cd ~/Klipper-configuration && git pull && cd -
 cp -r ~/Klipper-configuration/* ~/printer_data/config
