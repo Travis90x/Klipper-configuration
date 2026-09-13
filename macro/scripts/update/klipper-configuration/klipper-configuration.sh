@@ -1,3 +1,14 @@
+# Must run as the printer user, never as root: every path below is built from ~,
+# so under sudo it would clone into /root/Klipper_AI_Macro and try to install into
+# /root/printer_data instead of the real config. The script elevates on its own
+# (sudo -S) only for the steps that need it.
+if [ "$(id -u)" -eq 0 ]; then
+    echo "ERROR: do not run this script as root / with sudo."
+    echo "Run it as the printer user, e.g.:"
+    echo "  bash ~/printer_data/config/macro/scripts/update/klipper-configuration/klipper-configuration.sh <password>"
+    exit 1
+fi
+
 if [ ! -d ~/Klipper_AI_Macro/ ]; then git clone -b Klipper_AI_macro https://github.com/Travis90x/Klipper-configuration.git ~/Klipper_AI_Macro/; fi
 cd ~/Klipper_AI_Macro && git pull --rebase && cd -
 cp -r ~/Klipper_AI_Macro/* ~/printer_data/config

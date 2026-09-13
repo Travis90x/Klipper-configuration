@@ -103,8 +103,11 @@ managed_services: klipper moonraker klipper_ai_macro
 After updating from "Update Manager", use the Macro **UPDATE KLIPPER CONF** in Klipper
 or 
 ```
-sudo ~/printer_data/config/macro/scripts/update/klipper-configuration/klipper-configuration.sh
+bash ~/printer_data/config/macro/scripts/update/klipper-configuration/klipper-configuration.sh
 ```
+Run it **without `sudo`**: the script elevates on its own only where needed. Under
+`sudo`, `~` becomes `/root` and it would install into `/root/printer_data` instead
+of yours.
 
 `klipper_ai_macro` in `managed_services` restarts the [Config Manager](web/README.md)
 (`klipper_ai_macro.service`) after every update. Only takes effect if you've
